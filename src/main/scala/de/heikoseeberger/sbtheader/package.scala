@@ -16,6 +16,9 @@
 
 package de.heikoseeberger
 
+import java.io.File
+import scala.util.matching.Regex
+
 package object sbtheader {
 
   // format: OFF
@@ -31,4 +34,16 @@ package object sbtheader {
   private[sbtheader] val IndexedSeq = scala.collection.immutable.IndexedSeq
   private[sbtheader] type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
   // format: ON
+
+  object FileOps {
+    val extensionPattern: Regex = """.+\.(.+)""".r
+  }
+
+  implicit class FileOps(val file: File) extends AnyVal {
+    def extension: Option[String] =
+      file.getName match {
+        case FileOps.extensionPattern(ext) => Some(ext)
+        case _                             => None
+      }
+  }
 }
