@@ -20,11 +20,17 @@ import java.io.File
 import java.nio.file.Files
 import sbt._
 import scala.collection.JavaConversions._
+import scala.util.matching.Regex
 
 object SbtHeader extends AutoPlugin {
 
   object autoImport {
-    val headers = settingKey[Map[String, String]]("""Header text by extension; empty by default""")
+
+    object HeaderPattern {
+      val blockComment = """(?s)(\s*/\*.*\*/\s*)(\S+.*)""".r
+    }
+
+    val headers = settingKey[Map[String, (Regex, String)]]("""Header pattern and text by extension; empty by default""")
     val createHeaders = taskKey[Iterable[File]]("Create/update headers")
   }
 
@@ -41,21 +47,23 @@ object SbtHeader extends AutoPlugin {
 
   override def trigger = allRequirements
 
-  private def createHeaders(sources: Seq[File], headers: Map[String, String], log: Logger): Iterable[File] = {
+  private def createHeaders(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
     val touchedFiles = sources
       .groupBy(_.extension)
       .collect { case (Some(ext), files) => headers.get(ext).map(_ -> files) }
       .flatten
-      .flatMap { case (header, files) => files.flatMap(createHeader(header)) }
+      .flatMap { case ((headerPattern, headerText), files) => files.flatMap(createHeader(headerPattern, headerText, log)) }
     log.info(s"Headers created for ${touchedFiles.size} files${if (touchedFiles.isEmpty) "" else f":%n  " + touchedFiles.mkString(f"%n  ")}")
     touchedFiles
   }
 
-  private def createHeader(header: String)(file: File): Option[File] = {
-    val lines = Files.readAllLines(file.toPath)
-    if (lines.mkString(f"%n").startsWith(header))
-      None
-    else
-      Some(Files.write(file.toPath, header +: lines).toFile)
+  private def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
+    def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
+    val text = Files.readAllLines(file.toPath).mkString(newLine) match {
+      case headerPattern(`headerText`, body) => None
+      case headerPattern(_, body)            => Some(headerText + body)
+      case body                              => Some(headerText + body.replaceAll("""^\s+""", ""))
+    }
+    text.map(write)
   }
 }

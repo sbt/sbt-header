@@ -46,4 +46,6 @@ package object sbtheader {
         case _                             => None
       }
   }
+
+  val newLine: String = f"%n"
 }
