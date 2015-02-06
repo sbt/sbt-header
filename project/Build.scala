@@ -38,6 +38,8 @@ object Build extends AutoPlugin {
         .setPreference(AlignParameters, true)
         .setPreference(AlignSingleLineCaseStatements, true)
         .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
-        .setPreference(DoubleIndentClassDeclaration, true)
+        .setPreference(DoubleIndentClassDeclaration, true),
+      // Git settings
+      git.baseVersion := "0.3.0"
     )
 }
