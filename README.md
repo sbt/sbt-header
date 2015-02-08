@@ -6,7 +6,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating file header
 
 In order to add the sbt-header plugin to your build, just add the below line to `project/plugins.sbt`:
 
-```
+``` scala
 addSbtPlugin("de.heikoseeberger" % "sbt-header" % "0.3.0")
 ```
 
@@ -14,27 +14,29 @@ You have to define which source files should have which header: sbt-header uses 
 header pattern and text for that purpose, specified with the `headers` setting. Add a line like the one below
 to your `build.sbt`:
 
-```
-headers := Map("scala" -> (
-   HeaderPattern.blockComment,
-   """|/*
-      | * Copyright 2015 Heiko Seeberger
-      | *
-      | * Licensed under the Apache License, Version 2.0 (the "License");
-      | * you may not use this file except in compliance with the License.
-      | * You may obtain a copy of the License at
-      | *
-      | *    http://www.apache.org/licenses/LICENSE-2.0
-      | *
-      | * Unless required by applicable law or agreed to in writing, software
-      | * distributed under the License is distributed on an "AS IS" BASIS,
-      | * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-      | * See the License for the specific language governing permissions and
-      | * limitations under the License.
-      | */
-      |
-      |""".stripMargin
-))
+``` scala
+headers := Map(
+  "scala" -> (
+    HeaderPattern.blockComment,
+    """|/*
+       | * Copyright 2015 Heiko Seeberger
+       | *
+       | * Licensed under the Apache License, Version 2.0 (the "License");
+       | * you may not use this file except in compliance with the License.
+       | * You may obtain a copy of the License at
+       | *
+       | *    http://www.apache.org/licenses/LICENSE-2.0
+       | *
+       | * Unless required by applicable law or agreed to in writing, software
+       | * distributed under the License is distributed on an "AS IS" BASIS,
+       | * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       | * See the License for the specific language governing permissions and
+       | * limitations under the License.
+       | */
+       |
+       |""".stripMargin
+  )
+)
 ```
 
 In order to create the file headers, execute the `createHeaders` task:
