@@ -27,14 +27,17 @@ object SbtHeader extends AutoPlugin {
   object autoImport {
 
     object HeaderPattern {
-      val blockComment = """(?s)(\s*/\*.*\*/\s*)(\S+.*)""".r
+      val blockComment: Regex = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
     }
 
-    val headers = settingKey[Map[String, (Regex, String)]]("""Header pattern and text by extension; empty by default""")
-    val createHeaders = taskKey[Iterable[File]]("Create/update headers")
+    val headers: SettingKey[Map[String, (Regex, String)]] =
+      settingKey("""Header pattern and text by extension; empty by default""")
+
+    val createHeaders: TaskKey[Iterable[File]] =
+      taskKey("Create/update headers")
   }
 
-  override def projectSettings =
+  override def projectSettings: Seq[Setting[_]] =
     List(
       Keys.sources in autoImport.createHeaders := (Keys.sources in Compile).value,
       autoImport.headers := Map.empty,
@@ -45,24 +48,24 @@ object SbtHeader extends AutoPlugin {
       )
     )
 
-  override def trigger = allRequirements
+  override def trigger: PluginTrigger = allRequirements
 
-  private def createHeaders(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
+  private def createHeaders(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger): Iterable[File] = {
     val touchedFiles = sources
       .groupBy(_.extension)
       .collect { case (Some(ext), files) => headers.get(ext).map(_ -> files) }
       .flatten
-      .flatMap { case ((headerPattern, headerText), files) => files.flatMap(createHeader(headerPattern, headerText, log)) }
+      .flatMap { case ((headerPattern, headerText), files) => files.flatMap(createHeader(headerPattern, headerText)) }
     log.info(s"Headers created for ${touchedFiles.size} files${if (touchedFiles.isEmpty) "" else f":%n  " + touchedFiles.mkString(f"%n  ")}")
     touchedFiles
   }
 
-  private def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
+  private def createHeader(headerPattern: Regex, headerText: String)(file: File): Option[File] = {
     def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
     val text = Files.readAllLines(file.toPath).mkString(newLine) match {
-      case headerPattern(`headerText`, body) => None
-      case headerPattern(_, body)            => Some(headerText + body)
-      case body                              => Some(headerText + body.replaceAll("""^\s+""", ""))
+      case headerPattern(`headerText`, _) => None
+      case headerPattern(_, body)         => Some(headerText + body)
+      case body                           => Some(headerText + body.replaceAll("""^\s+""", "")) // Trim left
     }
     text.map(write)
   }
