@@ -22,14 +22,14 @@ class SbtHeaderSpec extends WordSpec with Matchers {
 
   import SbtHeader.autoImport._
 
-  "HeaderPattern.blockComment" should {
+  "HeaderPattern.javaScala" should {
 
-    "not match a singleline block comment without a trailing new line" in {
-      HeaderPattern.blockComment.unapplySeq("/* comment */") shouldBe None
+    "not match a singleline comment without a trailing new line" in {
+      HeaderPattern.javaScala.unapplySeq("/* comment */") shouldBe None
     }
 
-    "not match a multiline block comment without a trailing new line" in {
-      HeaderPattern.blockComment.unapplySeq(
+    "not match a multiline comment without a trailing new line" in {
+      HeaderPattern.javaScala.unapplySeq(
         """|/*
            | * comment/1
            | * comment/2
@@ -37,14 +37,14 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       ) shouldBe None
     }
 
-    "match a block comment with trailing new lines not followed by a body" in {
+    "match a comment with trailing new lines not followed by a body" in {
       val header = """|/* comment */
                       |
                       |""".stripMargin
-      HeaderPattern.blockComment.unapplySeq(header) shouldBe Some(List(header, ""))
+      HeaderPattern.javaScala.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
-    "match a block comment with a trailing new line followed by a body" in {
+    "match a comment with a trailing new line followed by a body" in {
       val header = """|/*
                       | * comment/1
                       | * comment/2
@@ -54,10 +54,10 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                     |  val bar = "bar"
                     |}
                     |""".stripMargin
-      HeaderPattern.blockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+      HeaderPattern.javaScala.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
 
-    "match a block comment with a trailing new line followed by a body with a ScalaDoc comment" in {
+    "match a comment with a trailing new line followed by a body with a ScalaDoc comment" in {
       val header = """|/*
                       | * comment/1
                       | * comment/2
@@ -70,7 +70,54 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                     |  val bar = "bar"
                     |}
                     |""".stripMargin
-      HeaderPattern.blockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+      HeaderPattern.javaScala.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
+  }
+
+  "HeaderPattern.python" should {
+
+    "not match a singleline comment without trailing new lines" in {
+      HeaderPattern.python.unapplySeq("# comment") shouldBe None
+    }
+
+    "not match a multiline block comment with a single trailing new line" in {
+      HeaderPattern.python.unapplySeq(
+        """|# comment/1
+           |# comment/2
+           |""".stripMargin
+      ) shouldBe None
+    }
+
+    "match a comment with trailing new lines not followed by a body" in {
+      val header = """|# comment
+                      |
+                      |
+                      |""".stripMargin
+      HeaderPattern.python.unapplySeq(header) shouldBe Some(List(null, header, ""))
+    }
+
+    "match a comment with trailing new lines followed by a body" in {
+      val header = """|# comment/1
+                      |# comment/2
+                      |
+                      |""".stripMargin
+      val body = """|def foo(bar):
+                    |    print(bar)
+                    |""".stripMargin
+      HeaderPattern.python.unapplySeq(header + body) shouldBe Some(List(null, header, body))
+    }
+  }
+
+  "match a comment with a leading shebang and with trailing new lines followed by a body" in {
+    val shebang = """|#!/usr/bin/env python3
+                     |""".stripMargin
+    val header = """|# comment/1
+                    |# comment/2
+                    |
+                    |""".stripMargin
+    val body = """|def foo(bar):
+                  |    print(bar)
+                  |""".stripMargin
+    HeaderPattern.python.unapplySeq(shebang + header + body) shouldBe Some(List(shebang, header, body))
   }
 }
