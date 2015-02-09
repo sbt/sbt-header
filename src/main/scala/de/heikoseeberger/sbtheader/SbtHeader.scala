@@ -72,6 +72,7 @@ object SbtHeader extends AutoPlugin {
     val modifiedText = text match {
       case headerPattern(`headerText`, _) => None
       case headerPattern(_, body)         => Some(firstLine + headerText + body)
+      case body if body.isEmpty           => None
       case body                           => Some(firstLine + headerText + body.replaceAll("""^\s+""", "")) // Trim left
     }
     modifiedText.map(write)
