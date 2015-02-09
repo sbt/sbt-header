@@ -93,7 +93,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                       |
                       |
                       |""".stripMargin
-      HeaderPattern.python.unapplySeq(header) shouldBe Some(List(null, header, ""))
+      HeaderPattern.python.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines followed by a body" in {
@@ -104,20 +104,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       val body = """|def foo(bar):
                     |    print(bar)
                     |""".stripMargin
-      HeaderPattern.python.unapplySeq(header + body) shouldBe Some(List(null, header, body))
+      HeaderPattern.python.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
-  }
-
-  "match a comment with a leading shebang and with trailing new lines followed by a body" in {
-    val shebang = """|#!/usr/bin/env python3
-                     |""".stripMargin
-    val header = """|# comment/1
-                    |# comment/2
-                    |
-                    |""".stripMargin
-    val body = """|def foo(bar):
-                  |    print(bar)
-                  |""".stripMargin
-    HeaderPattern.python.unapplySeq(shebang + header + body) shouldBe Some(List(shebang, header, body))
   }
 }

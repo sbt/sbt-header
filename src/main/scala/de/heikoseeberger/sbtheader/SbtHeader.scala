@@ -28,7 +28,7 @@ object SbtHeader extends AutoPlugin {
 
     object HeaderPattern {
       val javaScala: Regex = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
-      val python: Regex = """(#!.*(?:\n|(?:\r\n)))?((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+      val python: Regex = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
     }
 
     val headers: SettingKey[Map[String, (Regex, String)]] =
@@ -37,6 +37,8 @@ object SbtHeader extends AutoPlugin {
     val createHeaders: TaskKey[Iterable[File]] =
       taskKey("Create/update headers")
   }
+
+  private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 
   override def projectSettings: Seq[Setting[_]] =
     List(
@@ -63,14 +65,15 @@ object SbtHeader extends AutoPlugin {
 
   private def createHeader(headerPattern: Regex, headerText: String)(file: File): Option[File] = {
     def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
-    val text = Files.readAllLines(file.toPath).mkString(newLine) match {
-      case headerPattern(_, `headerText`, _) => None
-      case headerPattern(null, _, body)      => Some(headerText + body) // e.g. shebang
-      case headerPattern(init, _, body)      => Some(init + headerText + body) // e.g. shebang
-      case headerPattern(`headerText`, _)    => None
-      case headerPattern(_, body)            => Some(headerText + body)
-      case body                              => Some(headerText + body.replaceAll("""^\s+""", "")) // Trim left
+    val (firstLine, text) = Files.readAllLines(file.toPath).mkString(newLine) match {
+      case shebangAndBody(s, b) => (s, b)
+      case other                => ("", other)
     }
-    text.map(write)
+    val modifiedText = text match {
+      case headerPattern(`headerText`, _) => None
+      case headerPattern(_, body)         => Some(firstLine + headerText + body)
+      case body                           => Some(firstLine + headerText + body.replaceAll("""^\s+""", "")) // Trim left
+    }
+    modifiedText.map(write)
   }
 }
