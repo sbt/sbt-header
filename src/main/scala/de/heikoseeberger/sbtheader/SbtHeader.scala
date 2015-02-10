@@ -28,8 +28,8 @@ object SbtHeader extends AutoPlugin {
   object autoImport {
 
     object HeaderPattern {
-      val javaScala = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
-      val python = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+      val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
+      val hashLineComment = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
     }
 
     val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
@@ -49,20 +49,28 @@ object SbtHeader extends AutoPlugin {
 
   def toBeScopedSettings = List(
     unmanagedSources in createHeaders := unmanagedSources.value,
-    createHeaders := createHeadersTask((unmanagedSources in createHeaders).value.toList, headers.value, streams.value.log)
+    unmanagedResources in createHeaders := unmanagedResources.value,
+    createHeaders := createHeadersTask(
+      (unmanagedSources in createHeaders).value.toList ++ (unmanagedResources in createHeaders).value.toList,
+      headers.value,
+      streams.value.log
+    )
   )
 
   def notToBeScopedSettings = List(
     headers := Map.empty
   )
 
-  private def createHeadersTask(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
-    val touchedFiles = sources
+  private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
+    val touchedFiles = files
       .groupBy(_.extension)
-      .collect { case (Some(ext), files) => headers.get(ext).map(_ -> files) }
+      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
       .flatten
-      .flatMap { case ((headerPattern, headerText), files) => files.flatMap(createHeader(headerPattern, headerText)) }
-    log.info(s"Headers created for ${touchedFiles.size} files${if (touchedFiles.isEmpty) "" else f":%n  " + touchedFiles.mkString(f"%n  ")}")
+      .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text)) }
+    if (touchedFiles.isEmpty)
+      log.info("No headers created/updated")
+    else
+      log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
     touchedFiles
   }
 

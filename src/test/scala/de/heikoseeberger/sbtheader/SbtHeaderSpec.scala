@@ -22,14 +22,14 @@ class SbtHeaderSpec extends WordSpec with Matchers {
 
   import SbtHeader.autoImport._
 
-  "HeaderPattern.javaScala" should {
+  "HeaderPattern.cStyleBlockComment" should {
 
     "not match a singleline comment without a trailing new line" in {
-      HeaderPattern.javaScala.unapplySeq("/* comment */") shouldBe None
+      HeaderPattern.cStyleBlockComment.unapplySeq("/* comment */") shouldBe None
     }
 
     "not match a multiline comment without a trailing new line" in {
-      HeaderPattern.javaScala.unapplySeq(
+      HeaderPattern.cStyleBlockComment.unapplySeq(
         """|/*
            | * comment/1
            | * comment/2
@@ -41,7 +41,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       val header = """|/* comment */
                       |
                       |""".stripMargin
-      HeaderPattern.javaScala.unapplySeq(header) shouldBe Some(List(header, ""))
+      HeaderPattern.cStyleBlockComment.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with a trailing new line followed by a body" in {
@@ -54,7 +54,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                     |  val bar = "bar"
                     |}
                     |""".stripMargin
-      HeaderPattern.javaScala.unapplySeq(header + body) shouldBe Some(List(header, body))
+      HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
 
     "match a comment with a trailing new line followed by a body with a ScalaDoc comment" in {
@@ -70,18 +70,18 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                     |  val bar = "bar"
                     |}
                     |""".stripMargin
-      HeaderPattern.javaScala.unapplySeq(header + body) shouldBe Some(List(header, body))
+      HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 
-  "HeaderPattern.python" should {
+  "HeaderPattern.hashLineComment" should {
 
     "not match a singleline comment without trailing new lines" in {
-      HeaderPattern.python.unapplySeq("# comment") shouldBe None
+      HeaderPattern.hashLineComment.unapplySeq("# comment") shouldBe None
     }
 
     "not match a multiline block comment with a single trailing new line" in {
-      HeaderPattern.python.unapplySeq(
+      HeaderPattern.hashLineComment.unapplySeq(
         """|# comment/1
            |# comment/2
            |""".stripMargin
@@ -93,7 +93,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
                       |
                       |
                       |""".stripMargin
-      HeaderPattern.python.unapplySeq(header) shouldBe Some(List(header, ""))
+      HeaderPattern.hashLineComment.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines followed by a body" in {
@@ -104,7 +104,7 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       val body = """|def foo(bar):
                     |    print(bar)
                     |""".stripMargin
-      HeaderPattern.python.unapplySeq(header + body) shouldBe Some(List(header, body))
+      HeaderPattern.hashLineComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 }
