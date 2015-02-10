@@ -45,14 +45,14 @@ object SbtHeader extends AutoPlugin {
   override def requires = plugins.CorePlugin
 
   override def projectSettings =
-    inConfig(Compile)(toBeScopedHeaderSettings) ++ inConfig(Test)(toBeScopedHeaderSettings) ++ notToBeScopedHeaderSettings
+    inConfig(Compile)(toBeScopedSettings) ++ inConfig(Test)(toBeScopedSettings) ++ notToBeScopedSettings
 
-  def toBeScopedHeaderSettings = List(
-    sources in createHeaders := (sources in compile).value,
-    createHeaders := createHeadersTask((sources in createHeaders).value.toList, headers.value, streams.value.log)
+  def toBeScopedSettings = List(
+    unmanagedSources in createHeaders := unmanagedSources.value,
+    createHeaders := createHeadersTask((unmanagedSources in createHeaders).value.toList, headers.value, streams.value.log)
   )
 
-  def notToBeScopedHeaderSettings = List(
+  def notToBeScopedSettings = List(
     headers := Map.empty
   )
 
