@@ -1,7 +1,7 @@
 name := "sbt-header-test"
 
-unmanagedSourceDirectories in Compile := (unmanagedSourceDirectories in Compile).value :+ baseDirectory.value
-includeFilter in unmanagedSources := "*.java" | "*.scala" | "*.py"
+inConfig(Compile)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
+inConfig(Test)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
 
 headers := Map(
   "scala" -> (

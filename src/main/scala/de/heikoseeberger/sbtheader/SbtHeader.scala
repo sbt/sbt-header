@@ -19,6 +19,7 @@ package de.heikoseeberger.sbtheader
 import java.io.File
 import java.nio.file.Files
 import sbt._
+import sbt.Keys._
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
 
@@ -27,33 +28,35 @@ object SbtHeader extends AutoPlugin {
   object autoImport {
 
     object HeaderPattern {
-      val javaScala: Regex = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
-      val python: Regex = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+      val javaScala = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
+      val python = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
     }
 
-    val headers: SettingKey[Map[String, (Regex, String)]] =
-      settingKey("""Header pattern and text by extension; empty by default""")
-
-    val createHeaders: TaskKey[Iterable[File]] =
-      taskKey("Create/update headers")
+    val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
+    val createHeaders = taskKey[Iterable[File]]("Create/update headers")
   }
+
+  import autoImport._
 
   private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 
-  override def projectSettings: Seq[Setting[_]] =
-    List(
-      Keys.sources in autoImport.createHeaders := (Keys.sources in Compile).value ++ (Keys.sources in Test).value,
-      autoImport.headers := Map.empty,
-      autoImport.createHeaders := createHeaders(
-        (Keys.sources in autoImport.createHeaders).value.toList,
-        autoImport.headers.value,
-        Keys.streams.value.log
-      )
-    )
+  override def trigger = allRequirements
 
-  override def trigger: PluginTrigger = allRequirements
+  override def requires = plugins.JvmPlugin
 
-  private def createHeaders(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger): Iterable[File] = {
+  override def projectSettings =
+    inConfig(Compile)(toBeScopedSettings) ++ inConfig(Test)(toBeScopedSettings) ++ notToBeScopedSettings
+
+  private def toBeScopedSettings = List(
+    sources in createHeaders := (sources in compile).value,
+    createHeaders := createHeadersTask((sources in createHeaders).value.toList, headers.value, streams.value.log)
+  )
+
+  private def notToBeScopedSettings = List(
+    headers := Map.empty
+  )
+
+  private def createHeadersTask(sources: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
     val touchedFiles = sources
       .groupBy(_.extension)
       .collect { case (Some(ext), files) => headers.get(ext).map(_ -> files) }
@@ -63,7 +66,7 @@ object SbtHeader extends AutoPlugin {
     touchedFiles
   }
 
-  private def createHeader(headerPattern: Regex, headerText: String)(file: File): Option[File] = {
+  private def createHeader(headerPattern: Regex, headerText: String)(file: File) = {
     def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
     val (firstLine, text) = Files.readAllLines(file.toPath).mkString(newLine) match {
       case shebangAndBody(s, b) => (s, b)
