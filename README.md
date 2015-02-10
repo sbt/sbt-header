@@ -1,6 +1,6 @@
 # sbt-header #
 
-sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating file headers, e.g. copyright headers.
+sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
 ## Usage
 
@@ -39,13 +39,21 @@ headers := Map(
 )
 ```
 
-In order to create the file headers, execute the `createHeaders` task:
+In order to create or update the file headers, execute the `createHeaders` task:
 
 ```
 > createHeaders
 [info] Headers created for 2 files:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
+```
+
+If you want to automate header creation/update for `Config` and `Test` configurations,
+add the following settings to your build:
+
+``` scala
+inConfig(Compile)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
+inConfig(Test)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
 ```
 
 ## Contribution policy ##
