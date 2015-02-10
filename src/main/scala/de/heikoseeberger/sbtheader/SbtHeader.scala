@@ -42,7 +42,7 @@ object SbtHeader extends AutoPlugin {
 
   override def trigger = allRequirements
 
-  override def requires = plugins.JvmPlugin
+  override def requires = plugins.CorePlugin
 
   override def projectSettings =
     inConfig(Compile)(toBeScopedSettings) ++ inConfig(Test)(toBeScopedSettings) ++ notToBeScopedSettings
