@@ -67,9 +67,7 @@ object SbtHeader extends AutoPlugin {
       .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
       .flatten
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text)) }
-    if (touchedFiles.isEmpty)
-      log.info("No headers created/updated")
-    else
+    if (!touchedFiles.isEmpty)
       log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
     touchedFiles
   }
