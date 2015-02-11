@@ -7,11 +7,9 @@ import scalariform.formatter.preferences._
 
 object Build extends AutoPlugin {
 
-  override def requires =
-    plugins.JvmPlugin
+  override def requires = plugins.JvmPlugin
 
-  override def trigger =
-    allRequirements
+  override def trigger = allRequirements
 
   override def projectSettings =
     scalariformSettings ++
