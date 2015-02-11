@@ -2,17 +2,15 @@
 
 sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
-## Usage
+## Configuration
 
-In order to add the sbt-header plugin to your build, just add the below line to `project/plugins.sbt`:
+In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
 addSbtPlugin("de.heikoseeberger" % "sbt-header" % "0.7.1")
 ```
 
-You have to define which source or resource files should have which header:
-sbt-header uses a mapping from file extension to header pattern and text for that purpose,
-specified with the `headers` setting. Add a line like the one below to your `build.sbt`:
+You have to define which source or resource files should be considered by sbt-header and if so, how the headers should look like. sbt-header uses a mapping from file extension to header pattern and text for that purpose, specified with the `headers` setting. Here's an example:
 
 ``` scala
 headers := Map(
@@ -39,7 +37,15 @@ headers := Map(
 )
 ```
 
-In order to create or update the file headers, execute the `createHeaders` task:
+Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines two widely used patterns:
+- `cStyleBlockComment`, e.g. for Scala and Java
+- `hashLineComment`, e.g. for Bash, Pyhon and HOCON
+
+By the way, first lines starting with shebang are not touched by sbt-header.
+
+## Usage
+
+In order to create or update file headers, execute the `createHeaders` task:
 
 ```
 > createHeaders
@@ -48,8 +54,7 @@ In order to create or update the file headers, execute the `createHeaders` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-If you want to automate header creation/update for `Config` and `Test` configurations,
-add the following settings to your build:
+If you want to automate header creation/update for `Compile` and `Test` configurations, add the following settings to your build:
 
 ``` scala
 inConfig(Compile)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
