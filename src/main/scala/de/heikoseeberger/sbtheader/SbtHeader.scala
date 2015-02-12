@@ -28,8 +28,8 @@ object SbtHeader extends AutoPlugin {
   object autoImport {
 
     object HeaderPattern {
-      val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|(?:\r\n))+)(.*)""".r
-      val hashLineComment = """((?:#.*(?:\n|(?:\r\n)))+(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+      val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
+      val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
     }
 
     val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
