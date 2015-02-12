@@ -41,7 +41,7 @@ object Build extends AutoPlugin {
         .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
         .setPreference(DoubleIndentClassDeclaration, true),
       // Git settings
-      git.baseVersion := "1.1.0",
+      git.baseVersion := "1.2.0",
       // Header settings
       headers := Map(
         "scala" -> (
