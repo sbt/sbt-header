@@ -66,24 +66,28 @@ object SbtHeader extends AutoPlugin {
       .groupBy(_.extension)
       .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
       .flatten
-      .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text)) }
+      .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text, log)) }
     if (!touchedFiles.isEmpty)
       log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
     touchedFiles
   }
 
-  private def createHeader(headerPattern: Regex, headerText: String)(file: File) = {
+  private def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
     def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
+    log.debug(s"About to create/update header for $file")
     val (firstLine, text) = Files.readAllLines(file.toPath).mkString(newLine) match {
       case shebangAndBody(s, b) => (s, b)
       case other                => ("", other)
     }
+    log.debug(s"First line of $file is:$newLine$firstLine")
+    log.debug(s"Text of $file is:$newLine$text")
     val modifiedText = text match {
       case headerPattern(`headerText`, _) => None
       case headerPattern(_, body)         => Some(firstLine + headerText + body)
       case body if body.isEmpty           => None
       case body                           => Some(firstLine + headerText + body.replaceAll("""^\s+""", "")) // Trim left
     }
+    log.debug(s"Modified text of $file is:$newLine$modifiedText")
     modifiedText.map(write)
   }
 }
