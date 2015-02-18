@@ -17,6 +17,7 @@
 package de.heikoseeberger.sbtheader
 
 import java.io.File
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import sbt._
 import sbt.Keys._
@@ -73,9 +74,9 @@ object SbtHeader extends AutoPlugin {
   }
 
   private def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
-    def write(text: String) = Files.write(file.toPath, text.split(newLine).toList).toFile
+    def write(text: String) = Files.write(file.toPath, text.split(newLine).toList, UTF_8).toFile
     log.debug(s"About to create/update header for $file")
-    val (firstLine, text) = Files.readAllLines(file.toPath).mkString(newLine) match {
+    val (firstLine, text) = Files.readAllLines(file.toPath, UTF_8).mkString(newLine) match {
       case shebangAndBody(s, b) => (s, b)
       case other                => ("", other)
     }

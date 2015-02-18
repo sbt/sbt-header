@@ -2,6 +2,11 @@
 
 sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
+## Requirements
+
+- Java 7 or higher
+- sbt 0.13.7 or higher
+
 ## Configuration
 
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
