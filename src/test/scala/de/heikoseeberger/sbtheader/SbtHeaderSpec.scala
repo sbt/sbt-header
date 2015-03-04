@@ -28,6 +28,10 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       HeaderPattern.cStyleBlockComment.unapplySeq("/* comment */") shouldBe None
     }
 
+    "not match a multi star singleline comment without a trailing new line" in {
+      HeaderPattern.cStyleBlockComment.unapplySeq("/** comment */") shouldBe None
+    }
+
     "not match a multiline comment without a trailing new line" in {
       HeaderPattern.cStyleBlockComment.unapplySeq(
         """|/*
@@ -37,8 +41,24 @@ class SbtHeaderSpec extends WordSpec with Matchers {
       ) shouldBe None
     }
 
+    "not match a multi star multiline comment without a trailing new line" in {
+      HeaderPattern.cStyleBlockComment.unapplySeq(
+        """|/**
+           | * comment/1
+           | * comment/2
+           | */""".stripMargin
+      ) shouldBe None
+    }
+
     "match a comment with trailing new lines not followed by a body" in {
       val header = """|/* comment */
+                      |
+                      |""".stripMargin
+      HeaderPattern.cStyleBlockComment.unapplySeq(header) shouldBe Some(List(header, ""))
+    }
+
+    "match a multi star comment with trailing new lines not followed by a body" in {
+      val header = """|/** comment */
                       |
                       |""".stripMargin
       HeaderPattern.cStyleBlockComment.unapplySeq(header) shouldBe Some(List(header, ""))
@@ -59,6 +79,35 @@ class SbtHeaderSpec extends WordSpec with Matchers {
 
     "match a comment with a trailing new line followed by a body with a ScalaDoc comment" in {
       val header = """|/*
+                      | * comment/1
+                      | * comment/2
+                      | */
+                      |""".stripMargin
+      val body = """|/**
+                    |  * ScalaDoc for Foo
+                    |  */
+                    |class Foo {
+                    |  val bar = "bar"
+                    |}
+                    |""".stripMargin
+      HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+
+    "match a multi star comment with a trailing new line followed by a body" in {
+      val header = """|/**
+                      | * comment/1
+                      | * comment/2
+                      | */
+                      |""".stripMargin
+      val body = """|class Foo {
+                    |  val bar = "bar"
+                    |}
+                    |""".stripMargin
+      HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+
+    "match a multi star comment with a trailing new line followed by a body with a ScalaDoc comment" in {
+      val header = """|/**
                       | * comment/1
                       | * comment/2
                       | */
