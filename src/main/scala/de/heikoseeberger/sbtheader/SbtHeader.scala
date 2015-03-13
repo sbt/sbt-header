@@ -62,6 +62,11 @@ object SbtHeader extends AutoPlugin {
     headers := Map.empty
   )
 
+  def automate = Seq(
+    (compile in Compile) <<= (compile in Compile) dependsOn (createHeaders in Compile),
+    (compile in Test) <<= (compile in Test) dependsOn (createHeaders in Test)
+  )
+
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
     val touchedFiles = files
       .groupBy(_.extension)
