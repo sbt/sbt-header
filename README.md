@@ -42,15 +42,15 @@ headers := Map(
 )
 ```
 
-The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/Apache2_0.scala) can be added as follows:
+The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/Apache2_0.scala) and can be added as follows:
 
 ``` scala
 headers := Map(
-      "scala" ->(
-        HeaderPattern.cStyleBlockComment,
-        Apache2_0("2015", "Heiko Seeberger").toString()
-        )
-    )
+  "scala" -> (
+    HeaderPattern.cStyleBlockComment,
+    Apache2_0("2015", "Heiko Seeberger").toString
+  )
+)
 ```
 
 Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines two widely used patterns:
