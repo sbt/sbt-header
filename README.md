@@ -42,6 +42,17 @@ headers := Map(
 )
 ```
 
+The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/Apache2_0.scala) can be added as follows:
+
+``` scala
+headers := Map(
+      "scala" ->(
+        HeaderPattern.cStyleBlockComment,
+        Apache2_0("2015", "Heiko Seeberger").toString()
+        )
+    )
+```
+
 Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines two widely used patterns:
 - `cStyleBlockComment`, e.g. for Scala and Java
 - `hashLineComment`, e.g. for Bash, Pyhon and HOCON
@@ -59,12 +70,7 @@ In order to create or update file headers, execute the `createHeaders` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-If you want to automate header creation/update for `Compile` and `Test` configurations, add the following settings to your build:
-
-``` scala
-inConfig(Compile)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
-inConfig(Test)(compileInputs.in(compile) <<= compileInputs.in(compile).dependsOn(createHeaders.in(compile)))
-```
+If you want to automate header creation/update for `Compile` and `Test` configurations, add the [SbtHeader.automate](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/SbtHeader.scala#L65) settings
 
 ## Contribution policy ##
 
