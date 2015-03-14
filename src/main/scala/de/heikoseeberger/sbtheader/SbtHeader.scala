@@ -27,14 +27,13 @@ import scala.util.matching.Regex
 object SbtHeader extends AutoPlugin {
 
   object autoImport {
-
-    object HeaderPattern {
-      val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
-      val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
-    }
-
     val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
     val createHeaders = taskKey[Iterable[File]]("Create/update headers")
+  }
+
+  object HeaderPattern {
+    val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
+    val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
   }
 
   import autoImport._
@@ -45,10 +44,13 @@ object SbtHeader extends AutoPlugin {
 
   override def requires = plugins.CorePlugin
 
-  override def projectSettings =
-    inConfig(Compile)(toBeScopedSettings) ++ inConfig(Test)(toBeScopedSettings) ++ notToBeScopedSettings
+  override def projectSettings = settings(Compile, Test)
 
-  def toBeScopedSettings = List(
+  def settings(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(notToBeScopedSettings) {
+    _ ++ inConfig(_)(toBeScopedSettings)
+  }
+
+  def toBeScopedSettings: Seq[Setting[_]] = List(
     unmanagedSources in createHeaders := unmanagedSources.value,
     unmanagedResources in createHeaders := unmanagedResources.value,
     createHeaders := createHeadersTask(
@@ -58,14 +60,13 @@ object SbtHeader extends AutoPlugin {
     )
   )
 
-  def notToBeScopedSettings = List(
+  def notToBeScopedSettings: Seq[Setting[_]] = List(
     headers := Map.empty
   )
 
-  def automate = Seq(
-    (compile in Compile) <<= (compile in Compile) dependsOn (createHeaders in Compile),
-    (compile in Test) <<= (compile in Test) dependsOn (createHeaders in Test)
-  )
+  def automate(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
+    _ ++ inConfig(_)(compile <<= compile.dependsOn(createHeaders))
+  }
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
     val touchedFiles = files
@@ -73,7 +74,7 @@ object SbtHeader extends AutoPlugin {
       .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
       .flatten
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text, log)) }
-    if (!touchedFiles.isEmpty)
+    if (touchedFiles.nonEmpty)
       log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
     touchedFiles
   }

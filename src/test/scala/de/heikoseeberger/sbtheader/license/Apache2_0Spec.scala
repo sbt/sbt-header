@@ -20,11 +20,11 @@ import org.scalatest.{ Matchers, WordSpec }
 
 class Apache2_0Spec extends WordSpec with Matchers {
 
-  "Apache2_0" should {
+  "apply" should {
 
-    "contain copyright year and owner" in {
-      val apache2_0 = Apache2_0("2015", "Heiko Seeberger")
-      val expectedLicenseHeader =
+    "return the Apache 2.0 license with the given copyright year and owner" in {
+      val (_, apache2_0) = Apache2_0("2015", "Heiko Seeberger")
+      val expected =
         s"""|/*
             | * Copyright 2015 Heiko Seeberger
             | *
@@ -42,7 +42,7 @@ class Apache2_0Spec extends WordSpec with Matchers {
             | */
             |
             |""".stripMargin
-      apache2_0.toString shouldBe expectedLicenseHeader
+      apache2_0 shouldBe expected
     }
   }
 }

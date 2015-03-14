@@ -20,7 +20,7 @@ import org.scalatest.{ Matchers, WordSpec }
 
 class SbtHeaderSpec extends WordSpec with Matchers {
 
-  import SbtHeader.autoImport._
+  import SbtHeader._
 
   "HeaderPattern.cStyleBlockComment" should {
 
