@@ -18,9 +18,9 @@ package de.heikoseeberger.sbtheader
 
 import org.scalatest.{ Matchers, WordSpec }
 
-class SbtHeaderSpec extends WordSpec with Matchers {
+class HeaderPluginSpec extends WordSpec with Matchers {
 
-  import SbtHeader._
+  import HeaderPlugin._
 
   "HeaderPattern.cStyleBlockComment" should {
 

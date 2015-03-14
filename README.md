@@ -15,9 +15,22 @@ In order to add the sbt-header plugin to your build, add the following line to `
 addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.2.0")
 ```
 
+If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:
+
+``` scala
+import de.heikoseeberger.sbtheader.HeaderPlugin
+
+object Build extends AutoPlugin {
+  override def requires = ... && HeaderPlugin
+  ...
+}
+```
+
 You have to define which source or resource files should be considered by sbt-header and if so, how the headers should look like. sbt-header uses a mapping from file extension to header pattern and text for that purpose, specified with the `headers` setting. Here's an example:
 
 ``` scala
+import de.heikoseeberger.sbtheader.HeaderPattern
+
 headers := Map(
   "scala" -> (
     HeaderPattern.cStyleBlockComment,
@@ -45,6 +58,8 @@ headers := Map(
 The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/Apache2_0.scala) and can be added as follows:
 
 ``` scala
+import de.heikoseeberger.sbtheader.license.Apache2_0
+
 headers := Map(
   "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
@@ -59,7 +74,7 @@ By the way, first lines starting with shebang are not touched by sbt-header.
 By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
 ``` scala
-SbtHeader.settings(It, MultiJvm)
+HeaderPlugin.settingsFor(It, MultiJvm)
 ```
 
 ## Usage
@@ -73,10 +88,20 @@ In order to create or update file headers, execute the `createHeaders` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-If you want to automate header creation/update on compile:
+### Automation
+
+If you want to automate header creation/update on compile, enable the `AutomateHeaderPlugin`:
 
 ``` scala
-SbtHeader.automate(Compile, Test)
+lazy val myProject = project
+  .in(file("."))
+  .enablePlugins(AutomateHeaderPlugin)
+```
+
+By default automation takes `Compile` and `Test` configurations into account. If you need more, just add them:
+
+``` scala
+AutomateHeaderPlugin.automateFor(It, MultiJvm)
 ```
 
 ## Contribution policy ##

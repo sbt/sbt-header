@@ -1,13 +1,11 @@
-import de.heikoseeberger.sbtheader.SbtHeader
-import de.heikoseeberger.sbtheader.SbtHeader.HeaderPattern
+import de.heikoseeberger.sbtheader.HeaderPattern
 import de.heikoseeberger.sbtheader.license.Apache2_0
+
+lazy val sbtHeaderTest = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)
 
 name := "sbt-header-test"
 
-SbtHeader.automate(Compile, Test)
-
-headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger"),
+headers := headers.value ++ Map(
   "py" -> (
     HeaderPattern.hashLineComment,
     """|# Copyright 2015 Heiko Seeberger
@@ -16,7 +14,7 @@ headers := Map(
        |# you may not use this file except in compliance with the License.
        |# You may obtain a copy of the License at
        |#
-       |#    http://www.apache.org/licenses/LICENSE-2.0
+       |#     http://www.apache.org/licenses/LICENSE-2.0
        |#
        |# Unless required by applicable law or agreed to in writing, software
        |# distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +32,7 @@ headers := Map(
        |# you may not use this file except in compliance with the License.
        |# You may obtain a copy of the License at
        |#
-       |#    http://www.apache.org/licenses/LICENSE-2.0
+       |#     http://www.apache.org/licenses/LICENSE-2.0
        |#
        |# Unless required by applicable law or agreed to in writing, software
        |# distributed under the License is distributed on an "AS IS" BASIS,
