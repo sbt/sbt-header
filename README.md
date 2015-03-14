@@ -12,7 +12,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.1.2")
+addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.2.0")
 ```
 
 You have to define which source or resource files should be considered by sbt-header and if so, how the headers should look like. sbt-header uses a mapping from file extension to header pattern and text for that purpose, specified with the `headers` setting. Here's an example:
@@ -46,10 +46,7 @@ The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt
 
 ``` scala
 headers := Map(
-  "scala" -> (
-    HeaderPattern.cStyleBlockComment,
-    Apache2_0("2015", "Heiko Seeberger").toString
-  )
+  "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
 ```
 
@@ -58,6 +55,12 @@ Notice that for the header pattern you have to provide a `Regex` which extracts 
 - `hashLineComment`, e.g. for Bash, Pyhon and HOCON
 
 By the way, first lines starting with shebang are not touched by sbt-header.
+
+By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
+
+``` scala
+SbtHeader.settings(It, MultiJvm)
+```
 
 ## Usage
 
@@ -70,7 +73,11 @@ In order to create or update file headers, execute the `createHeaders` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-If you want to automate header creation/update for `Compile` and `Test` configurations, add the [SbtHeader.automate](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/SbtHeader.scala#L65) settings
+If you want to automate header creation/update on compile:
+
+``` scala
+SbtHeader.automate(Compile, Test)
+```
 
 ## Contribution policy ##
 
