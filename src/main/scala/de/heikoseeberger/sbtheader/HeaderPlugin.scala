@@ -31,7 +31,7 @@ object HeaderPattern {
 
 /**
  * Enable this plugin to automate header creation/update on compile. By default the `Compile` and `Test` configurations
- * are considered; use [[AutomateHeaderPlugin.automate]] to add further ones.
+ * are considered; use [[AutomateHeaderPlugin.automateFor]] to add further ones.
  */
 object AutomateHeaderPlugin extends AutoPlugin {
 
