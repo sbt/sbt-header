@@ -1,4 +1,6 @@
-lazy val sbtHeader = project.in(file("."))
+lazy val sbtHeader = project
+  .in(file("."))
+  .enablePlugins(AutomateHeaderPlugin)
 
 name := "sbt-header"
 

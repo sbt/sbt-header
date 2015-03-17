@@ -1,7 +1,7 @@
 import com.typesafe.sbt.SbtGit
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-import de.heikoseeberger.sbtheader.SbtHeader
+import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import sbt._
 import sbt.Keys._
@@ -9,7 +9,7 @@ import scalariform.formatter.preferences._
 
 object Build extends AutoPlugin {
 
-  override def requires = plugins.JvmPlugin
+  override def requires = plugins.JvmPlugin && HeaderPlugin
 
   override def trigger = allRequirements
 
@@ -48,9 +48,8 @@ object Build extends AutoPlugin {
       SbtGit.git.baseVersion := "1.4.0"
     ) ++
     // Header settings
-    SbtHeader.automate(Compile, Test) ++
     List(
-      SbtHeader.autoImport.headers := Map(
+      HeaderPlugin.autoImport.headers := Map(
         "scala" -> Apache2_0("2015", "Heiko Seeberger")
       )
     )
