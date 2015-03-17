@@ -24,16 +24,35 @@ import sbt.Keys._
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
 
-object SbtHeader extends AutoPlugin {
+object HeaderPattern {
+  val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
+  val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
+}
+
+/**
+ * Enable this plugin to automate header creation/update on compile. By default the `Compile` and `Test` configurations
+ * are considered; use [[AutomateHeaderPlugin.automate]] to add further ones.
+ */
+object AutomateHeaderPlugin extends AutoPlugin {
+
+  override def requires = HeaderPlugin
+
+  override def projectSettings = automateFor(Compile, Test)
+
+  def automateFor(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
+    _ ++ inConfig(_)(compile := compile.dependsOn(HeaderPlugin.autoImport.createHeaders).value)
+  }
+}
+
+/**
+ * This plugin adds the [[HeaderPlugin.autoImport.createHeaders]] task to created/update headers. The patterns and
+ * texts for the headers are specified via [[HeaderPlugin.autoImport.headers]].
+ */
+object HeaderPlugin extends AutoPlugin {
 
   object autoImport {
     val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
     val createHeaders = taskKey[Iterable[File]]("Create/update headers")
-  }
-
-  object HeaderPattern {
-    val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
-    val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
   }
 
   import autoImport._
@@ -42,11 +61,11 @@ object SbtHeader extends AutoPlugin {
 
   override def trigger = allRequirements
 
-  override def requires = plugins.CorePlugin
+  override def requires = plugins.JvmPlugin
 
-  override def projectSettings = settings(Compile, Test)
+  override def projectSettings = settingsFor(Compile, Test) ++ notToBeScopedSettings
 
-  def settings(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(notToBeScopedSettings) {
+  def settingsFor(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
     _ ++ inConfig(_)(toBeScopedSettings)
   }
 
@@ -63,10 +82,6 @@ object SbtHeader extends AutoPlugin {
   def notToBeScopedSettings: Seq[Setting[_]] = List(
     headers := Map.empty
   )
-
-  def automate(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
-    _ ++ inConfig(_)(compile <<= compile.dependsOn(createHeaders))
-  }
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
     val touchedFiles = files
