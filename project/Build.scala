@@ -45,7 +45,7 @@ object Build extends AutoPlugin {
     // Git settings
     SbtGit.versionWithGit ++
     List(
-      SbtGit.git.baseVersion := "1.3.0"
+      SbtGit.git.baseVersion := "1.4.0"
     ) ++
     // Header settings
     SbtHeader.automate(Compile, Test) ++
