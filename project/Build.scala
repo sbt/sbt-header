@@ -43,7 +43,6 @@ object Build extends AutoPlugin {
         .setPreference(DoubleIndentClassDeclaration, true)
     ) ++
     // Git settings
-    SbtGit.versionWithGit ++
     List(
       SbtGit.git.baseVersion := "1.4.0"
     ) ++
