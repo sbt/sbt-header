@@ -1,4 +1,4 @@
-import com.typesafe.sbt.SbtGit
+import com.typesafe.sbt.GitPlugin
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import de.heikoseeberger.sbtheader.HeaderPlugin
@@ -9,7 +9,7 @@ import scalariform.formatter.preferences._
 
 object Build extends AutoPlugin {
 
-  override def requires = plugins.JvmPlugin && HeaderPlugin
+  override def requires = plugins.JvmPlugin && HeaderPlugin && GitPlugin
 
   override def trigger = allRequirements
 
@@ -44,7 +44,7 @@ object Build extends AutoPlugin {
     ) ++
     // Git settings
     List(
-      SbtGit.git.baseVersion := "1.4.0"
+      GitPlugin.autoImport.git.baseVersion := "1.4.0"
     ) ++
     // Header settings
     List(
