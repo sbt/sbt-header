@@ -5,7 +5,7 @@ import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import sbt._
 import sbt.Keys._
-import scalariform.formatter.preferences._
+import scalariform.formatter.preferences. { AlignSingleLineCaseStatements, DoubleIndentClassDeclaration }
 
 object Build extends AutoPlugin {
 
@@ -36,8 +36,6 @@ object Build extends AutoPlugin {
     SbtScalariform.scalariformSettings ++
     List(
       ScalariformKeys.preferences := ScalariformKeys.preferences.value
-        .setPreference(AlignArguments, true)
-        .setPreference(AlignParameters, true)
         .setPreference(AlignSingleLineCaseStatements, true)
         .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
         .setPreference(DoubleIndentClassDeclaration, true)
