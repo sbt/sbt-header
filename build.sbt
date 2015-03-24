@@ -4,10 +4,10 @@ lazy val sbtHeader = project
 
 name := "sbt-header"
 
+sbtPlugin := true
+
 libraryDependencies ++= List(
   Library.scalaTest % "test"
 )
-
-sbtPlugin := true
 
 initialCommands := """|import de.heikoseeberger.sbtheader._""".stripMargin
