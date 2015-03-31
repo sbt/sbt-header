@@ -29,7 +29,7 @@ object HeaderPattern {
   val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
 }
 
-object HeaderKeys {
+object HeaderKey {
   val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
   val createHeaders = taskKey[Iterable[File]]("Create/update headers")
 }
@@ -45,17 +45,17 @@ object AutomateHeaderPlugin extends AutoPlugin {
   override def projectSettings = automateFor(Compile, Test)
 
   def automateFor(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
-    _ ++ inConfig(_)(compile := compile.dependsOn(HeaderKeys.createHeaders).value)
+    _ ++ inConfig(_)(compile := compile.dependsOn(HeaderKey.createHeaders).value)
   }
 }
 
 /**
- * This plugin adds the [[HeaderKeys.createHeaders]] task to created/update headers. The patterns and
- * texts for the headers are specified via [[HeaderKeys.headers]].
+ * This plugin adds the [[HeaderKey.createHeaders]] task to created/update headers. The patterns and
+ * texts for the headers are specified via [[HeaderKey.headers]].
  */
 object HeaderPlugin extends AutoPlugin {
 
-  val autoImport = HeaderKeys
+  val autoImport = HeaderKey
 
   import autoImport._
 
