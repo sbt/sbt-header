@@ -29,6 +29,11 @@ object HeaderPattern {
   val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
 }
 
+object HeaderKey {
+  val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
+  val createHeaders = taskKey[Iterable[File]]("Create/update headers")
+}
+
 /**
  * Enable this plugin to automate header creation/update on compile. By default the `Compile` and `Test` configurations
  * are considered; use [[AutomateHeaderPlugin.automateFor]] to add further ones.
@@ -40,20 +45,17 @@ object AutomateHeaderPlugin extends AutoPlugin {
   override def projectSettings = automateFor(Compile, Test)
 
   def automateFor(configurations: Configuration*): Seq[Setting[_]] = configurations.foldLeft(List.empty[Setting[_]]) {
-    _ ++ inConfig(_)(compile := compile.dependsOn(HeaderPlugin.autoImport.createHeaders).value)
+    _ ++ inConfig(_)(compile := compile.dependsOn(HeaderKey.createHeaders).value)
   }
 }
 
 /**
- * This plugin adds the [[HeaderPlugin.autoImport.createHeaders]] task to created/update headers. The patterns and
- * texts for the headers are specified via [[HeaderPlugin.autoImport.headers]].
+ * This plugin adds the [[HeaderKey.createHeaders]] task to created/update headers. The patterns and
+ * texts for the headers are specified via [[HeaderKey.headers]].
  */
 object HeaderPlugin extends AutoPlugin {
 
-  object autoImport {
-    val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
-    val createHeaders = taskKey[Iterable[File]]("Create/update headers")
-  }
+  val autoImport = HeaderKey
 
   import autoImport._
 
