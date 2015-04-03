@@ -63,7 +63,8 @@ The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt
 import de.heikoseeberger.sbtheader.license.Apache2_0
 
 headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger")
+  "scala" -> Apache2_0("2015", "Heiko Seeberger"),
+  "conf" -> Apache2_0("2015", "Heiko Seeberger", "#")
 )
 ```
 
