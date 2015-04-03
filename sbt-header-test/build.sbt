@@ -1,5 +1,4 @@
 import de.heikoseeberger.sbtheader.HeaderPattern
-import de.heikoseeberger.sbtheader.license.Apache2_0
 
 lazy val sbtHeaderTest = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)
 
