@@ -22,17 +22,17 @@ import scala.util.matching.Regex
 package object sbtheader {
 
   // format: OFF
-  private[sbtheader] val Traversable = scala.collection.immutable.Traversable
-  private[sbtheader] type Traversable[+A] = scala.collection.immutable.Traversable[A]
+  val Traversable = scala.collection.immutable.Traversable
+  type Traversable[+A] = scala.collection.immutable.Traversable[A]
 
-  private[sbtheader] val Iterable = scala.collection.immutable.Iterable
-  private[sbtheader] type Iterable[+A] = scala.collection.immutable.Iterable[A]
+  val Iterable = scala.collection.immutable.Iterable
+  type Iterable[+A] = scala.collection.immutable.Iterable[A]
 
-  private[sbtheader] val Seq = scala.collection.immutable.Seq
-  private[sbtheader] type Seq[+A] = scala.collection.immutable.Seq[A]
+  val Seq = scala.collection.immutable.Seq
+  type Seq[+A] = scala.collection.immutable.Seq[A]
 
-  private[sbtheader] val IndexedSeq = scala.collection.immutable.IndexedSeq
-  private[sbtheader] type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
+  val IndexedSeq = scala.collection.immutable.IndexedSeq
+  type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
   // format: ON
 
   object FileOps {
