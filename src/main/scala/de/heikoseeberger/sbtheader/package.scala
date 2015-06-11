@@ -47,5 +47,5 @@ package object sbtheader {
       }
   }
 
-  val newLine: String = f"%n"
+  val newLine: String = System.getProperty("line.separator")
 }
