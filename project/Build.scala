@@ -1,6 +1,5 @@
 import com.typesafe.sbt.GitPlugin
 import com.typesafe.sbt.SbtScalariform
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import de.heikoseeberger.sbtheader.HeaderPlugin
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import sbt._
@@ -33,9 +32,8 @@ object Build extends AutoPlugin {
       publishMavenStyle := false
     ) ++
     // Scalariform settings
-    SbtScalariform.scalariformSettings ++
     List(
-      ScalariformKeys.preferences := ScalariformKeys.preferences.value
+      SbtScalariform.autoImport.preferences := SbtScalariform.autoImport.preferences.value
         .setPreference(AlignSingleLineCaseStatements, true)
         .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
         .setPreference(DoubleIndentClassDeclaration, true)
