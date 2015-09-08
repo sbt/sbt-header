@@ -6,7 +6,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 
 ## Requirements
 
-- Java 7 or higher
+- Java 8 or higher
 - sbt 0.13.8 or higher
 
 ## Configuration
