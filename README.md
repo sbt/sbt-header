@@ -68,11 +68,14 @@ headers := Map(
 )
 ```
 
-Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines two widely used patterns:
+Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines three widely used patterns:
 - `cStyleBlockComment`, e.g. for Scala and Java
-- `hashLineComment`, e.g. for Bash, Pyhon and HOCON
+- `cppStyleLineComment`, e.g. for C++ and Protobuf
+- `hashLineComment`, e.g. for Bash, Python and HOCON
 
 By the way, first lines starting with shebang are not touched by sbt-header.
+
+You can also declare your own quite easily using the `HeaderPattern.commentBetween` and `HeaderPattern.commentStartingWith` functions.
 
 By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
