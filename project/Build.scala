@@ -28,7 +28,6 @@ object Build extends AutoPlugin {
       ),
       unmanagedSourceDirectories.in(Compile) := List(scalaSource.in(Compile).value),
       unmanagedSourceDirectories.in(Test) := List(scalaSource.in(Test).value),
-      publishTo := Some(if (isSnapshot.value) Classpaths.sbtPluginSnapshots else Classpaths.sbtPluginReleases),
       publishMavenStyle := false
     ) ++
     // Scalariform settings
