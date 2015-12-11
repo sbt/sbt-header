@@ -25,8 +25,14 @@ import scala.collection.JavaConversions._
 import scala.util.matching.Regex
 
 object HeaderPattern {
-  val cStyleBlockComment = """(?s)(/\*(?!\*).*?\*/(?:\n|\r|\r\n)+)(.*)""".r
-  val hashLineComment = """(?s)((?:#[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""".r
+  val cStyleBlockComment = commentBetween("""/\*""", "*", """\*/""")
+  val cppStyleLineComment = commentStartingWith("//")
+  val hashLineComment = commentStartingWith("#")
+
+  def commentBetween(start: String, middle: String, end: String): Regex =
+    new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")
+  def commentStartingWith(start: String): Regex =
+    new Regex(raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""")
 }
 
 object HeaderKey {
