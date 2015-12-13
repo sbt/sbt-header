@@ -22,6 +22,10 @@ target
 .ensime
 .ensime_lucene
 
+# Vim
+*.swo
+*.swp
+
 # Mac
 .DS_Store
 

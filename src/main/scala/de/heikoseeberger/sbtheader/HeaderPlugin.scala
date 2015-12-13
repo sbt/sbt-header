@@ -23,6 +23,7 @@ import sbt._
 import sbt.Keys._
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
+import java.io.FileInputStream
 
 object HeaderPattern {
   val cStyleBlockComment = commentBetween("""/\*""", "*", """\*/""")
@@ -32,7 +33,7 @@ object HeaderPattern {
   def commentBetween(start: String, middle: String, end: String): Regex =
     new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")
   def commentStartingWith(start: String): Regex =
-    new Regex(raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))+(?:\n|\r|\r\n)+)(.*)""")
+    new Regex(raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:#[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)""")
 }
 
 object HeaderKey {
@@ -64,8 +65,6 @@ object HeaderPlugin extends AutoPlugin {
   val autoImport = HeaderKey
 
   import autoImport._
-
-  private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 
   override def trigger = allRequirements
 
@@ -103,21 +102,8 @@ object HeaderPlugin extends AutoPlugin {
   }
 
   private def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
-    def write(text: String) = Files.write(file.toPath, text.split(newLine).toList, UTF_8).toFile
+    def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
     log.debug(s"About to create/update header for $file")
-    val (firstLine, text) = Files.readAllLines(file.toPath, UTF_8).mkString(newLine) match {
-      case shebangAndBody(s, b) => (s, b)
-      case other                => ("", other)
-    }
-    log.debug(s"First line of $file is:$newLine$firstLine")
-    log.debug(s"Text of $file is:$newLine$text")
-    val modifiedText = text match {
-      case headerPattern(`headerText`, _) => None
-      case headerPattern(_, body)         => Some(firstLine + headerText + body)
-      case body if body.isEmpty           => None
-      case body                           => Some(firstLine + headerText + body.replaceAll("""^\s+""", "")) // Trim left
-    }
-    log.debug(s"Modified text of $file is:$newLine$modifiedText")
-    modifiedText.map(write)
+    HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).getText.map(write)
   }
 }
