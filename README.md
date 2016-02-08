@@ -57,7 +57,12 @@ headers := Map(
 )
 ```
 
-The Apache 2.0 license has been pre-canned in [Apache2_0](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/Apache2_0.scala) and can be added as follows:
+Three licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
+- [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+- [MIT License](https://opensource.org/licenses/MIT)
+- BSD [2 Clause](https://opensource.org/licenses/BSD-2-Clause) and [3 Clause](https://opensource.org/licenses/BSD-3-Clause) License
+
+They can be added as follows:
 
 ``` scala
 import de.heikoseeberger.sbtheader.license.Apache2_0
