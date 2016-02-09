@@ -57,10 +57,12 @@ headers := Map(
 )
 ```
 
-Three licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
+The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
 - [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 - [MIT License](https://opensource.org/licenses/MIT)
 - BSD [2 Clause](https://opensource.org/licenses/BSD-2-Clause) and [3 Clause](https://opensource.org/licenses/BSD-3-Clause) License
+- [GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.en.html)
+- [GNU Lesser General Public License v3](http://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 They can be added as follows:
 
