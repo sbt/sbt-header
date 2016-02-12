@@ -24,7 +24,7 @@ class BSD2ClauseSpec extends WordSpec with Matchers {
   "apply" should {
 
     "return the BSD 2 Clause license with the given copyright year and owner" in {
-      val (headerPattern, mit) = BSD2Clause("2015", "Heiko Seeberger")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger")
       val expected =
         s"""|/*
             | * Copyright (c) 2015, Heiko Seeberger
@@ -54,12 +54,12 @@ class BSD2ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      mit shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.cStyleBlockComment
     }
 
     "return the BSD 2 Clause license with hash style" in {
-      val (headerPattern, mit) = BSD2Clause("2015", "Heiko Seeberger", "#")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "#")
       val expected =
         s"""|# Copyright (c) 2015, Heiko Seeberger
             |# All rights reserved.
@@ -87,12 +87,12 @@ class BSD2ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      mit shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.hashLineComment
     }
 
     "return the BSD 2 Clause license with C++ style" in {
-      val (headerPattern, mit) = BSD2Clause("2015", "Heiko Seeberger", "//")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "//")
       val expected =
         s"""|// Copyright (c) 2015, Heiko Seeberger
             |// All rights reserved.
@@ -120,7 +120,7 @@ class BSD2ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      mit shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.cppStyleLineComment
     }
 
