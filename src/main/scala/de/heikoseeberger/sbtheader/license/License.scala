@@ -26,6 +26,7 @@ trait License {
     commentStyle match {
       case "*" => (cStyleBlockComment, CommentBlock.cStyle(text))
       case "#" => (hashLineComment, CommentBlock.hashLines(text))
+      case "//" => (cppStyleLineComment, CommentBlock.cppStyle(text))
       case _ =>
         throw new IllegalArgumentException(s"Comment style '$commentStyle' not supported")
     }
