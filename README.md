@@ -75,6 +75,11 @@ headers := Map(
 )
 ```
 
+The built-in licenses support three comment styles:
+- C style block comments (default)
+- C++ style line comments (commentStyle = "//")
+- Hash line comments (commentStyle = "#")
+
 Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines three widely used patterns:
 - `cStyleBlockComment`, e.g. for Scala and Java
 - `cppStyleLineComment`, e.g. for C++ and Protobuf
