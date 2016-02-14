@@ -36,6 +36,22 @@ object HeaderPattern {
     new Regex(raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:#[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)""")
 }
 
+object CommentStyleMapping {
+  import de.heikoseeberger.sbtheader.license._
+
+  val JavaBlockComments = "java" -> "*"
+  val ScalaBlockComments = "scala" -> "*"
+
+  def createFrom(
+    license: License, 
+    yyyy: String, 
+    copyrightOwner: String, 
+    mappings: Seq[(String, String)] = Seq(JavaBlockComments, ScalaBlockComments)
+  ): Map[String, (Regex, String)] = {
+    mappings.map { mapping => mapping._1 -> license(yyyy, copyrightOwner, mapping._2) }.toMap
+  }
+}
+
 object HeaderKey {
   val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
   val createHeaders = taskKey[Iterable[File]]("Create/update headers")
