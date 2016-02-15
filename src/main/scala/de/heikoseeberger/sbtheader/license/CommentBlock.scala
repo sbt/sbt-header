@@ -36,5 +36,6 @@ object CommentBlock {
 
   val cStyle = new CommentBlock("/*", " *", " */" + System.lineSeparator())
   val hashLines = new CommentBlock("", "#", "")
+  val cppStyle = new CommentBlock("", "//", "")
 
 }
