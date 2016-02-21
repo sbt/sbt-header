@@ -80,6 +80,15 @@ The built-in licenses support three comment styles:
 - C++ style line comments (commentStyle = "//")
 - Hash line comments (commentStyle = "#")
 
+The CommentStyleMapping object in [HeaderPlugin](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/HeaderPlugin.scala) provides default mappings for common file types, so that they don't have to be configured manually:
+
+``` scala
+import de.heikoseeberger.sbtheader.license.Apache2_0
+import de.heikoseeberger.sbtheader.CommentStyleMapping._
+
+headers := createFrom(Apache2_0, "2015", "Heiko Seeberger")
+```
+
 Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines three widely used patterns:
 - `cStyleBlockComment`, e.g. for Scala and Java
 - `cppStyleLineComment`, e.g. for C++ and Protobuf
