@@ -27,8 +27,8 @@ class CommentBlock(blockPrefix: String, linePrefix: String, blockSuffix: String)
   }
 
   private val prependWithLinePrefix: String => String = {
-    case ""    => linePrefix
-    case line  => linePrefix + " " + line
+    case ""   => linePrefix
+    case line => linePrefix + " " + line
   }
 }
 

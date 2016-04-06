@@ -26,7 +26,7 @@ import scala.util.matching.Regex
 import java.io.FileInputStream
 
 object HeaderPattern {
-  val cStyleBlockComment = commentBetween("""/\*""", "*", """\*/""")
+  val cStyleBlockComment = commentBetween("""/\**""", "*", """\*/""")
   val cppStyleLineComment = commentStartingWith("//")
   val hashLineComment = commentStartingWith("#")
 
@@ -43,9 +43,9 @@ object CommentStyleMapping {
   val ScalaBlockComments = "scala" -> "*"
 
   def createFrom(
-    license: License, 
-    yyyy: String, 
-    copyrightOwner: String, 
+    license: License,
+    yyyy: String,
+    copyrightOwner: String,
     mappings: Seq[(String, String)] = Seq(JavaBlockComments, ScalaBlockComments)
   ): Map[String, (Regex, String)] = {
     mappings.map { mapping => mapping._1 -> license(yyyy, copyrightOwner, mapping._2) }.toMap
