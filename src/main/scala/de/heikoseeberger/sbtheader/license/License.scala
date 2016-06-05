@@ -24,8 +24,8 @@ trait License {
   def apply(yyyy: String, copyrightOwner: String, commentStyle: String = "*"): (Regex, String) = {
     val text = createLicenseText(yyyy, copyrightOwner)
     commentStyle match {
-      case "*" => (cStyleBlockComment, CommentBlock.cStyle(text))
-      case "#" => (hashLineComment, CommentBlock.hashLines(text))
+      case "*"  => (cStyleBlockComment, CommentBlock.cStyle(text))
+      case "#"  => (hashLineComment, CommentBlock.hashLines(text))
       case "//" => (cppStyleLineComment, CommentBlock.cppStyle(text))
       case _ =>
         throw new IllegalArgumentException(s"Comment style '$commentStyle' not supported")

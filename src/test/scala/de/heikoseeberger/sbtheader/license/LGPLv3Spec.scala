@@ -17,7 +17,7 @@
 package de.heikoseeberger.sbtheader.license
 
 import de.heikoseeberger.sbtheader.HeaderPattern
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 class LGPLv3Spec extends WordSpec with Matchers {
 

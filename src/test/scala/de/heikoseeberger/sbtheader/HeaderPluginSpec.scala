@@ -72,6 +72,22 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                     |""".stripMargin
       HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
+
+    "match a left indented header with a trailing new line followed by a body with a ScalaDoc comment" in {
+      val header = """|/**
+                      | * comment/1
+                      | * comment/2
+                      | */
+                      |""".stripMargin
+      val body = """|/**
+                    |  * ScalaDoc for Foo
+                    |  */
+                    |class Foo {
+                    |  val bar = "bar"
+                    |}
+                    |""".stripMargin
+      HeaderPattern.cStyleBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
   }
 
   "HeaderPattern.hashLineComment" should {
