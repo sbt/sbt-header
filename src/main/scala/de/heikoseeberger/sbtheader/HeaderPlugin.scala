@@ -26,7 +26,7 @@ import scala.util.matching.Regex
 import java.io.FileInputStream
 
 object HeaderPattern {
-  val cStyleBlockComment = commentBetween("""/\**""", "*", """\*/""")
+  val cStyleBlockComment = commentBetween("""/\*+""", "*", """\*/""")
   val cppStyleLineComment = commentStartingWith("//")
   val hashLineComment = commentStartingWith("#")
 
