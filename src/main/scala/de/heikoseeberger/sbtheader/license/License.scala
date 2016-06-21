@@ -78,6 +78,26 @@ object MIT extends License {
   }
 }
 
+object MPLv2 extends License {
+  override def createLicenseText(yyyy: String, copyrightOwner: String) = {
+    s"""|Copyright (c) $yyyy $copyrightOwner
+        |
+        |This Source Code Form is subject to the terms of the Mozilla Public
+        |License, v. 2.0. If a copy of the MPL was not distributed with this
+        |file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        |""".stripMargin
+  }
+}
+
+object MPLv2_NoCopyright extends License {
+  override def createLicenseText(yyyy: String, copyrightOwner: String) = {
+    s"""|This Source Code Form is subject to the terms of the Mozilla Public
+        |License, v. 2.0. If a copy of the MPL was not distributed with this
+        |file, You can obtain one at http://mozilla.org/MPL/2.0/.
+        |""".stripMargin
+  }
+}
+
 object BSD2Clause extends License {
   override def createLicenseText(yyyy: String, copyrightOwner: String) = {
     s"""|Copyright (c) $yyyy, $copyrightOwner
