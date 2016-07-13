@@ -7,7 +7,7 @@ headers := Map(
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 checkFileContents := {
   val actualPath = (scalaSource.in(Compile).value / "Main.scala").toString
-  val expectedPath = (scalaSource.in(Compile).value / "Main.scala_expected").toString
+  val expectedPath = (resourceDirectory.in(Compile).value / "Main.scala_expected").toString
 
   val actual = scala.io.Source.fromFile(actualPath).mkString
   val expected = scala.io.Source.fromFile(expectedPath).mkString
