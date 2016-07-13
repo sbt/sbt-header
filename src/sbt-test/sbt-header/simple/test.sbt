@@ -17,5 +17,4 @@ checkFileContents := {
         |  actual:   $actualPath
         |  expected: $expectedPath
         |""".stripMargin)
-  ()
 }
