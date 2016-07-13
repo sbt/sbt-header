@@ -4,10 +4,10 @@ headers := Map(
   "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
 
-TaskKey[Unit]("check") <<= scalaSource in Compile map { (scalaSource) =>
-
-  val actualPath = (scalaSource / "Main.scala").toString
-  val expectedPath = (scalaSource / "Main.scala_expected").toString
+val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
+checkFileContents := {
+  val actualPath = (scalaSource.in(Compile).value / "Main.scala").toString
+  val expectedPath = (scalaSource.in(Compile).value / "Main.scala_expected").toString
 
   val actual = scala.io.Source.fromFile(actualPath).mkString
   val expected = scala.io.Source.fromFile(expectedPath).mkString
