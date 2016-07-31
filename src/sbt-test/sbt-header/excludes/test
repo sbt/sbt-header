@@ -1,0 +1,3 @@
+# check if headers get created
+> createHeaders
+> checkFileContents
