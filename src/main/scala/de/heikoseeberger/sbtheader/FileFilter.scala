@@ -21,10 +21,10 @@ import java.nio.file.FileSystems
 
 case class FileFilter(excludes: Seq[String]) {
 
-  // adding **/ to the start of the pattern so that users define their ignores relative to the project root
-  private val matchers = excludes.map(p => FileSystems.getDefault.getPathMatcher(s"glob:**/$p"))
-
   def filter(files: Seq[File]): Seq[File] = {
+    // adding **/ to the start of the pattern so that users define their ignores relative to the project root
+    val matchers = excludes.map(p => FileSystems.getDefault.getPathMatcher(s"glob:**/$p"))
+
     files.filterNot(f => matchers.exists(_.matches(f.toPath)))
   }
 }
