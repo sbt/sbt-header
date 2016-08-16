@@ -4,7 +4,7 @@ headers := Map(
   "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
 
-excludes := scala.collection.immutable.Seq(
+excludes := Seq(
   "src/main/scala/Excluded.scala",
   "src/main/scala/de/heikoseeberger/mixed/Excluded.scala",
   "src/main/scala/de/heikoseeberger/allexcluded/*.scala",
