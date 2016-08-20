@@ -54,6 +54,8 @@ object CommentStyleMapping {
 
 object HeaderKey {
   val headers = settingKey[Map[String, (Regex, String)]]("Header pattern and text by extension; empty by default")
+  /* explicitly use the default (mutable) Seq here */
+  val excludes = settingKey[scala.collection.Seq[String]]("File patterns for files to be excluded; empty by default")
   val createHeaders = taskKey[Iterable[File]]("Create/update headers")
 }
 
@@ -96,14 +98,17 @@ object HeaderPlugin extends AutoPlugin {
     unmanagedSources in createHeaders := unmanagedSources.value,
     unmanagedResources in createHeaders := unmanagedResources.value,
     createHeaders := createHeadersTask(
-      (unmanagedSources in createHeaders).value.toList ++ (unmanagedResources in createHeaders).value.toList,
+      FileFilter(Seq(excludes.value: _*)).filter(
+        (unmanagedSources in createHeaders).value.toList ++ (unmanagedResources in createHeaders).value.toList
+      ),
       headers.value,
       streams.value.log
     )
   )
 
   def notToBeScopedSettings: Seq[Setting[_]] = List(
-    headers := Map.empty
+    headers := Map.empty,
+    excludes := Seq.empty
   )
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
