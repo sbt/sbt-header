@@ -80,6 +80,7 @@ The most common licenses have been pre-canned in [License](https://github.com/sb
 - BSD [2 Clause](https://opensource.org/licenses/BSD-2-Clause) and [3 Clause](https://opensource.org/licenses/BSD-3-Clause) License
 - [GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.en.html)
 - [GNU Lesser General Public License v3](http://www.gnu.org/licenses/lgpl-3.0.en.html)
+- [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl.html)
 
 They can be added as follows:
 
