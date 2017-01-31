@@ -17,7 +17,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.6.0")
+addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.7.0")
 ```
 
 If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:
