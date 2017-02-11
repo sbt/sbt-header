@@ -1,7 +1,8 @@
 import de.heikoseeberger.sbtheader.license.Apache2_0
 
 headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger")
+  "scala" -> Apache2_0("2015", "Heiko Seeberger"),
+  "scala.html" -> Apache2_0("2015", "Heiko Seeberger", "@*")
 )
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
@@ -18,12 +19,13 @@ checkFileContents := {
 
     if (actual != expected) sys.error(
       s"""|Actual file contents do not match expected file contents!
+
           |  actual: $actualPath
           |$actual
           |
           |  expected: $expectedPath
           |$expected
           |""".stripMargin)
-
   }
 }
+
