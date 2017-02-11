@@ -37,16 +37,20 @@ object TwirlCommentBlock {
   private final val NL = System.lineSeparator()
 
   def apply(text: String): String = {
-    val lineLength = text.lines.map(_.length).max
+    val maxLineLength = text.lines.map(_.length).max
     def fillLine(line: String) = {
-      " * " + line + " " * (lineLength - line.length) + " *"
+      " * " + line + spaces(maxLineLength - line.length) + " *"
     }
 
-    var commentBlock = text.lines.map(fillLine).mkString(NL)
-    commentBlock = "@*" + "*" * lineLength + "***" + NL + commentBlock
-    commentBlock ++ NL ++ " " + "*" * lineLength + "****@" ++ NL + NL
+    val commentBlock = text.lines.map(fillLine).mkString(NL)
+    val firstLine = "@**" + stars(maxLineLength + 2)
+    val lastLine = " " + firstLine.reverse
+
+    firstLine ++ NL ++ commentBlock ++ NL ++ lastLine ++ NL ++ NL
   }
 
+  private def spaces(count: Int) = " " * count
+  private def stars(count: Int) = "*" * count
 }
 
 object CommentBlock {
