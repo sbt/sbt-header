@@ -14,12 +14,23 @@
  * limitations under the License.                                           *
  ****************************************************************************@
 
-@(customer: Customer, orders: List[Order])
+@*
+ * This template takes a single argument, a String containing a
+ * message to display.
+ *@
+@(message: String)
 
-<h1>Welcome @customer.name!</h1>
+@*
+ * Call the `main` template with two arguments. The first
+ * argument is a `String` with the title of the page, the second
+ * argument is an `Html` object containing the body of the page.
+ *@
+@main("Welcome to Play") {
 
-<ul>
-@for(order <- orders) {
-    <li>@order.title</li>
+    @*
+     * Get an `Html` object by calling the built-in Play welcome
+     * template and passing a `String` message.
+     *@
+    @play20.welcome(message, style = "Scala")
+
 }
-</ul>
