@@ -121,6 +121,7 @@ object HeaderPlugin extends AutoPlugin {
   )
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
+    log.debug(s"About to process headers for the following ${files.size} files:$newLine  ${files.mkString(s"$newLine  ")}")
     val touchedFiles = groupFilesByHeader(files, headers)
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text, log)) }
     if (touchedFiles.nonEmpty)
@@ -135,6 +136,7 @@ object HeaderPlugin extends AutoPlugin {
   }
 
   private def checkHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
+    log.debug(s"About to check headers for the following ${files.size} files:$newLine  ${files.mkString(s"$newLine  ")}")
     val filesWithoutHeader = groupFilesByHeader(files, headers)
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(checkHeader(pattern, text, log)) }
 
