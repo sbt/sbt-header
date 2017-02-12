@@ -122,10 +122,7 @@ object HeaderPlugin extends AutoPlugin {
   )
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
-    val touchedFiles = files
-      .groupBy(_.extension)
-      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
-      .flatten
+    val touchedFiles = groupFilesByHeader(files, headers)
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text, log)) }
     if (touchedFiles.nonEmpty)
       log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
@@ -139,18 +136,22 @@ object HeaderPlugin extends AutoPlugin {
   }
 
   private def checkHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
-    val filesWithoutHeader = files
-      .groupBy(_.extension)
-      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
-      .flatten
+    val filesWithoutHeader = groupFilesByHeader(files, headers)
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(checkHeader(pattern, text, log)) }
 
     if (filesWithoutHeader.nonEmpty) sys.error(
       s"""|There are files without headers!
-          |  ${filesWithoutHeader.mkString(s"$newLine  ")}}
+          |  ${filesWithoutHeader.mkString(s"$newLine  ")}
           |""".stripMargin
     )
     filesWithoutHeader
+  }
+
+  private def groupFilesByHeader(files: Seq[File], headers: Map[String, (Regex, String)]) = {
+    files
+      .groupBy(_.extension)
+      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
+      .flatten
   }
 
   private def checkHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) =
