@@ -133,6 +133,15 @@ In order to create or update file headers, execute the `createHeaders` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
+In order to check whether all files have headers, execute the `checkHeaders` task:
+
+```
+> checkHeaders
+[error] (compile:checkHeaders) There are files without headers!
+[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
+[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
+```
+
 ### Automation
 
 If you want to automate header creation/update on compile, enable the `AutomateHeaderPlugin`:
