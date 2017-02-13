@@ -57,6 +57,7 @@ object HeaderKey {
   /* explicitly use the default (mutable) Seq here */
   val excludes = settingKey[scala.collection.Seq[String]]("File patterns for files to be excluded; empty by default")
   val createHeaders = taskKey[Iterable[File]]("Create/update headers")
+  val checkHeaders = taskKey[Iterable[File]]("Check whether files have headers")
 }
 
 /**
@@ -103,6 +104,13 @@ object HeaderPlugin extends AutoPlugin {
       ),
       headers.value,
       streams.value.log
+    ),
+    checkHeaders := checkHeadersTask(
+      FileFilter(Seq(excludes.value: _*)).filter(
+        (unmanagedSources in createHeaders).value.toList ++ (unmanagedResources in createHeaders).value.toList
+      ),
+      headers.value,
+      streams.value.log
     )
   )
 
@@ -112,10 +120,7 @@ object HeaderPlugin extends AutoPlugin {
   )
 
   private def createHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
-    val touchedFiles = files
-      .groupBy(_.extension)
-      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
-      .flatten
+    val touchedFiles = groupFilesByHeader(files, headers)
       .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(createHeader(pattern, text, log)) }
     if (touchedFiles.nonEmpty)
       log.info(s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}")
@@ -127,4 +132,27 @@ object HeaderPlugin extends AutoPlugin {
     log.debug(s"About to create/update header for $file")
     HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).getText.map(write)
   }
+
+  private def checkHeadersTask(files: Seq[File], headers: Map[String, (Regex, String)], log: Logger) = {
+    val filesWithoutHeader = groupFilesByHeader(files, headers)
+      .flatMap { case ((pattern, text), groupedFiles) => groupedFiles.flatMap(checkHeader(pattern, text, log)) }
+
+    if (filesWithoutHeader.nonEmpty) sys.error(
+      s"""|There are files without headers!
+          |  ${filesWithoutHeader.mkString(s"$newLine  ")}
+          |""".stripMargin
+    )
+    filesWithoutHeader
+  }
+
+  private def groupFilesByHeader(files: Seq[File], headers: Map[String, (Regex, String)]) = {
+    files
+      .groupBy(_.extension)
+      .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
+      .flatten
+  }
+
+  private def checkHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) =
+    HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).getText.map(_ => file)
+
 }
