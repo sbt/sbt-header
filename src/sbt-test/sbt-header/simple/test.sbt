@@ -6,15 +6,24 @@ headers := Map(
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 checkFileContents := {
-  val actualPath = (scalaSource.in(Compile).value / "Main.scala").toString
-  val expectedPath = (resourceDirectory.in(Compile).value / "Main.scala_expected").toString
+  checkFile("HasHeader.scala")
+  checkFile("HasNoHeader.scala")
 
-  val actual = scala.io.Source.fromFile(actualPath).mkString
-  val expected = scala.io.Source.fromFile(expectedPath).mkString
+  def checkFile(name: String) = {
+    val actualPath = (scalaSource.in(Compile).value / name).toString
+    val expectedPath = (resourceDirectory.in(Compile).value / s"${name}_expected").toString
 
-  if (actual != expected) sys.error(
-    s"""|Actual file contents do not match expected file contents!
-        |  actual:   $actualPath
-        |  expected: $expectedPath
-        |""".stripMargin)
+    val actual = scala.io.Source.fromFile(actualPath).mkString
+    val expected = scala.io.Source.fromFile(expectedPath).mkString
+
+    if (actual != expected) sys.error(
+      s"""|Actual file contents do not match expected file contents!
+          |  actual: $actualPath
+          |$actual
+          |
+          |  expected: $expectedPath
+          |$expected
+          |""".stripMargin)
+
+  }
 }
