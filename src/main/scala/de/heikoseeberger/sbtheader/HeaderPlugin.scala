@@ -19,10 +19,8 @@ package de.heikoseeberger.sbtheader
 import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
-
 import sbt._
-import sbt.Keys.{ unmanagedSources, _ }
-
+import sbt.Keys._
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
 import java.io.FileInputStream
