@@ -27,6 +27,7 @@ trait License {
       case "*"  => (cStyleBlockComment, CommentBlock.cStyle(text))
       case "#"  => (hashLineComment, CommentBlock.hashLines(text))
       case "//" => (cppStyleLineComment, CommentBlock.cppStyle(text))
+      case "@*" => (twirlBlockComment, CommentBlock.twirl(text))
       case _ =>
         throw new IllegalArgumentException(s"Comment style '$commentStyle' not supported")
     }

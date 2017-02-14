@@ -32,10 +32,32 @@ class CommentBlock(blockPrefix: String, linePrefix: String, blockSuffix: String)
   }
 }
 
+object TwirlCommentBlock {
+
+  private final val NL = System.lineSeparator()
+
+  def apply(text: String): String = {
+    val maxLineLength = text.lines.map(_.length).max
+    def fillLine(line: String) = {
+      " * " + line + spaces(maxLineLength - line.length) + " *"
+    }
+
+    val commentBlock = text.lines.map(fillLine).mkString(NL)
+    val firstLine = "@**" + stars(maxLineLength + 2)
+    val lastLine = " " + firstLine.reverse
+
+    firstLine ++ NL ++ commentBlock ++ NL ++ lastLine ++ NL ++ NL
+  }
+
+  private def spaces(count: Int) = " " * count
+  private def stars(count: Int) = "*" * count
+}
+
 object CommentBlock {
 
   val cStyle = new CommentBlock("/*", " *", " */" + System.lineSeparator())
   val hashLines = new CommentBlock("", "#", "")
   val cppStyle = new CommentBlock("", "//", "")
+  val twirl = TwirlCommentBlock
 
 }

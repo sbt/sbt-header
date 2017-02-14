@@ -123,4 +123,58 @@ class HeaderPluginSpec extends WordSpec with Matchers {
       HeaderPattern.hashLineComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
+
+  "HeaderPattern.twirlBlockComment" should {
+
+    "not match a singleline comment without a trailing new line" in {
+      HeaderPattern.twirlBlockComment.unapplySeq("@* comment *@") shouldBe None
+    }
+
+    "not match a multiline comment without a trailing new line" in {
+      HeaderPattern.twirlBlockComment.unapplySeq(
+        """|@*************
+           | * comment/1 *
+           | * comment/2 *
+           | *************@""".stripMargin
+      ) shouldBe None
+    }
+
+    "match a comment with trailing new lines not followed by a body" in {
+      val header = """|@* comment *@
+                      |
+                      |""".stripMargin
+      HeaderPattern.twirlBlockComment.unapplySeq(header) shouldBe Some(List(header, ""))
+    }
+
+    "match a comment with a trailing new line followed by a body" in {
+      val header = """|@*************
+                      | * comment/1 *
+                      | * comment/2 *
+                      | *************@
+                      |""".stripMargin
+      val body = """|@(name: String)
+                    |
+                    |<h1>Hello @name!</h1>
+                    |""".stripMargin
+      HeaderPattern.twirlBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+
+    "match a comment with a trailing new line followed by a body with a twirl comment" in {
+      val header = """|@*************
+                      | * comment/1 *
+                      | * comment/2 *
+                      | *************@
+                      |""".stripMargin
+      val body = """|@*****************
+                    | * Twirl comment *
+                    | *****************@
+                    |@(name: String)
+                    |
+                    |<h1>Hello @name!</h1>
+                    |
+                    |""".stripMargin
+      HeaderPattern.twirlBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+  }
+
 }
