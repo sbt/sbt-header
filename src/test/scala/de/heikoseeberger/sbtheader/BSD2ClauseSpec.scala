@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader.license
+package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPattern
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.BSD2Clause
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
-class BSD3ClauseSpec extends WordSpec with Matchers {
+final class BSD2ClauseSpec extends WordSpec with Matchers {
 
   "apply" should {
 
-    "return the BSD 3 Clause license with the given copyright year and owner" in {
-      val (headerPattern, bsd3) = BSD3Clause("2015", "Heiko Seeberger")
+    "return the BSD 2 Clause license with the given copyright year and owner" in {
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger")
       val expected =
         s"""|/*
             | * Copyright (c) 2015, Heiko Seeberger
@@ -40,10 +41,6 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             | *    this list of conditions and the following disclaimer in the documentation
             | *    and/or other materials provided with the distribution.
             | *
-            | * 3. Neither the name of the copyright holder nor the names of its contributors
-            | *    may be used to endorse or promote products derived from this software without
-            | *    specific prior written permission.
-            | *
             | * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
             | * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
             | * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -58,12 +55,12 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      bsd3 shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.cStyleBlockComment
     }
 
-    "return the BSD 3 Clause license with hash style" in {
-      val (headerPattern, bsd3) = BSD3Clause("2015", "Heiko Seeberger", "#")
+    "return the BSD 2 Clause license with hash style" in {
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "#")
       val expected =
         s"""|# Copyright (c) 2015, Heiko Seeberger
             |# All rights reserved.
@@ -78,10 +75,6 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |#    this list of conditions and the following disclaimer in the documentation
             |#    and/or other materials provided with the distribution.
             |#
-            |# 3. Neither the name of the copyright holder nor the names of its contributors
-            |#    may be used to endorse or promote products derived from this software without
-            |#    specific prior written permission.
-            |#
             |# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
             |# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
             |# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -95,12 +88,12 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      bsd3 shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.hashLineComment
     }
 
-    "return the BSD 3 Clause license with C++ style" in {
-      val (headerPattern, bsd3) = BSD3Clause("2015", "Heiko Seeberger", "//")
+    "return the BSD 2 Clause license with C++ style" in {
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "//")
       val expected =
         s"""|// Copyright (c) 2015, Heiko Seeberger
             |// All rights reserved.
@@ -115,10 +108,6 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |//    this list of conditions and the following disclaimer in the documentation
             |//    and/or other materials provided with the distribution.
             |//
-            |// 3. Neither the name of the copyright holder nor the names of its contributors
-            |//    may be used to endorse or promote products derived from this software without
-            |//    specific prior written permission.
-            |//
             |// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
             |// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
             |// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -132,12 +121,12 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      bsd3 shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.cppStyleLineComment
     }
 
-    "return the BSD 3 Clause license with Twirl block style" in {
-      val (headerPattern, bsd3) = BSD3Clause("2015", "Heiko Seeberger", "@**")
+    "return the BSD 2 Clause license with Twirl block style" in {
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "@**")
       val expected =
         s"""|@************************************************************************************
             | * Copyright (c) 2015, Heiko Seeberger                                              *
@@ -153,10 +142,6 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             | *    this list of conditions and the following disclaimer in the documentation     *
             | *    and/or other materials provided with the distribution.                        *
             | *                                                                                  *
-            | * 3. Neither the name of the copyright holder nor the names of its contributors    *
-            | *    may be used to endorse or promote products derived from this software without *
-            | *    specific prior written permission.                                            *
-            | *                                                                                  *
             | * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND  *
             | * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED    *
             | * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE           *
@@ -171,12 +156,12 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      bsd3 shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlBlockComment
     }
 
-    "return the BSD 3 Clause license with Twirl style" in {
-      val (headerPattern, bsd3) = BSD3Clause("2015", "Heiko Seeberger", "@*")
+    "return the BSD 2 Clause license with Twirl style " in {
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "@*")
       val expected =
         s"""|@*
             | * Copyright (c) 2015, Heiko Seeberger
@@ -192,10 +177,6 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             | *    this list of conditions and the following disclaimer in the documentation
             | *    and/or other materials provided with the distribution.
             | *
-            | * 3. Neither the name of the copyright holder nor the names of its contributors
-            | *    may be used to endorse or promote products derived from this software without
-            | *    specific prior written permission.
-            | *
             | * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
             | * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
             | * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -210,12 +191,12 @@ class BSD3ClauseSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      bsd3 shouldBe expected
+      bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
     }
 
     "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { BSD3Clause("2015", "Heiko Seeberger", "???") }
+      intercept[IllegalArgumentException] { BSD2Clause("2015", "Heiko Seeberger", "???") }
     }
   }
 }

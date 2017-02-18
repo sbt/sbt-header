@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader.license
+package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPattern
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.AGPLv3
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
-class AGPLv3Spec extends WordSpec with Matchers {
+final class AGPLv3Spec extends WordSpec with Matchers {
 
   "apply" should {
 

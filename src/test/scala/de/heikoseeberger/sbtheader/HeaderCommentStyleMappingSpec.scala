@@ -16,14 +16,20 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.license.Apache2_0
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern.{
+  cStyleBlockComment,
+  hashLineComment
+}
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.{
+  HeaderCommentStyleMapping,
+  HeaderLicense
+}
 import org.scalatest.{ Matchers, WordSpec }
-import de.heikoseeberger.sbtheader.HeaderPattern._
 
-class CommentStyleMappingSpec extends WordSpec with Matchers {
+final class HeaderCommentStyleMappingSpec extends WordSpec with Matchers {
 
-  "Default CommentStyleMapping" should {
-    val mapping = CommentStyleMapping.createFrom(Apache2_0, "2016", "John Doe")
+  "Default HeaderCommentStyleMapping" should {
+    val mapping = HeaderCommentStyleMapping.createFrom(HeaderLicense.Apache2_0, "2016", "John Doe")
 
     "contain a mapping from java files to C style block comments" in {
       mapping should contain key "java"
@@ -36,12 +42,12 @@ class CommentStyleMappingSpec extends WordSpec with Matchers {
     }
   }
 
-  "Custom CommentStyleMapping" should {
-    val mapping = CommentStyleMapping.createFrom(
-      Apache2_0,
+  "Custom HeaderCommentStyleMapping" should {
+    val mapping = HeaderCommentStyleMapping.createFrom(
+      HeaderLicense.Apache2_0,
       "2016",
       "John Doe",
-      Seq("conf" -> "#", "properties" -> "#", "yml" -> "#")
+      Vector("conf" -> "#", "properties" -> "#", "yml" -> "#")
     )
 
     "map conf files to hash line comments" in {

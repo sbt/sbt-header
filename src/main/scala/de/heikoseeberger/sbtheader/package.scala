@@ -21,25 +21,16 @@ import scala.util.matching.Regex
 
 package object sbtheader {
 
-  // format: OFF
-  val Traversable = scala.collection.immutable.Traversable
   type Traversable[+A] = scala.collection.immutable.Traversable[A]
+  type Iterable[+A]    = scala.collection.immutable.Iterable[A]
+  type Seq[+A]         = scala.collection.immutable.Seq[A]
+  type IndexedSeq[+A]  = scala.collection.immutable.IndexedSeq[A]
 
-  val Iterable = scala.collection.immutable.Iterable
-  type Iterable[+A] = scala.collection.immutable.Iterable[A]
-
-  val Seq = scala.collection.immutable.Seq
-  type Seq[+A] = scala.collection.immutable.Seq[A]
-
-  val IndexedSeq = scala.collection.immutable.IndexedSeq
-  type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
-  // format: ON
-
-  object FileOps {
+  final object FileOps {
     val extensionPattern: Regex = """.+\.(.+)""".r
   }
 
-  implicit class FileOps(val file: File) extends AnyVal {
+  final implicit class FileOps(val file: File) extends AnyVal {
     def extension: Option[String] =
       file.getName match {
         case FileOps.extensionPattern(ext) => Some(ext)

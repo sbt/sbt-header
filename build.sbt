@@ -1,13 +1,76 @@
-lazy val sbtHeader = project
-  .in(file("."))
-  .enablePlugins(AutomateHeaderPlugin, GitVersioning)
+// *****************************************************************************
+// Projects
+// *****************************************************************************
 
-name := "sbt-header"
+lazy val `sbt-header` =
+  project
+    .in(file("."))
+    .enablePlugins(AutomateHeaderPlugin, GitVersioning)
+    .settings(settings)
+    .settings(
+      libraryDependencies ++= Seq(
+        library.scalaTest % Test
+      )
+    )
 
-sbtPlugin := true
+// *****************************************************************************
+// Library dependencies
+// *****************************************************************************
 
-libraryDependencies ++= List(
-  Library.scalaTest % "test"
+lazy val library =
+  new {
+    object Version {
+      val scalaTest = "3.0.1"
+    }
+    val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest
+  }
+
+// *****************************************************************************
+// Settings
+// *****************************************************************************        |
+
+lazy val settings =
+  commonSettings ++
+  gitSettings ++
+  headerSettings ++
+  pluginSettings
+
+lazy val commonSettings =
+  Seq(
+    // scalaVersion and crossScalaVersions from .travis.yml via sbt-travisci
+    // scalaVersion := "2.12.1",
+    // crossScalaVersions := Seq(scalaVersion.value, "2.11.8"),
+    organization := "de.heikoseeberger",
+    licenses += ("Apache 2.0",
+                 url("http://www.apache.org/licenses/LICENSE-2.0")),
+    mappings.in(Compile, packageBin) += baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
+    scalacOptions ++= Seq(
+      "-unchecked",
+      "-deprecation",
+      "-language:_",
+      "-target:jvm-1.7",
+      "-encoding", "UTF-8"
+    ),
+    unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
+    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value)
 )
 
-initialCommands := """|import de.heikoseeberger.sbtheader._""".stripMargin
+lazy val gitSettings =
+  Seq(
+    git.useGitDescribe := true
+  )
+
+import de.heikoseeberger.sbtheader.license._
+lazy val headerSettings =
+  Seq(
+    headers := Map("scala" -> Apache2_0("2015", "Heiko Seeberger"))
+  )
+
+lazy val pluginSettings =
+  scriptedSettings ++
+  Seq(
+    sbtPlugin := true,
+    publishMavenStyle := false,
+    scriptedLaunchOpts ++= Seq("-Xmx1024M", s"-Dplugin.version=${version.value}"),
+    scriptedBufferLog := false
+  )

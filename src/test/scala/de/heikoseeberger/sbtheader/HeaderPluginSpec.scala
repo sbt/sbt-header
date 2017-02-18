@@ -16,11 +16,10 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
 class HeaderPluginSpec extends WordSpec with Matchers {
-
-  import HeaderPlugin._
 
   "HeaderPattern.cStyleBlockComment" should {
 
@@ -50,7 +49,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body = """|class Foo {
+      val body   = """|class Foo {
                     |  val bar = "bar"
                     |}
                     |""".stripMargin
@@ -63,7 +62,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body = """|/**
+      val body   = """|/**
                     |  * ScalaDoc for Foo
                     |  */
                     |class Foo {
@@ -79,7 +78,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body = """|/**
+      val body   = """|/**
                     |  * ScalaDoc for Foo
                     |  */
                     |class Foo {
@@ -117,7 +116,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       |# comment/2
                       |
                       |""".stripMargin
-      val body = """|def foo(bar):
+      val body   = """|def foo(bar):
                     |    print(bar)
                     |""".stripMargin
       HeaderPattern.hashLineComment.unapplySeq(header + body) shouldBe Some(List(header, body))
@@ -152,7 +151,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body = """|@(name: String)
+      val body   = """|@(name: String)
                     |
                     |<h1>Hello @name!</h1>
                     |""".stripMargin
@@ -165,7 +164,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body = """|@*****************
+      val body   = """|@*****************
                     | * Twirl comment *
                     | *****************@
                     |@(name: String)
@@ -182,7 +181,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body = """|@*
+      val body   = """|@*
                     | * Twirl comment
                     | *@
                     |@(name: String)
@@ -222,7 +221,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2
                       | *@
                       |""".stripMargin
-      val body = """|@main("Welcome to Play") {
+      val body   = """|@main("Welcome to Play") {
                     |
                     |    @*
                     |     * Get an `Html` object by calling the built-in Play welcome
@@ -241,7 +240,7 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                       | * comment/2
                       | *@
                       |""".stripMargin
-      val body = """|@*************************
+      val body   = """|@*************************
                     | * A twirl block comment *
                     | *************************@
                     |@main("Welcome to Play") {

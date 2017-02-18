@@ -17,50 +17,60 @@
 package de.heikoseeberger.sbtheader
 
 import java.io.InputStream
-import java.nio.charset.StandardCharsets.UTF_8
+import sbt.Logger
 import scala.util.matching.Regex
-import sbt._
 
-class HeaderCreator(headerPattern: Regex, headerText: String, log: Logger, input: InputStream) {
+object HeaderCreator {
+
+  def apply(headerPattern: Regex,
+            headerText: String,
+            log: Logger,
+            input: InputStream): HeaderCreator =
+    new HeaderCreator(headerPattern, headerText, log, input)
+}
+
+final class HeaderCreator private (headerPattern: Regex,
+                                   headerText: String,
+                                   log: Logger,
+                                   input: InputStream) {
+
   private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+  private val crlf           = """(?s)(?:.*)(\r\n)(?:.*)""".r
+  private val cr             = """(?s)(?:.*)(\r)(?:.*)""".r
 
-  val Crlf = """(?s)(?:.*)(\r\n)(?:.*)""".r
-  val Cr = """(?s)(?:.*)(\r)(?:.*)""".r
-
-  val (firstLine, text) = scala.io.Source.fromInputStream(input).mkString match {
-    case shebangAndBody(s, b) => (s, b)
-    case other                => ("", other)
-  }
+  private val (firstLine, text) =
+    scala.io.Source.fromInputStream(input).mkString match {
+      case shebangAndBody(s, b) => (s, b)
+      case other                => ("", other)
+    }
   log.debug(s"First line of file is:$newLine$firstLine")
   log.debug(s"Text of file is:$newLine$text")
 
-  val fileNewLine = text match {
-    case Crlf(newLine) => "\r\n"
-    case Cr(newLine)   => "\r"
-    case other         => "\n"
-  }
+  private val fileNewLine =
+    text match {
+      case crlf(_) => "\r\n"
+      case cr(_)   => "\r"
+      case _       => "\n"
+    }
 
-  val headerNewLine = headerText match {
-    case Crlf(newLine) => "\r\n"
-    case Cr(newLine)   => "\r"
-    case other         => "\n"
-  }
+  private val headerNewLine =
+    headerText match {
+      case crlf(_) => "\r\n"
+      case cr(_)   => "\r"
+      case _       => "\n"
+    }
 
-  val newHeaderText = headerText.replace(headerNewLine, fileNewLine)
+  private val newHeaderText = headerText.replace(headerNewLine, fileNewLine)
 
-  val modifiedText = text match {
-    case headerPattern(`headerText`, _) => None
-    case headerPattern(_, body)         => Some(firstLine + newHeaderText + body)
-    case body if body.isEmpty           => None
-    case body                           => Some(firstLine + newHeaderText + body.replaceAll("""^\s+""", "")) // Trim left
-  }
+  private val modifiedText =
+    text match {
+      case headerPattern(`headerText`, _) => None
+      case headerPattern(_, body)         => Some(firstLine + newHeaderText + body)
+      case body if body.isEmpty           => None
+      case body                           => Some(firstLine + newHeaderText + body.replaceAll("""^\s+""", "")) // Trim left
+    }
   log.debug(s"Modified text of file is:$newLine$modifiedText")
 
-  def getText = {
+  def createText: Option[String] =
     modifiedText
-  }
-}
-
-object HeaderCreator {
-  def apply(headerPattern: Regex, headerText: String, log: Logger, input: InputStream) = new HeaderCreator(headerPattern, headerText, log, input)
 }

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader.license
+package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPattern
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.MIT
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
-class MITSpec extends WordSpec with Matchers {
+final class MITSpec extends WordSpec with Matchers {
 
   "apply" should {
 

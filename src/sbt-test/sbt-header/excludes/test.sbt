@@ -1,10 +1,6 @@
-import de.heikoseeberger.sbtheader.license.Apache2_0
+headers := Map("scala" -> HeaderLicense.Apache2_0("2015", "Heiko Seeberger"))
 
-headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger")
-)
-
-excludes := Seq(
+headerExcludes := Seq(
   "src/main/scala/Excluded.scala",
   "src/main/scala/de/heikoseeberger/mixed/Excluded.scala",
   "src/main/scala/de/heikoseeberger/allexcluded/*.scala",

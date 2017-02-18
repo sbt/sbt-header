@@ -17,19 +17,20 @@
 package de.heikoseeberger.sbtheader
 
 import java.io.File
-
 import org.scalatest.{ Matchers, WordSpec }
 
-class FileFilterSpec extends WordSpec with Matchers {
+final class FileFilterSpec extends WordSpec with Matchers {
 
-  val emptyFiles = Seq.empty
-  val scalaFiles = Seq(new File("/project/src/main/scala/SomeFile.scala"), new File("/project/src/main/scala/AnotherFile.scala"))
-  val javaFiles = Seq(new File("/project/src/main/java/SomeFile.java"), new File("/project/src/main/java/AnotherFile.java"))
-  val mixedFiles = scalaFiles ++ javaFiles
+  private val emptyFiles = Vector.empty
+  private val scalaFiles = Vector(new File("/project/src/main/scala/SomeFile.scala"),
+                                  new File("/project/src/main/scala/AnotherFile.scala"))
+  private val javaFiles = Vector(new File("/project/src/main/java/SomeFile.java"),
+                                 new File("/project/src/main/java/AnotherFile.java"))
+  private val mixedFiles = scalaFiles ++ javaFiles
 
   "Empty FileFilter" should {
 
-    val filter = FileFilter(Seq.empty)
+    val filter = FileFilter(Vector.empty)
 
     "not filter empty files" in {
       filter.filter(emptyFiles) shouldBe emptyFiles
@@ -41,7 +42,7 @@ class FileFilterSpec extends WordSpec with Matchers {
   }
 
   "FilterFilter filtering scala files" should {
-    val filter = FileFilter(Seq("**/*.scala"))
+    val filter = FileFilter(Vector("**/*.scala"))
 
     "not filter empty files" in {
       filter.filter(emptyFiles) shouldBe emptyFiles
@@ -61,7 +62,7 @@ class FileFilterSpec extends WordSpec with Matchers {
   }
 
   "FilterFilter filtering the scala directory" should {
-    val filter = FileFilter(Seq("**/scala/**"))
+    val filter = FileFilter(Vector("**/scala/**"))
 
     "not filter empty files" in {
       filter.filter(emptyFiles) shouldBe emptyFiles
@@ -81,14 +82,16 @@ class FileFilterSpec extends WordSpec with Matchers {
   }
 
   "FilterFilter filtering a specific scala file" should {
-    val filter = FileFilter(Seq("**/SomeFile.scala"))
+    val filter = FileFilter(Vector("**/SomeFile.scala"))
 
     "not filter empty files" in {
       filter.filter(emptyFiles) shouldBe emptyFiles
     }
 
     "filter only filter that file from all scala files" in {
-      filter.filter(scalaFiles) shouldBe Seq(new File("/project/src/main/scala/AnotherFile.scala"))
+      filter.filter(scalaFiles) shouldBe Vector(
+        new File("/project/src/main/scala/AnotherFile.scala")
+      )
     }
 
     "not filter java files" in {
