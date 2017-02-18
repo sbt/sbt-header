@@ -30,6 +30,7 @@ object HeaderPattern {
   val cppStyleLineComment = commentStartingWith("//")
   val hashLineComment = commentStartingWith("#")
   val twirlBlockComment = commentBetween("""@\*+""", "*", """\*@""")
+  val twirlStyleComment = commentBetween("""@\*""", "*", """\*@""")
 
   def commentBetween(start: String, middle: String, end: String): Regex =
     new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")

@@ -58,6 +58,7 @@ object CommentBlock {
   val cStyle = new CommentBlock("/*", " *", " */" + System.lineSeparator())
   val hashLines = new CommentBlock("", "#", "")
   val cppStyle = new CommentBlock("", "//", "")
-  val twirl = TwirlCommentBlock
+  val twirlStyle = new CommentBlock("@*", " *", " *@" + System.lineSeparator())
+  val twirlBlock = TwirlCommentBlock
 
 }

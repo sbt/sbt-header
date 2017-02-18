@@ -2,7 +2,7 @@ import de.heikoseeberger.sbtheader.license.Apache2_0
 import play.twirl.sbt.Import.TwirlKeys
 
 headers := Map(
-  "html" -> Apache2_0("2015", "Heiko Seeberger", "@*")
+  "html" -> Apache2_0("2015", "Heiko Seeberger", "@**")
 )
 
 unmanagedSources.in(Compile, createHeaders) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
