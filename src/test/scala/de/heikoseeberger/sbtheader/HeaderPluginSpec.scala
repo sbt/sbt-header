@@ -175,6 +175,23 @@ class HeaderPluginSpec extends WordSpec with Matchers {
                     |""".stripMargin
       HeaderPattern.twirlBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
+
+    "match a block comment with a trailing new line followed by a body with a twirl comment" in {
+      val header = """|@*************
+                      | * comment/1 *
+                      | * comment/2 *
+                      | *************@
+                      |""".stripMargin
+      val body = """|@*
+                    | * Twirl comment
+                    | *@
+                    |@(name: String)
+                    |
+                    |<h1>Hello @name!</h1>
+                    |
+                    |""".stripMargin
+      HeaderPattern.twirlBlockComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
   }
 
 }
