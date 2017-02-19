@@ -85,6 +85,40 @@ class MPLv2Spec extends WordSpec with Matchers {
       headerPattern shouldBe HeaderPattern.cppStyleLineComment
     }
 
+    "return the MIT license with Twirl block style" in {
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "@**")
+      val expected =
+        s"""|@***********************************************************************
+            | * Copyright (c) 2015 Heiko Seeberger                                  *
+            | *                                                                     *
+            | * This Source Code Form is subject to the terms of the Mozilla Public *
+            | * License, v. 2.0. If a copy of the MPL was not distributed with this *
+            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.            *
+            | ***********************************************************************@
+            |
+            |""".stripMargin
+
+      mit shouldBe expected
+      headerPattern shouldBe HeaderPattern.twirlBlockComment
+    }
+
+    "return the MPL 2.0 license with Twirl style" in {
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "@*")
+      val expected =
+        s"""|@*
+            | * Copyright (c) 2015 Heiko Seeberger
+            | *
+            | * This Source Code Form is subject to the terms of the Mozilla Public
+            | * License, v. 2.0. If a copy of the MPL was not distributed with this
+            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+            | *@
+            |
+            |""".stripMargin
+
+      mit shouldBe expected
+      headerPattern shouldBe HeaderPattern.twirlStyleComment
+    }
+
     "fail when unknown comment style prefix provided" in {
       intercept[IllegalArgumentException] { MPLv2("2015", "Heiko Seeberger", "???") }
     }

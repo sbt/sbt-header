@@ -160,13 +160,15 @@ By default automation takes `Compile` and `Test` configurations into account. If
 AutomateHeaderPlugin.automateFor(It, MultiJvm)
 ```
 
-### Integration with other plugins
+## Integration with other plugins
 
 This plugin by default only handles `managedSources` and `managedResources` in `Compile` and `Test`. For this reason you
 need to tell sbt-header when it should also add headers to additional files managed by other plugins.
 
-In order to use sbt-header for example with [sbt-boilerplate plugin](https://github.com/sbt/sbt-boilerplate) add the
-following to your build definition:
+### sbt-boilerplate
+
+In order to use sbt-header with [sbt-boilerplate plugin](https://github.com/sbt/sbt-boilerplate) add the following to
+your build definition:
 
 ```scala
 def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
@@ -178,6 +180,42 @@ addBoilerplate(Compile, Test)
 
 This adds `src/{conf}/boilerplate/**.scala` in the list of files handled by sbt-headers for `conf`, where `conf` is
 either `Compile` or `Test`.
+
+### sbt-twirl / play projects
+
+To use sbt-header in a project using [sbt-twirl](https://github.com/playframework/twirl) (for example a Play web
+project), the Twirl templates have to be added to the sources handled by sbt-header. Add the following to your build
+definition:
+
+```scala
+import de.heikoseeberger.sbtheader.license.Apache2_0
+import play.twirl.sbt.Import.TwirlKeys
+
+headers := Map(
+  "html" -> Apache2_0("2015", "Heiko Seeberger", "@*")
+)
+
+unmanagedSources.in(Compile, createHeaders) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
+```
+
+sbt-header supports two comment styles for Twirl templates. `@*` will produce simple twirl comments, while `@**` produce
+twirl block comments.
+
+`@*` comment style:
+
+```scala
+@*
+ * This is a simple twirl comment
+ *@
+```
+
+`@**` comment style:
+
+```scala
+@*********************************
+ * This is a twirl block comment *
+ ********************************@
+```
 
 ## Contribution policy ##
 

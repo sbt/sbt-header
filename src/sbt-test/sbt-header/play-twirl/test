@@ -1,0 +1,3 @@
+# check if headers get for twirl templates
+> createHeaders
+> checkFileContents
