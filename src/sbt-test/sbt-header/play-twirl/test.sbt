@@ -1,6 +1,6 @@
 import play.twirl.sbt.Import.TwirlKeys
 
-headers := Map("scala" -> HeaderLicense.Apache2_0("2015", "Heiko Seeberger", "@**"))
+headers := Map("html" -> HeaderLicense.Apache2_0("2015", "Heiko Seeberger", "@**"))
 
 unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 
