@@ -71,17 +71,17 @@ object HeaderPlugin extends AutoPlugin {
 
     object HeaderCommentStyleMapping {
 
-      val JavaBlockComments: (String, String) =
+      val javaBlockComments: (String, String) =
         "java" -> "*"
 
-      val ScalaBlockComments: (String, String) =
+      val scalaBlockComments: (String, String) =
         "scala" -> "*"
 
       def createFrom(
           license: License,
           yyyy: String,
           copyrightOwner: String,
-          mappings: Seq[(String, String)] = Vector(JavaBlockComments, ScalaBlockComments)
+          mappings: Seq[(String, String)] = Vector(javaBlockComments, scalaBlockComments)
       ): Map[String, (Regex, String)] =
         mappings.map { case (a, b) => a -> license(yyyy, copyrightOwner, b) }(breakOut)
     }
