@@ -47,7 +47,7 @@ final class HeaderCommentStyleMappingSpec extends WordSpec with Matchers {
       HeaderLicense.Apache2_0,
       "2016",
       "John Doe",
-      Vector("conf" -> "#", "properties" -> "#", "yml" -> "#")
+      Vector("conf" -> HashLineComment, "properties" -> HashLineComment, "yml" -> HashLineComment)
     )
 
     "map conf files to hash line comments" in {

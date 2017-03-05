@@ -51,7 +51,7 @@ final class LGPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the LGPLv3 license with hash style" in {
-      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", "#")
+      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", HashLineComment)
       val expected =
         """|# Copyright (C) 2015  Heiko Seeberger
            |#
@@ -75,7 +75,7 @@ final class LGPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the LGPLv3 license with C++ style" in {
-      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", "//")
+      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", CppStyleLineComment)
       val expected =
         """|// Copyright (C) 2015  Heiko Seeberger
            |//
@@ -99,7 +99,7 @@ final class LGPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the LGPLv3 license with Twirl block style" in {
-      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", "@**")
+      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", TwirlStyleBlockComment)
       val expected =
         """|@****************************************************************************
            | * Copyright (C) 2015  Heiko Seeberger                                      *
@@ -125,7 +125,7 @@ final class LGPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the LGPLv3 license with Twirl style" in {
-      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", "@*")
+      val (headerPattern, lgplv3) = LGPLv3("2015", "Heiko Seeberger", TwirlStyleComment)
       val expected =
         s"""|@*
             | * Copyright (C) 2015  Heiko Seeberger
@@ -148,10 +148,6 @@ final class LGPLv3Spec extends WordSpec with Matchers {
 
       lgplv3 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
-    }
-
-    "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { LGPLv3("2015", "Heiko Seeberger", "???") }
     }
   }
 }

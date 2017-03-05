@@ -50,7 +50,7 @@ final class Apache2_0Spec extends WordSpec with Matchers {
     }
 
     "return the Apache 2.0 license with hash style" in {
-      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", "#")
+      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", HashLineComment)
       val expected =
         """|# Copyright 2015 Heiko Seeberger
            |#
@@ -73,7 +73,7 @@ final class Apache2_0Spec extends WordSpec with Matchers {
     }
 
     "return the Apache 2.0 license with C++ style" in {
-      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", "//")
+      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", CppStyleLineComment)
       val expected =
         """|// Copyright 2015 Heiko Seeberger
            |//
@@ -96,7 +96,7 @@ final class Apache2_0Spec extends WordSpec with Matchers {
     }
 
     "return the Apache 2.0 license with Twirl block style" in {
-      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", "@**")
+      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", TwirlStyleBlockComment)
       val expected =
         """|@****************************************************************************
            | * Copyright 2015 Heiko Seeberger                                           *
@@ -121,7 +121,7 @@ final class Apache2_0Spec extends WordSpec with Matchers {
     }
 
     "return the Apache 2.0 license with Twirl style" in {
-      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", "@*")
+      val (headerPattern, apache2_0) = Apache2_0("2015", "Heiko Seeberger", TwirlStyleComment)
       val expected =
         """|@*
            | * Copyright 2015 Heiko Seeberger
@@ -143,10 +143,6 @@ final class Apache2_0Spec extends WordSpec with Matchers {
 
       apache2_0 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
-    }
-
-    "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { Apache2_0("2015", "Heiko Seeberger", "???") }
     }
   }
 }

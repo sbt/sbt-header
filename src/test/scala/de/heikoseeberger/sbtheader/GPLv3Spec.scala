@@ -51,7 +51,7 @@ final class GPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the GPLv3 license with hash style" in {
-      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", "#")
+      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", HashLineComment)
       val expected =
         """|# Copyright (C) 2015  Heiko Seeberger
            |#
@@ -75,7 +75,7 @@ final class GPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the GPLv3 license with C++ style" in {
-      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", "//")
+      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", CppStyleLineComment)
       val expected =
         """|// Copyright (C) 2015  Heiko Seeberger
            |//
@@ -99,7 +99,7 @@ final class GPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the GPLv3 license with Twirl block style" in {
-      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", "@**")
+      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", TwirlStyleBlockComment)
       val expected =
         """|@*************************************************************************
            | * Copyright (C) 2015  Heiko Seeberger                                   *
@@ -125,7 +125,7 @@ final class GPLv3Spec extends WordSpec with Matchers {
     }
 
     "return the GPLv3 license with Twirl style" in {
-      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", "@*")
+      val (headerPattern, gplv3) = GPLv3("2015", "Heiko Seeberger", TwirlStyleComment)
       val expected =
         s"""|@*
             | * Copyright (C) 2015  Heiko Seeberger
@@ -148,10 +148,6 @@ final class GPLv3Spec extends WordSpec with Matchers {
 
       gplv3 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
-    }
-
-    "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { GPLv3("2015", "Heiko Seeberger", "???") }
     }
   }
 }

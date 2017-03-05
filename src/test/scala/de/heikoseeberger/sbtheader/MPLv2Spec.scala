@@ -60,7 +60,7 @@ final class MPLv2Spec extends WordSpec with Matchers {
     }
 
     "return the MPL 2.0 license with hash style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "#")
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", HashLineComment)
       val expected =
         s"""|# Copyright (c) 2015 Heiko Seeberger
             |#
@@ -75,7 +75,7 @@ final class MPLv2Spec extends WordSpec with Matchers {
     }
 
     "return the MIT license with C++ style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "//")
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", CppStyleLineComment)
       val expected =
         s"""|// Copyright (c) 2015 Heiko Seeberger
             |//
@@ -90,7 +90,7 @@ final class MPLv2Spec extends WordSpec with Matchers {
     }
 
     "return the MIT license with Twirl block style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "@**")
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", TwirlStyleBlockComment)
       val expected =
         s"""|@***********************************************************************
             | * Copyright (c) 2015 Heiko Seeberger                                  *
@@ -107,7 +107,7 @@ final class MPLv2Spec extends WordSpec with Matchers {
     }
 
     "return the MPL 2.0 license with Twirl style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", "@*")
+      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", TwirlStyleComment)
       val expected =
         s"""|@*
             | * Copyright (c) 2015 Heiko Seeberger
@@ -121,10 +121,6 @@ final class MPLv2Spec extends WordSpec with Matchers {
 
       mit shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
-    }
-
-    "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { MPLv2("2015", "Heiko Seeberger", "???") }
     }
   }
 }
