@@ -89,7 +89,11 @@ object HeaderPlugin extends AutoPlugin {
     val headers: SettingKey[Map[String, (Regex, String)]] =
       settingKey("Header pattern and text by extension; empty by default")
 
-    /* explicitly use the default (mutable) Seq here */ // TODO: Why?
+    /*
+     * Since we override the default (mutable) Seq in our package object with the immutable variant, we explicitly use
+     * the default (mutable) Seq here. Otherwise users would have to import scala.collection.immutable.Seq explicitly
+     * in their build files, which would probably only cause confusion.
+     */
     val headerExcludes: SettingKey[scala.collection.Seq[String]] =
       settingKey("File patterns for files to be excluded; empty by default")
 
