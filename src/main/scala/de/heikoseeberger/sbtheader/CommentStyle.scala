@@ -16,17 +16,38 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern._
+
+import scala.util.matching.Regex
+
 /**
   * Representation of the different comment styles supported by this plugin.
   */
-sealed trait CommentStyle
+sealed trait CommentStyle {
+  def apply(licenseText: String): (Regex, String)
+}
 
-case object CStyleBlockComment extends CommentStyle
+case object CStyleBlockComment extends CommentStyle {
+  override def apply(licenseText: String): (Regex, String) =
+    (cStyleBlockComment, CommentBlock.cStyle(licenseText))
+}
 
-case object CppStyleLineComment extends CommentStyle
+case object CppStyleLineComment extends CommentStyle {
+  override def apply(licenseText: String): (Regex, String) =
+    (cppStyleLineComment, CommentBlock.cppStyle(licenseText))
+}
 
-case object HashLineComment extends CommentStyle
+case object HashLineComment extends CommentStyle {
+  override def apply(licenseText: String): (Regex, String) =
+    (hashLineComment, CommentBlock.hashLines(licenseText))
+}
 
-case object TwirlStyleComment extends CommentStyle
+case object TwirlStyleComment extends CommentStyle {
+  override def apply(licenseText: String): (Regex, String) =
+    (twirlStyleComment, CommentBlock.twirlStyle(licenseText))
+}
 
-case object TwirlStyleBlockComment extends CommentStyle
+case object TwirlStyleBlockComment extends CommentStyle {
+  override def apply(licenseText: String): (Regex, String) =
+    (twirlBlockComment, CommentBlock.twirlBlock(licenseText))
+}

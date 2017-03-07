@@ -19,19 +19,12 @@ package de.heikoseeberger.sbtheader
 import scala.util.matching.Regex
 
 sealed trait License {
-  import HeaderPlugin.autoImport.HeaderPattern._
 
   def apply(yyyy: String,
             copyrightOwner: String,
             commentStyle: CommentStyle = CStyleBlockComment): (Regex, String) = {
     val text = createLicenseText(yyyy, copyrightOwner)
-    commentStyle match {
-      case CStyleBlockComment     => (cStyleBlockComment, CommentBlock.cStyle(text))
-      case HashLineComment        => (hashLineComment, CommentBlock.hashLines(text))
-      case CppStyleLineComment    => (cppStyleLineComment, CommentBlock.cppStyle(text))
-      case TwirlStyleBlockComment => (twirlBlockComment, CommentBlock.twirlBlock(text))
-      case TwirlStyleComment      => (twirlStyleComment, CommentBlock.twirlStyle(text))
-    }
+    commentStyle(text)
   }
 
   def createLicenseText(yyyy: String, copyrightOwner: String): String
