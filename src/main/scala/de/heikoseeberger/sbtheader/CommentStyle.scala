@@ -27,27 +27,31 @@ sealed trait CommentStyle {
   def apply(licenseText: String): (Regex, String)
 }
 
-case object CStyleBlockComment extends CommentStyle {
-  override def apply(licenseText: String): (Regex, String) =
-    (cStyleBlockComment, CommentBlock.cStyle(licenseText))
-}
+object CommentStyle {
 
-case object CppStyleLineComment extends CommentStyle {
-  override def apply(licenseText: String): (Regex, String) =
-    (cppStyleLineComment, CommentBlock.cppStyle(licenseText))
-}
+  final case object CStyleBlockComment extends CommentStyle {
+    override def apply(licenseText: String): (Regex, String) =
+      (cStyleBlockComment, CommentBlock.cStyle(licenseText))
+  }
 
-case object HashLineComment extends CommentStyle {
-  override def apply(licenseText: String): (Regex, String) =
-    (hashLineComment, CommentBlock.hashLines(licenseText))
-}
+  case object CppStyleLineComment extends CommentStyle {
+    override def apply(licenseText: String): (Regex, String) =
+      (cppStyleLineComment, CommentBlock.cppStyle(licenseText))
+  }
 
-case object TwirlStyleComment extends CommentStyle {
-  override def apply(licenseText: String): (Regex, String) =
-    (twirlStyleComment, CommentBlock.twirlStyle(licenseText))
-}
+  case object HashLineComment extends CommentStyle {
+    override def apply(licenseText: String): (Regex, String) =
+      (hashLineComment, CommentBlock.hashLines(licenseText))
+  }
 
-case object TwirlStyleBlockComment extends CommentStyle {
-  override def apply(licenseText: String): (Regex, String) =
-    (twirlBlockComment, CommentBlock.twirlBlock(licenseText))
+  case object TwirlStyleComment extends CommentStyle {
+    override def apply(licenseText: String): (Regex, String) =
+      (twirlStyleComment, CommentBlock.twirlStyle(licenseText))
+  }
+
+  case object TwirlStyleBlockComment extends CommentStyle {
+    override def apply(licenseText: String): (Regex, String) =
+      (twirlBlockComment, CommentBlock.twirlBlock(licenseText))
+  }
+
 }

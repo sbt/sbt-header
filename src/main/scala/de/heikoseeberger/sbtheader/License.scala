@@ -16,6 +16,8 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
+
 import scala.util.matching.Regex
 
 sealed trait License {
