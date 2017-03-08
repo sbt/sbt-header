@@ -16,22 +16,6 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
-
-import scala.util.matching.Regex
-
-sealed trait LicenseHeaderCreator {
-
-  def apply(yyyy: String,
-            copyrightOwner: String,
-            commentStyle: CommentStyle = CStyleBlockComment): (Regex, String) = {
-    val text = createLicenseText(yyyy, copyrightOwner)
-    commentStyle(text)
-  }
-
-  def createLicenseText(yyyy: String, copyrightOwner: String): String
-}
-
 sealed trait License {
   def text: String
 }

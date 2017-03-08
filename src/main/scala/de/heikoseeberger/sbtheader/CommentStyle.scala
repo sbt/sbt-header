@@ -25,6 +25,7 @@ import scala.util.matching.Regex
   */
 sealed trait CommentStyle {
   def apply(licenseText: String): (Regex, String)
+  def apply(license: License): (Regex, String) = apply(license.text)
 }
 
 object CommentStyle {

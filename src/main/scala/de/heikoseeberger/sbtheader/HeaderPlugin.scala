@@ -81,12 +81,12 @@ object HeaderPlugin extends AutoPlugin {
         "scala" -> CStyleBlockComment
 
       def createFrom(
-          license: LicenseHeaderCreator,
-          yyyy: String,
-          copyrightOwner: String,
+          license: License,
           mappings: Seq[(String, CommentStyle)] = Vector(javaBlockComments, scalaBlockComments)
       ): Map[String, (Regex, String)] =
-        mappings.map { case (a, b) => a -> license(yyyy, copyrightOwner, b) }(breakOut)
+        mappings.map {
+          case (headerPattern, commentStyle) => headerPattern -> commentStyle(license)
+        }(breakOut)
     }
 
     val headers: SettingKey[Map[String, (Regex, String)]] =
