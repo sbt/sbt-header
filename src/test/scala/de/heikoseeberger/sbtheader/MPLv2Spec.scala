@@ -16,117 +16,38 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.{
-  CppStyleLineComment,
-  HashLineComment,
-  TwirlStyleBlockComment,
-  TwirlStyleComment
-}
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.{
   MPLv2,
   MPLv2_NoCopyright
 }
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
 final class MPLv2Spec extends WordSpec with Matchers {
 
-  "apply" should {
+  "text" should {
 
-    "return the MPL 2.0 license with the given copyright year and owner" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger")
+    "contain the MPL 2.0 license with the given copyright year and owner" in {
+      val mit = MPLv2("2015", "Heiko Seeberger").text
       val expected =
-        s"""|/*
-            | * Copyright (c) 2015 Heiko Seeberger
-            | *
-            | * This Source Code Form is subject to the terms of the Mozilla Public
-            | * License, v. 2.0. If a copy of the MPL was not distributed with this
-            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-            | */
+        s"""|Copyright (c) 2015 Heiko Seeberger
             |
+            |This Source Code Form is subject to the terms of the Mozilla Public
+            |License, v. 2.0. If a copy of the MPL was not distributed with this
+            |file, You can obtain one at http://mozilla.org/MPL/2.0/.
             |""".stripMargin
 
       mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.cStyleBlockComment
     }
 
-    "return the MPL 2.0 license without copyright" in {
-      val (headerPattern, mit) = MPLv2_NoCopyright("2015", "Heiko Seeberger")
+    "contain the MPL 2.0 license without copyright" in {
+      val mit = MPLv2_NoCopyright.text
       val expected =
-        s"""|/*
-            | * This Source Code Form is subject to the terms of the Mozilla Public
-            | * License, v. 2.0. If a copy of the MPL was not distributed with this
-            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-            | */
-            |
+        s"""|This Source Code Form is subject to the terms of the Mozilla Public
+            |License, v. 2.0. If a copy of the MPL was not distributed with this
+            |file, You can obtain one at http://mozilla.org/MPL/2.0/.
             |""".stripMargin
 
       mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.cStyleBlockComment
-    }
-
-    "return the MPL 2.0 license with hash style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", HashLineComment)
-      val expected =
-        s"""|# Copyright (c) 2015 Heiko Seeberger
-            |#
-            |# This Source Code Form is subject to the terms of the Mozilla Public
-            |# License, v. 2.0. If a copy of the MPL was not distributed with this
-            |# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-            |
-            |""".stripMargin
-
-      mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.hashLineComment
-    }
-
-    "return the MIT license with C++ style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", CppStyleLineComment)
-      val expected =
-        s"""|// Copyright (c) 2015 Heiko Seeberger
-            |//
-            |// This Source Code Form is subject to the terms of the Mozilla Public
-            |// License, v. 2.0. If a copy of the MPL was not distributed with this
-            |// file, You can obtain one at http://mozilla.org/MPL/2.0/.
-            |
-            |""".stripMargin
-
-      mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.cppStyleLineComment
-    }
-
-    "return the MIT license with Twirl block style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", TwirlStyleBlockComment)
-      val expected =
-        s"""|@***********************************************************************
-            | * Copyright (c) 2015 Heiko Seeberger                                  *
-            | *                                                                     *
-            | * This Source Code Form is subject to the terms of the Mozilla Public *
-            | * License, v. 2.0. If a copy of the MPL was not distributed with this *
-            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.            *
-            | ***********************************************************************@
-            |
-            |""".stripMargin
-
-      mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.twirlBlockComment
-    }
-
-    "return the MPL 2.0 license with Twirl style" in {
-      val (headerPattern, mit) = MPLv2("2015", "Heiko Seeberger", TwirlStyleComment)
-      val expected =
-        s"""|@*
-            | * Copyright (c) 2015 Heiko Seeberger
-            | *
-            | * This Source Code Form is subject to the terms of the Mozilla Public
-            | * License, v. 2.0. If a copy of the MPL was not distributed with this
-            | * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-            | *@
-            |
-            |""".stripMargin
-
-      mit shouldBe expected
-      headerPattern shouldBe HeaderPattern.twirlStyleComment
     }
   }
 }

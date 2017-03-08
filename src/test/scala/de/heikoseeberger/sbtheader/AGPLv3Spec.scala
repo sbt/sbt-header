@@ -16,144 +16,33 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.{
-  CppStyleLineComment,
-  HashLineComment,
-  TwirlStyleBlockComment,
-  TwirlStyleComment
-}
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.AGPLv3
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
 final class AGPLv3Spec extends WordSpec with Matchers {
 
-  "apply" should {
+  "text" should {
 
-    "return the AGPLv3 license with the given copyright year and owner" in {
-      val (headerPattern, agplv3) = AGPLv3("2015", "Heiko Seeberger")
+    "contain the AGPLv3 license with the given copyright year and owner" in {
+      val agplv3 = AGPLv3("2015", "Heiko Seeberger").text
       val expected =
-        s"""|/*
-            | * Copyright (C) 2015  Heiko Seeberger
-            | *
-            | * This program is free software: you can redistribute it and/or modify
-            | * it under the terms of the GNU Affero General Public License as
-            | * published by the Free Software Foundation, either version 3 of the
-            | * License, or (at your option) any later version.
-            | *
-            | * This program is distributed in the hope that it will be useful,
-            | * but WITHOUT ANY WARRANTY; without even the implied warranty of
-            | * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-            | * GNU Affero General Public License for more details.
-            | *
-            | * You should have received a copy of the GNU Affero General Public License
-            | * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-            | */
+        s"""|Copyright (C) 2015  Heiko Seeberger
             |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU Affero General Public License as
+            |published by the Free Software Foundation, either version 3 of the
+            |License, or (at your option) any later version.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU Affero General Public License for more details.
+            |
+            |You should have received a copy of the GNU Affero General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
             |""".stripMargin
 
       agplv3 shouldBe expected
-      headerPattern shouldBe HeaderPattern.cStyleBlockComment
-    }
-
-    "return the AGPLv3 license with hash style" in {
-      val (headerPattern, agplv3) = AGPLv3("2015", "Heiko Seeberger", HashLineComment)
-      val expected =
-        """|# Copyright (C) 2015  Heiko Seeberger
-           |#
-           |# This program is free software: you can redistribute it and/or modify
-           |# it under the terms of the GNU Affero General Public License as
-           |# published by the Free Software Foundation, either version 3 of the
-           |# License, or (at your option) any later version.
-           |#
-           |# This program is distributed in the hope that it will be useful,
-           |# but WITHOUT ANY WARRANTY; without even the implied warranty of
-           |# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-           |# GNU Affero General Public License for more details.
-           |#
-           |# You should have received a copy of the GNU Affero General Public License
-           |# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-           |
-           |""".stripMargin
-
-      agplv3 shouldBe expected
-      headerPattern shouldBe HeaderPattern.hashLineComment
-    }
-
-    "return the AGPLv3 license with C++ style" in {
-      val (headerPattern, agplv3) = AGPLv3("2015", "Heiko Seeberger", CppStyleLineComment)
-      val expected =
-        """|// Copyright (C) 2015  Heiko Seeberger
-           |//
-           |// This program is free software: you can redistribute it and/or modify
-           |// it under the terms of the GNU Affero General Public License as
-           |// published by the Free Software Foundation, either version 3 of the
-           |// License, or (at your option) any later version.
-           |//
-           |// This program is distributed in the hope that it will be useful,
-           |// but WITHOUT ANY WARRANTY; without even the implied warranty of
-           |// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-           |// GNU Affero General Public License for more details.
-           |//
-           |// You should have received a copy of the GNU Affero General Public License
-           |// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-           |
-           |""".stripMargin
-
-      agplv3 shouldBe expected
-      headerPattern shouldBe HeaderPattern.cppStyleLineComment
-    }
-
-    "return the AGPLv3 license with Twirl block style" in {
-      val (headerPattern, agplv3) = AGPLv3("2015", "Heiko Seeberger", TwirlStyleBlockComment)
-      val expected =
-        """|@****************************************************************************
-           | * Copyright (C) 2015  Heiko Seeberger                                      *
-           | *                                                                          *
-           | * This program is free software: you can redistribute it and/or modify     *
-           | * it under the terms of the GNU Affero General Public License as           *
-           | * published by the Free Software Foundation, either version 3 of the       *
-           | * License, or (at your option) any later version.                          *
-           | *                                                                          *
-           | * This program is distributed in the hope that it will be useful,          *
-           | * but WITHOUT ANY WARRANTY; without even the implied warranty of           *
-           | * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
-           | * GNU Affero General Public License for more details.                      *
-           | *                                                                          *
-           | * You should have received a copy of the GNU Affero General Public License *
-           | * along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
-           | ****************************************************************************@
-           |
-           |""".stripMargin
-
-      agplv3 shouldBe expected
-      headerPattern shouldBe HeaderPattern.twirlBlockComment
-    }
-
-    "return the AGPLv3 license with Twirl style" in {
-      val (headerPattern, agplv3) = AGPLv3("2015", "Heiko Seeberger", TwirlStyleComment)
-      val expected =
-        """|@*
-           | * Copyright (C) 2015  Heiko Seeberger
-           | *
-           | * This program is free software: you can redistribute it and/or modify
-           | * it under the terms of the GNU Affero General Public License as
-           | * published by the Free Software Foundation, either version 3 of the
-           | * License, or (at your option) any later version.
-           | *
-           | * This program is distributed in the hope that it will be useful,
-           | * but WITHOUT ANY WARRANTY; without even the implied warranty of
-           | * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-           | * GNU Affero General Public License for more details.
-           | *
-           | * You should have received a copy of the GNU Affero General Public License
-           | * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-           | *@
-           |
-           |""".stripMargin
-
-      agplv3 shouldBe expected
-      headerPattern shouldBe HeaderPattern.twirlStyleComment
     }
   }
 }

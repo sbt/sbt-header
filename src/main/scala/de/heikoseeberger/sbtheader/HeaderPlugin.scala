@@ -81,7 +81,7 @@ object HeaderPlugin extends AutoPlugin {
         "scala" -> CStyleBlockComment
 
       def createFrom(
-          license: License,
+          license: LicenseHeaderCreator,
           yyyy: String,
           copyrightOwner: String,
           mappings: Seq[(String, CommentStyle)] = Vector(javaBlockComments, scalaBlockComments)
