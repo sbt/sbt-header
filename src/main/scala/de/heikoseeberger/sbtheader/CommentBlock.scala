@@ -34,7 +34,7 @@ private object CommentBlock {
     TwirlCommentBlock
 }
 
-private final object TwirlCommentBlock {
+private object TwirlCommentBlock {
 
   private final val NL = System.lineSeparator()
 
