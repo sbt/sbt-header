@@ -16,22 +16,17 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
+
 import scala.util.matching.Regex
 
 sealed trait License {
-  import HeaderPlugin.autoImport.HeaderPattern._
 
-  def apply(yyyy: String, copyrightOwner: String, commentStyle: String = "*"): (Regex, String) = {
+  def apply(yyyy: String,
+            copyrightOwner: String,
+            commentStyle: CommentStyle = CStyleBlockComment): (Regex, String) = {
     val text = createLicenseText(yyyy, copyrightOwner)
-    commentStyle match {
-      case "*"   => (cStyleBlockComment, CommentBlock.cStyle(text))
-      case "#"   => (hashLineComment, CommentBlock.hashLines(text))
-      case "//"  => (cppStyleLineComment, CommentBlock.cppStyle(text))
-      case "@**" => (twirlBlockComment, CommentBlock.twirlBlock(text))
-      case "@*"  => (twirlStyleComment, CommentBlock.twirlStyle(text))
-      case _ =>
-        throw new IllegalArgumentException(s"Comment style '$commentStyle' not supported")
-    }
+    commentStyle(text)
   }
 
   def createLicenseText(yyyy: String, copyrightOwner: String): String

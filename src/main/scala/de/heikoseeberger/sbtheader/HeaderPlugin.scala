@@ -19,6 +19,8 @@ package de.heikoseeberger.sbtheader
 import java.io.{ File, FileInputStream }
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
+
+import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 import sbt.Keys.{ compile, streams, unmanagedResources, unmanagedSources }
 import sbt.plugins.JvmPlugin
 import sbt.{
@@ -34,6 +36,7 @@ import sbt.{
   TaskKey,
   Test
 }
+
 import scala.collection.breakOut
 import scala.util.matching.Regex
 
@@ -71,17 +74,17 @@ object HeaderPlugin extends AutoPlugin {
 
     object HeaderCommentStyleMapping {
 
-      val javaBlockComments: (String, String) =
-        "java" -> "*"
+      val javaBlockComments: (String, CommentStyle) =
+        "java" -> CStyleBlockComment
 
-      val scalaBlockComments: (String, String) =
-        "scala" -> "*"
+      val scalaBlockComments: (String, CommentStyle) =
+        "scala" -> CStyleBlockComment
 
       def createFrom(
           license: License,
           yyyy: String,
           copyrightOwner: String,
-          mappings: Seq[(String, String)] = Vector(javaBlockComments, scalaBlockComments)
+          mappings: Seq[(String, CommentStyle)] = Vector(javaBlockComments, scalaBlockComments)
       ): Map[String, (Regex, String)] =
         mappings.map { case (a, b) => a -> license(yyyy, copyrightOwner, b) }(breakOut)
     }

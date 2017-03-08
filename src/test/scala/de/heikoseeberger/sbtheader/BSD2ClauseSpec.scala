@@ -16,6 +16,12 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.{
+  CppStyleLineComment,
+  HashLineComment,
+  TwirlStyleBlockComment,
+  TwirlStyleComment
+}
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.BSD2Clause
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
@@ -60,7 +66,7 @@ final class BSD2ClauseSpec extends WordSpec with Matchers {
     }
 
     "return the BSD 2 Clause license with hash style" in {
-      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "#")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", HashLineComment)
       val expected =
         s"""|# Copyright (c) 2015, Heiko Seeberger
             |# All rights reserved.
@@ -93,7 +99,7 @@ final class BSD2ClauseSpec extends WordSpec with Matchers {
     }
 
     "return the BSD 2 Clause license with C++ style" in {
-      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "//")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", CppStyleLineComment)
       val expected =
         s"""|// Copyright (c) 2015, Heiko Seeberger
             |// All rights reserved.
@@ -126,7 +132,7 @@ final class BSD2ClauseSpec extends WordSpec with Matchers {
     }
 
     "return the BSD 2 Clause license with Twirl block style" in {
-      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "@**")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", TwirlStyleBlockComment)
       val expected =
         s"""|@************************************************************************************
             | * Copyright (c) 2015, Heiko Seeberger                                              *
@@ -161,7 +167,7 @@ final class BSD2ClauseSpec extends WordSpec with Matchers {
     }
 
     "return the BSD 2 Clause license with Twirl style " in {
-      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", "@*")
+      val (headerPattern, bsd2) = BSD2Clause("2015", "Heiko Seeberger", TwirlStyleComment)
       val expected =
         s"""|@*
             | * Copyright (c) 2015, Heiko Seeberger
@@ -193,10 +199,6 @@ final class BSD2ClauseSpec extends WordSpec with Matchers {
 
       bsd2 shouldBe expected
       headerPattern shouldBe HeaderPattern.twirlStyleComment
-    }
-
-    "fail when unknown comment style prefix provided" in {
-      intercept[IllegalArgumentException] { BSD2Clause("2015", "Heiko Seeberger", "???") }
     }
   }
 }
