@@ -16,6 +16,12 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.{
+  CppStyleLineComment,
+  HashLineComment,
+  TwirlStyleBlockComment,
+  TwirlStyleComment
+}
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.LGPLv3
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }

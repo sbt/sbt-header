@@ -16,6 +16,12 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.{
+  CppStyleLineComment,
+  HashLineComment,
+  TwirlStyleBlockComment,
+  TwirlStyleComment
+}
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.{
   MPLv2,
   MPLv2_NoCopyright

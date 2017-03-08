@@ -19,6 +19,8 @@ package de.heikoseeberger.sbtheader
 import java.io.{ File, FileInputStream }
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
+
+import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 import sbt.Keys.{ compile, streams, unmanagedResources, unmanagedSources }
 import sbt.plugins.JvmPlugin
 import sbt.{
@@ -34,6 +36,7 @@ import sbt.{
   TaskKey,
   Test
 }
+
 import scala.collection.breakOut
 import scala.util.matching.Regex
 

@@ -16,6 +16,7 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.HashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern.{
   cStyleBlockComment,
   hashLineComment
