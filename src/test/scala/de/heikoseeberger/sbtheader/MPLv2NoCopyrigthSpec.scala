@@ -22,16 +22,14 @@ import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.{
 }
 import org.scalatest.{ Matchers, WordSpec }
 
-final class MPLv2Spec extends WordSpec with Matchers {
+final class MPLv2NoCopyrigthSpec extends WordSpec with Matchers {
 
   "text" should {
 
-    "contain the MPL 2.0 license with the given copyright year and owner" in {
-      val mit = MPLv2("2015", "Heiko Seeberger").text
+    "contain the MPL 2.0 license without copyright" in {
+      val mit = MPLv2_NoCopyright.text
       val expected =
-        s"""|Copyright (c) 2015 Heiko Seeberger
-            |
-            |This Source Code Form is subject to the terms of the Mozilla Public
+        s"""|This Source Code Form is subject to the terms of the Mozilla Public
             |License, v. 2.0. If a copy of the MPL was not distributed with this
             |file, You can obtain one at http://mozilla.org/MPL/2.0/.
             |""".stripMargin
