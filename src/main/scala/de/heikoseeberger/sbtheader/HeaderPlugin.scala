@@ -162,7 +162,7 @@ object HeaderPlugin extends AutoPlugin {
                                 headerLicense: License,
                                 headerMappings: Map[String, CommentStyle],
                                 log: Logger) = {
-    def createHeader(commentStyle: CommentStyle, log: Logger)(file: File) = {
+    def createHeader(commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
       val (headerPattern, headerText) = commentStyle.apply(headerLicense)
@@ -173,7 +173,7 @@ object HeaderPlugin extends AutoPlugin {
       groupFilesByCommentStyle(files, headerMappings)
         .flatMap {
           case (commentStyle, groupedFiles) =>
-            groupedFiles.flatMap(createHeader(commentStyle, log))
+            groupedFiles.flatMap(createHeader(commentStyle))
         }
     if (touchedFiles.nonEmpty)
       log.info(
@@ -186,7 +186,7 @@ object HeaderPlugin extends AutoPlugin {
                                headerLicense: License,
                                headerMappings: Map[String, CommentStyle],
                                log: Logger) = {
-    def checkHeader(commentStyle: CommentStyle, log: Logger)(file: File) = {
+    def checkHeader(commentStyle: CommentStyle)(file: File) = {
       val (headerPattern, headerText) = commentStyle.apply(headerLicense)
       HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
         .map(_ => file)
@@ -194,7 +194,7 @@ object HeaderPlugin extends AutoPlugin {
     val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
       .flatMap {
         case (commentStyle, groupedFiles) =>
-          groupedFiles.flatMap(checkHeader(commentStyle, log))
+          groupedFiles.flatMap(checkHeader(commentStyle))
       }
     if (filesWithoutHeader.nonEmpty)
       sys.error(
