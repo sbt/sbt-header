@@ -16,25 +16,13 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
-
-import scala.util.matching.Regex
-
 sealed trait License {
-
-  def apply(yyyy: String,
-            copyrightOwner: String,
-            commentStyle: CommentStyle = CStyleBlockComment): (Regex, String) = {
-    val text = createLicenseText(yyyy, copyrightOwner)
-    commentStyle(text)
-  }
-
-  def createLicenseText(yyyy: String, copyrightOwner: String): String
+  def text: String
 }
 
 trait Licenses {
-  object Apache2_0 extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class Apache2_0(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright $yyyy $copyrightOwner
           |
           |Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,8 +39,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object MIT extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class MIT(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
           |Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,8 +62,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object MPLv2 extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class MPLv2(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
           |This Source Code Form is subject to the terms of the Mozilla Public
@@ -84,16 +72,16 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object MPLv2_NoCopyright extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final object MPLv2_NoCopyright extends License {
+    override val text =
       s"""|This Source Code Form is subject to the terms of the Mozilla Public
           |License, v. 2.0. If a copy of the MPL was not distributed with this
           |file, You can obtain one at http://mozilla.org/MPL/2.0/.
           |""".stripMargin
   }
 
-  object BSD2Clause extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class BSD2Clause(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
           |
@@ -120,8 +108,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object BSD3Clause extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class BSD3Clause(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
           |
@@ -152,8 +140,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object GPLv3 extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class GPLv3(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
           |This program is free software: you can redistribute it and/or modify
@@ -171,8 +159,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object LGPLv3 extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class LGPLv3(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
           |This program is free software: you can redistribute it and/or modify
@@ -190,8 +178,8 @@ trait Licenses {
           |""".stripMargin
   }
 
-  object AGPLv3 extends License {
-    override def createLicenseText(yyyy: String, copyrightOwner: String) =
+  final case class AGPLv3(yyyy: String, copyrightOwner: String) extends License {
+    override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
           |This program is free software: you can redistribute it and/or modify
