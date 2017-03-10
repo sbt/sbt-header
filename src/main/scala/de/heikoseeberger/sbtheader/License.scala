@@ -21,7 +21,7 @@ sealed trait License {
 }
 
 trait Licenses {
-  case class Apache2_0(yyyy: String, copyrightOwner: String) extends License {
+  final case class Apache2_0(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright $yyyy $copyrightOwner
           |
@@ -39,7 +39,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class MIT(yyyy: String, copyrightOwner: String) extends License {
+  final case class MIT(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
@@ -62,7 +62,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class MPLv2(yyyy: String, copyrightOwner: String) extends License {
+  final case class MPLv2(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
@@ -80,7 +80,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class BSD2Clause(yyyy: String, copyrightOwner: String) extends License {
+  final case class BSD2Clause(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
@@ -108,7 +108,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class BSD3Clause(yyyy: String, copyrightOwner: String) extends License {
+  final case class BSD3Clause(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
@@ -140,7 +140,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class GPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case class GPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
@@ -159,7 +159,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class LGPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case class LGPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
@@ -178,7 +178,7 @@ trait Licenses {
           |""".stripMargin
   }
 
-  case class AGPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case class AGPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
