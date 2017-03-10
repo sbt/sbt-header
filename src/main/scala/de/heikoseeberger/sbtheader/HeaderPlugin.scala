@@ -165,12 +165,12 @@ object HeaderPlugin extends AutoPlugin {
     def createHeader(commentStyle: CommentStyle, log: Logger)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
-      val (a, b) = commentStyle.apply(headerLicense)
-      HeaderCreator(a, b, log, new FileInputStream(file)).createText
+      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
+      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
         .map(write)
     }
     val touchedFiles =
-      groupFilesByHeader(files, headerMappings)
+      groupFilesByCommentStyle(files, headerMappings)
         .flatMap {
           case (commentStyle, groupedFiles) =>
             groupedFiles.flatMap(createHeader(commentStyle, log))
@@ -187,11 +187,11 @@ object HeaderPlugin extends AutoPlugin {
                                headerMappings: Map[String, CommentStyle],
                                log: Logger) = {
     def checkHeader(commentStyle: CommentStyle, log: Logger)(file: File) = {
-      val (a, b) = commentStyle.apply(headerLicense)
-      HeaderCreator(a, b, log, new FileInputStream(file)).createText
+      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
+      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
         .map(_ => file)
     }
-    val filesWithoutHeader = groupFilesByHeader(files, headerMappings)
+    val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
       .flatMap {
         case (commentStyle, groupedFiles) =>
           groupedFiles.flatMap(checkHeader(commentStyle, log))
@@ -205,7 +205,7 @@ object HeaderPlugin extends AutoPlugin {
     filesWithoutHeader
   }
 
-  private def groupFilesByHeader(files: Seq[File], headers: Map[String, CommentStyle]) =
+  private def groupFilesByCommentStyle(files: Seq[File], headers: Map[String, CommentStyle]) =
     files
       .groupBy(_.extension)
       .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
