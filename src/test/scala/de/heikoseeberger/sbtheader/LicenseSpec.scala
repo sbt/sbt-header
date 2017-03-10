@@ -49,7 +49,7 @@ class LicenseSpec extends WordSpec with Matchers {
   "Apache 2.0" should {
 
     "contain the Apache 2.0 license with the given copyright year and owner" in {
-      val apache2_0 = Apache2_0("2015", "Heiko Seeberger").text
+      val `apache 2.0` = Apache2_0("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright 2015 Heiko Seeberger
             |
@@ -66,7 +66,7 @@ class LicenseSpec extends WordSpec with Matchers {
             |limitations under the License.
             |""".stripMargin
 
-      apache2_0 shouldBe expected
+      `apache 2.0` shouldBe expected
     }
   }
 
