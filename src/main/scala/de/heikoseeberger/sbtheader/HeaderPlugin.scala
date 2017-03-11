@@ -89,8 +89,13 @@ object HeaderPlugin extends AutoPlugin {
         }(breakOut)
     }
 
-    val headers: SettingKey[Map[String, (Regex, String)]] =
-      settingKey("Header pattern and text by extension; empty by default")
+    val headerLicense: SettingKey[License] =
+      settingKey("The license to apply to files")
+
+    val headerMappings: SettingKey[Map[String, CommentStyle]] =
+      settingKey(
+        "CommentStyles to be used by file extension they should be applied to; empty by default"
+      )
 
     /*
      * Since we override the default (mutable) Seq in our package object with the immutable variant, we explicitly use
@@ -130,7 +135,8 @@ object HeaderPlugin extends AutoPlugin {
             .value
             .toList ++ unmanagedResources.in(headerCreate).value.toList
         ),
-        headers.value,
+        headerLicense.value,
+        headerMappings.value,
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
@@ -140,31 +146,34 @@ object HeaderPlugin extends AutoPlugin {
             .value
             .toList ++ unmanagedResources.in(headerCreate).value.toList
         ),
-        headers.value,
+        headerLicense.value,
+        headerMappings.value,
         streams.value.log
       )
     )
 
   private def notToBeScopedSettings =
     Vector(
-      headers := Map.empty,
+      headerMappings := Map.empty,
       headerExcludes := Seq.empty
     )
 
   private def createHeadersTask(files: Seq[File],
-                                headers: Map[String, (Regex, String)],
+                                headerLicense: License,
+                                headerMappings: Map[String, CommentStyle],
                                 log: Logger) = {
-    def createHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) = {
+    def createHeader(commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
+      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
       HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
         .map(write)
     }
     val touchedFiles =
-      groupFilesByHeader(files, headers)
+      groupFilesByCommentStyle(files, headerMappings)
         .flatMap {
-          case ((pattern, text), groupedFiles) =>
-            groupedFiles.flatMap(createHeader(pattern, text, log))
+          case (commentStyle, groupedFiles) =>
+            groupedFiles.flatMap(createHeader(commentStyle))
         }
     if (touchedFiles.nonEmpty)
       log.info(
@@ -174,15 +183,18 @@ object HeaderPlugin extends AutoPlugin {
   }
 
   private def checkHeadersTask(files: Seq[File],
-                               headers: Map[String, (Regex, String)],
+                               headerLicense: License,
+                               headerMappings: Map[String, CommentStyle],
                                log: Logger) = {
-    def checkHeader(headerPattern: Regex, headerText: String, log: Logger)(file: File) =
+    def checkHeader(commentStyle: CommentStyle)(file: File) = {
+      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
       HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
         .map(_ => file)
-    val filesWithoutHeader = groupFilesByHeader(files, headers)
+    }
+    val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
       .flatMap {
-        case ((pattern, text), groupedFiles) =>
-          groupedFiles.flatMap(checkHeader(pattern, text, log))
+        case (commentStyle, groupedFiles) =>
+          groupedFiles.flatMap(checkHeader(commentStyle))
       }
     if (filesWithoutHeader.nonEmpty)
       sys.error(
@@ -193,7 +205,7 @@ object HeaderPlugin extends AutoPlugin {
     filesWithoutHeader
   }
 
-  private def groupFilesByHeader(files: Seq[File], headers: Map[String, (Regex, String)]) =
+  private def groupFilesByCommentStyle(files: Seq[File], headers: Map[String, CommentStyle]) =
     files
       .groupBy(_.extension)
       .collect { case (Some(ext), groupedFiles) => headers.get(ext).map(_ -> groupedFiles) }
