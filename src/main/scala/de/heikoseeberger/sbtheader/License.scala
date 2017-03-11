@@ -196,4 +196,6 @@ trait Licenses {
           |along with this program.  If not, see <http://www.gnu.org/licenses/>.
           |""".stripMargin
   }
+
+  final case class Custom(text: String) extends License
 }
