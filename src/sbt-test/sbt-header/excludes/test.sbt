@@ -3,12 +3,7 @@ import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 headerLicense := HeaderLicense.Apache2_0("2015", "Heiko Seeberger")
 headerMappings := Map("scala" -> CStyleBlockComment)
 
-headerExcludes := Seq(
-  "src/main/scala/Excluded.scala",
-  "src/main/scala/de/heikoseeberger/mixed/Excluded.scala",
-  "src/main/scala/de/heikoseeberger/allexcluded/*.scala",
-  "src/main/scala/de/heikoseeberger/allincluded/*.java"
-)
+excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 checkFileContents := {
