@@ -97,14 +97,6 @@ object HeaderPlugin extends AutoPlugin {
         "CommentStyles to be used by file extension they should be applied to; empty by default"
       )
 
-    /*
-     * Since we override the default (mutable) Seq in our package object with the immutable variant, we explicitly use
-     * the default (mutable) Seq here. Otherwise users would have to import scala.collection.immutable.Seq explicitly
-     * in their build files, which would probably only cause confusion.
-     */
-    val headerExcludes: SettingKey[scala.collection.Seq[String]] =
-      settingKey("File patterns for files to be excluded; empty by default")
-
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
@@ -129,23 +121,19 @@ object HeaderPlugin extends AutoPlugin {
       unmanagedSources in headerCreate := unmanagedSources.value,
       unmanagedResources in headerCreate := unmanagedResources.value,
       headerCreate := createHeadersTask(
-        FileFilter(Vector(headerExcludes.value: _*)).filter(
-          unmanagedSources
-            .in(headerCreate)
-            .value
-            .toList ++ unmanagedResources.in(headerCreate).value.toList
-        ),
+        unmanagedSources
+          .in(headerCreate)
+          .value
+          .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value,
         headerMappings.value,
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
-        FileFilter(Vector(headerExcludes.value: _*)).filter(
-          unmanagedSources
-            .in(headerCreate)
-            .value
-            .toList ++ unmanagedResources.in(headerCreate).value.toList
-        ),
+        unmanagedSources
+          .in(headerCreate)
+          .value
+          .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value,
         headerMappings.value,
         streams.value.log
@@ -154,8 +142,7 @@ object HeaderPlugin extends AutoPlugin {
 
   private def notToBeScopedSettings =
     Vector(
-      headerMappings := Map.empty,
-      headerExcludes := Seq.empty
+      headerMappings := Map.empty
     )
 
   private def createHeadersTask(files: Seq[File],
