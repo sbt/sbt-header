@@ -62,7 +62,7 @@ headers := Map(
 )
 ```
 
-To exclude some files, use the `excludes` setting. It accepts glob file name patterns relative to the project root:
+To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
 
 ``` scala
 import de.heikoseeberger.sbtheader.HeaderPattern
@@ -71,9 +71,7 @@ headers := Map(
   "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
 
-excludes := Seq(
-  "src/generated/**",
-)
+excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
 ```
 
 The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
