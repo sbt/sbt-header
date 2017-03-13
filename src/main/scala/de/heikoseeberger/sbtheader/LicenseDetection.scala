@@ -36,8 +36,8 @@ private object LicenseDetection {
             organizationName: String,
             startYear: Option[Int]): Option[License] = {
     val licenseName = licenses match {
-      case license :: Nil => Some(license._1)
-      case _              => None
+      case (name, _) :: Nil => Some(name)
+      case _                => None
     }
     val org = organizationName.trim match {
       case "" => None
