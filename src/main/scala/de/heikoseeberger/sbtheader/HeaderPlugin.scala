@@ -22,7 +22,6 @@ import java.nio.file.Files
 
 import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 import sbt.Keys.{
-  compile,
   licenses,
   organizationName,
   startYear,
