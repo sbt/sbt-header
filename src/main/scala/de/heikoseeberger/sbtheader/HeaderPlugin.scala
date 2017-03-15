@@ -21,7 +21,14 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 
 import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
-import sbt.Keys.{ compile, streams, unmanagedResources, unmanagedSources }
+import sbt.Keys.{
+  licenses,
+  organizationName,
+  startYear,
+  streams,
+  unmanagedResources,
+  unmanagedSources
+}
 import sbt.plugins.JvmPlugin
 import sbt.{
   inConfig,
@@ -34,7 +41,8 @@ import sbt.{
   Setting,
   SettingKey,
   TaskKey,
-  Test
+  Test,
+  URL
 }
 
 import scala.collection.breakOut
@@ -89,8 +97,10 @@ object HeaderPlugin extends AutoPlugin {
         }(breakOut)
     }
 
-    val headerLicense: SettingKey[License] =
-      settingKey("The license to apply to files")
+    val headerLicense: SettingKey[Option[License]] =
+      settingKey(
+        "The license to apply to files; None by default (enabling auto detection from project settings)"
+      )
 
     val headerMappings: SettingKey[Map[String, CommentStyle]] =
       settingKey(
@@ -125,7 +135,10 @@ object HeaderPlugin extends AutoPlugin {
           .in(headerCreate)
           .value
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
-        headerLicense.value,
+        headerLicense.value
+          .getOrElse(
+            sys.error("Unable to auto detect project license")
+          ),
         headerMappings.value,
         streams.value.log
       ),
@@ -134,7 +147,10 @@ object HeaderPlugin extends AutoPlugin {
           .in(headerCreate)
           .value
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
-        headerLicense.value,
+        headerLicense.value
+          .getOrElse(
+            sys.error("Unable to auto detect project license")
+          ),
         headerMappings.value,
         streams.value.log
       )
@@ -142,7 +158,10 @@ object HeaderPlugin extends AutoPlugin {
 
   private def notToBeScopedSettings =
     Vector(
-      headerMappings := Map.empty
+      headerMappings := Map.empty,
+      headerLicense := LicenseDetection(licenses.value.toList,
+                                        organizationName.value,
+                                        startYear.value)
     )
 
   private def createHeadersTask(files: Seq[File],
