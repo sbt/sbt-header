@@ -137,10 +137,7 @@ object HeaderPlugin extends AutoPlugin {
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value
           .getOrElse(
-            LicenseDetection(licenses.value.toList, organizationName.value, startYear.value)
-              .getOrElse(
-                sys.error("Unable to auto detect project license")
-              )
+            sys.error("Unable to auto detect project license")
           ),
         headerMappings.value,
         streams.value.log
@@ -152,10 +149,7 @@ object HeaderPlugin extends AutoPlugin {
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value
           .getOrElse(
-            LicenseDetection(licenses.value.toList, organizationName.value, startYear.value)
-              .getOrElse(
-                sys.error("Unable to auto detect project license")
-              )
+            sys.error("Unable to auto detect project license")
           ),
         headerMappings.value,
         streams.value.log
@@ -165,7 +159,9 @@ object HeaderPlugin extends AutoPlugin {
   private def notToBeScopedSettings =
     Vector(
       headerMappings := Map.empty,
-      headerLicense := None
+      headerLicense := LicenseDetection(licenses.value.toList,
+                                        organizationName.value,
+                                        startYear.value)
     )
 
   private def createHeadersTask(files: Seq[File],
