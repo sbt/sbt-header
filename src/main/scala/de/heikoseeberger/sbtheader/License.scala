@@ -21,7 +21,7 @@ sealed trait License {
 }
 
 trait Licenses {
-  final case class Apache2_0(yyyy: String, copyrightOwner: String) extends License {
+  final case class ALv2(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright $yyyy $copyrightOwner
           |

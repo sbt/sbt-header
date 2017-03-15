@@ -18,7 +18,7 @@ package de.heikoseeberger.sbtheader
 
 import de.heikoseeberger.sbtheader.CommentStyle.HashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyleMapping
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Apache2_0
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.ALv2
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern.{
   cStyleBlockComment,
   hashLineComment
@@ -28,7 +28,7 @@ import org.scalatest.{ Matchers, WordSpec }
 final class HeaderCommentStyleMappingSpec extends WordSpec with Matchers {
 
   "Default HeaderCommentStyleMapping" should {
-    val mapping = HeaderCommentStyleMapping.createFrom(Apache2_0("2016", "John Doe"))
+    val mapping = HeaderCommentStyleMapping.createFrom(ALv2("2016", "John Doe"))
 
     "contain a mapping from java files to C style block comments" in {
       mapping should contain key "java"
@@ -43,7 +43,7 @@ final class HeaderCommentStyleMappingSpec extends WordSpec with Matchers {
 
   "Custom HeaderCommentStyleMapping" should {
     val mapping = HeaderCommentStyleMapping.createFrom(
-      Apache2_0("2016", "John Doe"),
+      ALv2("2016", "John Doe"),
       Vector("conf" -> HashLineComment, "properties" -> HashLineComment, "yml" -> HashLineComment)
     )
 

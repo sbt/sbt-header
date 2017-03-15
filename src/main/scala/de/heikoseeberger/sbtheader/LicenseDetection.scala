@@ -22,7 +22,7 @@ import sbt.URL
 private object LicenseDetection {
 
   private val spdxMapping = Map(
-    "Apache-2.0"   -> Apache2_0,
+    "Apache-2.0"   -> ALv2,
     "AGPL-3.0"     -> AGPLv3,
     "BSD-2-Clause" -> BSD2Clause,
     "BSD-3-Clause" -> BSD3Clause,
