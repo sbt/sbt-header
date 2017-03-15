@@ -67,15 +67,6 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
       ) shouldBe None
     }
 
-    // TODO is the value of the setting empty, when the user has not set it?
-    "not detect a license when organzationName is empty" in {
-      LicenseDetection(
-        List(apache),
-        "",
-        startYear
-      ) shouldBe None
-    }
-
     "not detect a license when startYear is None" in {
       LicenseDetection(
         List(apache),

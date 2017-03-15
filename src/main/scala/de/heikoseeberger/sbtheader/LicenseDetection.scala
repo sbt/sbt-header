@@ -39,21 +39,12 @@ private object LicenseDetection {
       case (name, _) :: Nil => Some(name)
       case _                => None
     }
-    val org = organizationName.trim match {
-      case "" => None
-      case _  => Some(organizationName)
-    }
-    detectLicense(licenseName, org, startYear)
-  }
 
-  private def detectLicense(licenseName: Option[String],
-                            organizationName: Option[String],
-                            startYear: Option[Int]) =
     for {
       name    <- licenseName
       license <- spdxMapping.get(name)
-      org     <- organizationName
       year    <- startYear
-    } yield license(year.toString, org)
+    } yield license(year.toString, organizationName)
+  }
 
 }
