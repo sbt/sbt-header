@@ -39,16 +39,14 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
       "https://spdx.org/licenses/AGPL-3.0.html#licenseText"
     )),
     Apache2_0(yyyy.toString, organizationName) ->
-    ("Apache-2.0", new URL("https://spdx.org/licenses/Apache-2.0.html#licenseText")),
+    apache,
     GPLv3(yyyy.toString, organizationName) -> ("GPL-3.0", new URL(
       "https://spdx.org/licenses/GPL-3.0.html#licenseText"
     )),
     LGPLv3(yyyy.toString, organizationName) -> ("LGPL-3.0", new URL(
       "https://spdx.org/licenses/LGPL-3.0.html#licenseText"
     )),
-    MIT(yyyy.toString, organizationName) -> ("MIT", new URL(
-      "https://spdx.org/licenses/MIT.html#licenseText"
-    )),
+    MIT(yyyy.toString, organizationName) -> mit,
     MPLv2(yyyy.toString, organizationName) -> ("MPL-2.0", new URL(
       "https://spdx.org/licenses/MPL-2.0.html#licenseText"
     ))
