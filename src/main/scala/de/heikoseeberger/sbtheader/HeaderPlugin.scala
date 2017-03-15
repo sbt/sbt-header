@@ -137,7 +137,10 @@ object HeaderPlugin extends AutoPlugin {
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value
           .getOrElse(
-            detectLicense(licenses.value.toList, organizationName.value, startYear.value)
+            LicenseDetection(licenses.value.toList, organizationName.value, startYear.value)
+              .getOrElse(
+                sys.error("Unable to auto detect project license")
+              )
           ),
         headerMappings.value,
         streams.value.log
@@ -149,18 +152,14 @@ object HeaderPlugin extends AutoPlugin {
           .toList ++ unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value
           .getOrElse(
-            detectLicense(licenses.value.toList, organizationName.value, startYear.value)
+            LicenseDetection(licenses.value.toList, organizationName.value, startYear.value)
+              .getOrElse(
+                sys.error("Unable to auto detect project license")
+              )
           ),
         headerMappings.value,
         streams.value.log
       )
-    )
-
-  private def detectLicense(licenses: List[(String, URL)],
-                            organizationName: String,
-                            startYear: Option[Int]): License =
-    LicenseDetection(licenses, organizationName, startYear).getOrElse(
-      sys.error("Unable to auto detect project license")
     )
 
   private def notToBeScopedSettings =
