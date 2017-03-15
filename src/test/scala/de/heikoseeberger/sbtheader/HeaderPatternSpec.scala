@@ -19,7 +19,7 @@ package de.heikoseeberger.sbtheader
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import org.scalatest.{ Matchers, WordSpec }
 
-class HeaderPluginSpec extends WordSpec with Matchers {
+class HeaderPatternSpec extends WordSpec with Matchers {
 
   "HeaderPattern.cStyleBlockComment" should {
 
