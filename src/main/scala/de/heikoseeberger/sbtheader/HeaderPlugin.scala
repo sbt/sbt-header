@@ -76,7 +76,7 @@ object HeaderPlugin extends AutoPlugin {
 
       def commentStartingWith(start: String): Regex =
         new Regex(
-          raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:#[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)"""
+          raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)"""
         )
     }
 

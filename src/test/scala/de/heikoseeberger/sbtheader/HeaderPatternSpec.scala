@@ -89,6 +89,40 @@ class HeaderPatternSpec extends WordSpec with Matchers {
     }
   }
 
+  "HeaderPattern.cppStyleLineComment" should {
+
+    "not match a singleline comment without trailing new lines" in {
+      HeaderPattern.cppStyleLineComment.unapplySeq("// comment") shouldBe None
+    }
+
+    "not match a multiline block comment with a single trailing new line" in {
+      HeaderPattern.cppStyleLineComment.unapplySeq(
+        """|// comment/1
+           |// comment/2
+           |""".stripMargin
+      ) shouldBe None
+    }
+
+    "match a comment with trailing new lines not followed by a body" in {
+      val header = """|// comment
+                      |
+                      |
+                      |""".stripMargin
+      HeaderPattern.cppStyleLineComment.unapplySeq(header) shouldBe Some(List(header, ""))
+    }
+
+    "match a comment with trailing new lines followed by a body" in {
+      val header = """|// comment/1
+                      |// comment/2
+                      |
+                      |""".stripMargin
+      val body   = """|def foo(bar):
+                      |    print(bar)
+                      |""".stripMargin
+      HeaderPattern.cppStyleLineComment.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+  }
+
   "HeaderPattern.hashLineComment" should {
 
     "not match a singleline comment without trailing new lines" in {
@@ -117,8 +151,8 @@ class HeaderPatternSpec extends WordSpec with Matchers {
                       |
                       |""".stripMargin
       val body   = """|def foo(bar):
-                    |    print(bar)
-                    |""".stripMargin
+                      |    print(bar)
+                      |""".stripMargin
       HeaderPattern.hashLineComment.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
