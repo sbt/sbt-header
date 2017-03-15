@@ -1,12 +1,9 @@
-import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
-
 headerLicense := Some(HeaderLicense.Custom(
   """|This is a custom License.
      |
      |It has an empty line and a second line with Text.
      |""".stripMargin
 ))
-headerMappings := Map("scala" -> CStyleBlockComment)
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 
