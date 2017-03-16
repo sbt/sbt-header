@@ -9,18 +9,124 @@
 
 sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
-## Requirements
+## Getting started
+
+In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
+
+``` scala
+addSbtPlugin("de.heikoseeberger" % "sbt-header" % "2.0.0")
+```
+
+Then in your `build.sbt` configure the following settings:
+
+```scala
+organizationName := "Heiko Seeberger"
+startYear := Some(2015)
+licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
+```
+
+This configuration will add apply Apache License 2.0 headers to Scala and Java files. sbt-header provides two tasks: `headerCreate` and `headerCheck`, which are described in the following sub sections. For more information on how to customize sbt-header, please refer to the [Configuration](#configuration) section.
+
+### Creating headers
+
+In order to create or update file headers, execute the `headerCreate` task:
+
+```
+> headerCreate
+[info] Headers created for 2 files:
+[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
+[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
+```
+
+### Checking headers
+
+In order to check whether all files have headers (for example for CI), execute the `headerCheck` task:
+
+```
+> headerCheck
+[error] (compile:checkHeaders) There are files without headers!
+[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
+[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
+```
+
+`headerCheck` will not modify any files but will cause the build to file there are files without a license header.
+
+### Requirements
 
 - Java 7 or higher
 - sbt 0.13.13 or higher
 
 ## Configuration
 
-In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
+By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses`. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses). 
+
+### Setting the license to use explicitly
+
+If you can not setup your build in a way that sbt-header can detect the license you want to use (see above), you can set the license to use explicitly:
+
+```scala
+headerLicense := Some(HeaderLicense.MIT("2015", "Heiko Seeberger"))
+```
+
+This will also given precedence if a license has been auto detected from project settings.
+
+### Build in licenses
+
+The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/License.scala). They can either be detected using their SPDX identifier or by setting them explicitly.
+
+|License|SPDX identifier|
+|-------|---------------|
+|[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)|`Apache-2.0`|
+|[BSD 2 Clause](https://opensource.org/licenses/BSD-2-Clause)|`BSD-2-Clause`|
+|[BSD 3 Clause](https://opensource.org/licenses/BSD-3-Clause)|`BSD-3-Clause`|
+|[GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.en.html)|`GPL-3.0`|
+|[GNU Lesser General Public License v3](http://www.gnu.org/licenses/lgpl-3.0.en.html)|`LGPL-3.0`|
+|[GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl.html)|`AGPL-3.0`|
+|[MIT License](https://opensource.org/licenses/MIT)|`MIT`|
+|[Mozilla Public License, v. 2.0](http://mozilla.org/MPL/2.0/)|`MPL-2.0`|
+
+### Using a custom license text
+
+If you don't want to use one of the build in licenses, you can define a custom license test using the `Custom` case class:
+
+```scala
+headerLicense := Some(HeaderLicense.Custom(
+  """|Copyright (c) Awesome Company 2015
+     |
+     |This is the custom License of Awesome Company
+     |""".stripMargin
+))
+```
+
+Note that you don't need to add comment markers like `//` or `/*`. The comment style is configured on a per file type basis and it explained in the [next section](#build-in-comment-styles).
+
+### Configuring comment styles
+
+Comment styles are configured on a per file type basis. The default is to apply C Style block comments to Scala and Java files. The build-in comment styles are defined in [CommentStyle](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/CommentStyle.scala):
+
+|Name|Description|
+|----|-----------|
+|CStyleBlockComment|C style block comments (blocks starting with "/*" and ending with "*/")|
+|CppStyleLineComment|C++ style line comments (lines prefixed with "//")|
+|HashLineComment|Hash line comments (lines prefixed with "#")|
+|TwirlStyleComment|Twirl style comment (blocks starting with "@*" and ending with "*@")|
+|TwirlStyleBlockComment|Twirl style block comments (comment blocks with a frame made of "*")|
+
+To override the configuration for Scala/Java files or add a configuration to some other files type, use the `headerMapping` setting:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.8.0")
+headersMappings := headerMapping.value + ("scala" -> CppStyleLineComment)
 ```
+
+### Excluding files
+
+To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
+
+``` scala
+excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
+```
+
+### Using an auto plugin
 
 If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:
 
@@ -33,113 +139,12 @@ object Build extends AutoPlugin {
 }
 ```
 
-You have to define which source or resource files should be considered by sbt-header and if so, how the headers should look like. sbt-header uses a mapping from file extension to header pattern and text for that purpose, specified with the `headers` setting. Here's an example:
-
-``` scala
-import de.heikoseeberger.sbtheader.HeaderPattern
-
-headers := Map(
-  "scala" -> (
-    HeaderPattern.cStyleBlockComment,
-    """|/*
-       | * Copyright 2015 Heiko Seeberger
-       | *
-       | * Licensed under the Apache License, Version 2.0 (the "License");
-       | * you may not use this file except in compliance with the License.
-       | * You may obtain a copy of the License at
-       | *
-       | *    http://www.apache.org/licenses/LICENSE-2.0
-       | *
-       | * Unless required by applicable law or agreed to in writing, software
-       | * distributed under the License is distributed on an "AS IS" BASIS,
-       | * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-       | * See the License for the specific language governing permissions and
-       | * limitations under the License.
-       | */
-       |
-       |""".stripMargin
-  )
-)
-```
-
-To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
-
-``` scala
-import de.heikoseeberger.sbtheader.HeaderPattern
-
-headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger")
-)
-
-excludeFilter.in(unmanagedSources.in(createHeaders)) := HiddenFileFilter || "*Excluded.scala"
-```
-
-The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
-- [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-- [MIT License](https://opensource.org/licenses/MIT)
-- BSD [2 Clause](https://opensource.org/licenses/BSD-2-Clause) and [3 Clause](https://opensource.org/licenses/BSD-3-Clause) License
-- [GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.en.html)
-- [GNU Lesser General Public License v3](http://www.gnu.org/licenses/lgpl-3.0.en.html)
-- [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl.html)
-
-They can be added as follows:
-
-``` scala
-import de.heikoseeberger.sbtheader.license.Apache2_0
-
-headers := Map(
-  "scala" -> Apache2_0("2015", "Heiko Seeberger"),
-  "conf" -> Apache2_0("2015", "Heiko Seeberger", "#")
-)
-```
-
-The built-in licenses support three comment styles:
-- C style block comments (default)
-- C++ style line comments (commentStyle = "//")
-- Hash line comments (commentStyle = "#")
-
-The CommentStyleMapping object in [HeaderPlugin](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/HeaderPlugin.scala) provides default mappings for common file types, so that they don't have to be configured manually:
-
-``` scala
-import de.heikoseeberger.sbtheader.license.Apache2_0
-import de.heikoseeberger.sbtheader.CommentStyleMapping._
-
-headers := createFrom(Apache2_0, "2015", "Heiko Seeberger")
-```
-
-Notice that for the header pattern you have to provide a `Regex` which extracts the header and the body for a given file, i.e. one with two capturing groups. `HeaderPattern` defines three widely used patterns:
-- `cStyleBlockComment`, e.g. for Scala and Java
-- `cppStyleLineComment`, e.g. for C++ and Protobuf
-- `hashLineComment`, e.g. for Bash, Python and HOCON
-
-By the way, first lines starting with shebang are not touched by sbt-header.
-
-You can also declare your own quite easily using the `HeaderPattern.commentBetween` and `HeaderPattern.commentStartingWith` functions.
+### Adding headers to files in other configurations 
 
 By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
 ``` scala
 HeaderPlugin.settingsFor(It, MultiJvm)
-```
-
-## Usage
-
-In order to create or update file headers, execute the `createHeaders` task:
-
-```
-> createHeaders
-[info] Headers created for 2 files:
-[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
-[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
-```
-
-In order to check whether all files have headers, execute the `checkHeaders` task:
-
-```
-> checkHeaders
-[error] (compile:checkHeaders) There are files without headers!
-[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
-[error]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
 ### Automation
@@ -162,22 +167,6 @@ AutomateHeaderPlugin.automateFor(It, MultiJvm)
 
 This plugin by default only handles `managedSources` and `managedResources` in `Compile` and `Test`. For this reason you
 need to tell sbt-header when it should also add headers to additional files managed by other plugins.
-
-### sbt-boilerplate
-
-In order to use sbt-header with [sbt-boilerplate plugin](https://github.com/sbt/sbt-boilerplate) add the following to
-your build definition:
-
-```scala
-def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
-  acc ++ (unmanagedSources in (conf, createHeaders) := (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get)
-}
-
-addBoilerplate(Compile, Test)
-```
-
-This adds `src/{conf}/boilerplate/**.scala` in the list of files handled by sbt-headers for `conf`, where `conf` is
-either `Compile` or `Test`.
 
 ### sbt-twirl / play projects
 
@@ -214,6 +203,31 @@ twirl block comments.
  * This is a twirl block comment *
  ********************************@
 ```
+
+### sbt-boilerplate
+
+In order to use sbt-header with [sbt-boilerplate plugin](https://github.com/sbt/sbt-boilerplate) add the following to
+your build definition:
+
+```scala
+def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
+  acc ++ (unmanagedSources in (conf, createHeaders) := (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get)
+}
+
+addBoilerplate(Compile, Test)
+```
+
+This adds `src/{conf}/boilerplate/**.scala` in the list of files handled by sbt-headers for `conf`, where `conf` is
+either `Compile` or `Test`.
+
+## Migrating from 1.x
+
+TODO
+
+- link to old documentation
+- renamed tasks and settings
+- migrating to `Custom` license
+- features which doe not work anymore: appling different licenses to different file types
 
 ## Contribution policy ##
 
