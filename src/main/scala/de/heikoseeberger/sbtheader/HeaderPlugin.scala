@@ -52,7 +52,7 @@ object HeaderPlugin extends AutoPlugin {
 
   final object autoImport {
 
-    object HeaderLicense extends Licenses
+    val HeaderLicense = License
 
     object HeaderPattern {
 

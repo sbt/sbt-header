@@ -20,7 +20,7 @@ sealed trait License {
   def text: String
 }
 
-trait Licenses {
+object License {
   final case class ALv2(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright $yyyy $copyrightOwner
