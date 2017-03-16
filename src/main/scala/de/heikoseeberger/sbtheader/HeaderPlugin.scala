@@ -80,23 +80,6 @@ object HeaderPlugin extends AutoPlugin {
         )
     }
 
-    object HeaderCommentStyleMapping {
-
-      val javaBlockComments: (String, CommentStyle) =
-        "java" -> CStyleBlockComment
-
-      val scalaBlockComments: (String, CommentStyle) =
-        "scala" -> CStyleBlockComment
-
-      def createFrom(
-          license: License,
-          mappings: Seq[(String, CommentStyle)] = Vector(javaBlockComments, scalaBlockComments)
-      ): Map[String, (Regex, String)] =
-        mappings.map {
-          case (headerPattern, commentStyle) => headerPattern -> commentStyle(license)
-        }(breakOut)
-    }
-
     val headerLicense: SettingKey[Option[License]] =
       settingKey(
         "The license to apply to files; None by default (enabling auto detection from project settings)"
@@ -104,7 +87,7 @@ object HeaderPlugin extends AutoPlugin {
 
     val headerMappings: SettingKey[Map[String, CommentStyle]] =
       settingKey(
-        "CommentStyles to be used by file extension they should be applied to; empty by default"
+        "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
       )
 
     val headerCreate: TaskKey[Iterable[File]] =
@@ -158,7 +141,10 @@ object HeaderPlugin extends AutoPlugin {
 
   private def notToBeScopedSettings =
     Vector(
-      headerMappings := Map.empty,
+      headerMappings := Map(
+        "scala" -> CStyleBlockComment,
+        "java"  -> CStyleBlockComment
+      ),
       headerLicense := LicenseDetection(licenses.value.toList,
                                         organizationName.value,
                                         startYear.value)
