@@ -87,7 +87,7 @@ object HeaderPlugin extends AutoPlugin {
 
     val headerMappings: SettingKey[Map[String, CommentStyle]] =
       settingKey(
-        "CommentStyles to be used by file extension they should be applied to. Default is to apply C style block comments to Scala and Java files."
+        "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
       )
 
     val headerCreate: TaskKey[Iterable[File]] =
