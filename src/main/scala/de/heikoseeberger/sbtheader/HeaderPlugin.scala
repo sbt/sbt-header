@@ -157,8 +157,8 @@ object HeaderPlugin extends AutoPlugin {
     def createHeader(commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
-      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
-      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
+      val headerText = commentStyle.apply(headerLicense)
+      HeaderCreator(commentStyle.pattern, headerText, log, new FileInputStream(file)).createText
         .map(write)
     }
     val touchedFiles =
@@ -179,8 +179,8 @@ object HeaderPlugin extends AutoPlugin {
                                headerMappings: Map[String, CommentStyle],
                                log: Logger) = {
     def checkHeader(commentStyle: CommentStyle)(file: File) = {
-      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
-      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
+      val headerText = commentStyle.apply(headerLicense)
+      HeaderCreator(commentStyle.pattern, headerText, log, new FileInputStream(file)).createText
         .map(_ => file)
     }
     val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)

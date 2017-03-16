@@ -24,35 +24,46 @@ import scala.util.matching.Regex
   * Representation of the different comment styles supported by this plugin.
   */
 sealed trait CommentStyle {
-  def apply(licenseText: String): (Regex, String)
-  def apply(license: License): (Regex, String) = apply(license.text)
+  def pattern: Regex
+  def apply(licenseText: String): String
+  def apply(license: License): String = apply(license.text)
 }
 
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (cStyleBlockComment, CommentBlock.cStyle(licenseText))
+    override def apply(licenseText: String) =
+      CommentBlock.cStyle(licenseText)
+
+    override def pattern: Regex = cStyleBlockComment
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (cppStyleLineComment, CommentBlock.cppStyle(licenseText))
+    override def apply(licenseText: String) =
+      CommentBlock.cppStyle(licenseText)
+
+    override def pattern: Regex = cppStyleLineComment
   }
 
   case object HashLineComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (hashLineComment, CommentBlock.hashLines(licenseText))
+    override def apply(licenseText: String) =
+      CommentBlock.hashLines(licenseText)
+
+    override def pattern: Regex = hashLineComment
   }
 
   case object TwirlStyleComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (twirlStyleComment, CommentBlock.twirlStyle(licenseText))
+    override def apply(licenseText: String) =
+      CommentBlock.twirlStyle(licenseText)
+
+    override def pattern: Regex = twirlStyleComment
   }
 
   case object TwirlStyleBlockComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (twirlBlockComment, CommentBlock.twirlBlock(licenseText))
+    override def apply(licenseText: String) =
+      CommentBlock.twirlBlock(licenseText)
+
+    override def pattern: Regex = twirlBlockComment
   }
 
 }

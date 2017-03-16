@@ -26,8 +26,6 @@ class CommentStyleStec extends WordSpec with Matchers {
 
   "CStyleBlockComment" should {
 
-    val (headerPattern, text) = CStyleBlockComment(licenseText)
-
     "create C style comment blocks" in {
       val expected =
         s"""|/*
@@ -36,17 +34,11 @@ class CommentStyleStec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      text shouldBe expected
-    }
-
-    "detect C style block comments" in {
-      headerPattern shouldBe HeaderPattern.cStyleBlockComment
+      CStyleBlockComment(licenseText) shouldBe expected
     }
   }
 
   "CppStyleLineComment" should {
-
-    val (headerPattern, text) = CppStyleLineComment(licenseText)
 
     "create C++ style line comments" in {
       val expected =
@@ -54,17 +46,11 @@ class CommentStyleStec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      text shouldBe expected
-    }
-
-    "detect C++ style line comments" in {
-      headerPattern shouldBe HeaderPattern.cppStyleLineComment
+      CppStyleLineComment(licenseText) shouldBe expected
     }
   }
 
   "HashLineComment" should {
-
-    val (headerPattern, text) = HashLineComment(licenseText)
 
     "create hash line comments" in {
       val expected =
@@ -72,17 +58,11 @@ class CommentStyleStec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      text shouldBe expected
-    }
-
-    "detect hash line comments" in {
-      headerPattern shouldBe HeaderPattern.hashLineComment
+      HashLineComment(licenseText) shouldBe expected
     }
   }
 
   "TwirlStyleComment" should {
-
-    val (headerPattern, text) = TwirlStyleComment(licenseText)
 
     "create Twirl style comments" in {
       val expected =
@@ -92,17 +72,11 @@ class CommentStyleStec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      text shouldBe expected
-    }
-
-    "detect twirl style comments" in {
-      headerPattern shouldBe HeaderPattern.twirlStyleComment
+      TwirlStyleComment(licenseText) shouldBe expected
     }
   }
 
   "TwirlStyleBlockComment" should {
-
-    val (headerPattern, text) = TwirlStyleBlockComment(licenseText)
 
     "create Twirl style block comments" in {
       val expected =
@@ -112,11 +86,7 @@ class CommentStyleStec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      text shouldBe expected
-    }
-
-    "detect twirl style block comments" in {
-      headerPattern shouldBe HeaderPattern.twirlBlockComment
+      TwirlStyleBlockComment(licenseText) shouldBe expected
     }
   }
 }
