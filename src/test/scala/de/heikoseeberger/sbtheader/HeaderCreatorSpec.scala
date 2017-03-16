@@ -19,7 +19,7 @@ package de.heikoseeberger.sbtheader
 import java.io.ByteArrayInputStream
 import org.scalatest.{ Matchers, WordSpec }
 import sbt.Logger
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle._
 
 final class StubLogger extends Logger {
   override def log(level: sbt.Level.Value, message: => String) = ()
@@ -35,7 +35,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val header      = "#this is a header text with lf endings\r\n"
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -47,7 +47,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val header      = "#this is a header text with lf endings\n"
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -60,7 +60,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val expectedResult = Some(header.replace("\n", "\r\n") + fileContent)
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -73,7 +73,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val expectedResult = Some(header.replace("\r\n", "\n") + fileContent)
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -86,7 +86,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val expectedResult = Some(header.replace("\r\n", "\r") + fileContent)
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -101,7 +101,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val expectedResult = Some(header + fileContent)
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)
@@ -115,7 +115,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val expectedResult = Some(header + fileContent)
 
       HeaderCreator(
-        HeaderPattern.hashLineComment,
+        HashLineComment.pattern,
         header,
         new StubLogger,
         new ByteArrayInputStream(fileContent.getBytes)

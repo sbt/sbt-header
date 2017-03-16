@@ -56,21 +56,6 @@ object HeaderPlugin extends AutoPlugin {
 
     object HeaderPattern {
 
-      val cStyleBlockComment: Regex =
-        commentBetween("""/\*+""", "*", """\*/""")
-
-      val cppStyleLineComment: Regex =
-        commentStartingWith("//")
-
-      val hashLineComment: Regex =
-        commentStartingWith("#")
-
-      val twirlBlockComment: Regex =
-        commentBetween("""@\*+""", "*", """\*@""")
-
-      val twirlStyleComment: Regex =
-        commentBetween("""@\*""", "*", """\*@""")
-
       def commentBetween(start: String, middle: String, end: String): Regex =
         new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")
 
@@ -79,6 +64,8 @@ object HeaderPlugin extends AutoPlugin {
           raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)"""
         )
     }
+
+    val HeaderCommentStyle = CommentStyle
 
     val headerLicense: SettingKey[Option[License]] =
       settingKey(

@@ -35,35 +35,35 @@ object CommentStyle {
     override def apply(licenseText: String) =
       CommentBlock.cStyle(licenseText)
 
-    override def pattern: Regex = cStyleBlockComment
+    override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
     override def apply(licenseText: String) =
       CommentBlock.cppStyle(licenseText)
 
-    override def pattern: Regex = cppStyleLineComment
+    override val pattern: Regex = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
     override def apply(licenseText: String) =
       CommentBlock.hashLines(licenseText)
 
-    override def pattern: Regex = hashLineComment
+    override val pattern: Regex = commentStartingWith("#")
   }
 
   case object TwirlStyleComment extends CommentStyle {
     override def apply(licenseText: String) =
       CommentBlock.twirlStyle(licenseText)
 
-    override def pattern: Regex = twirlStyleComment
+    override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
   }
 
   case object TwirlStyleBlockComment extends CommentStyle {
     override def apply(licenseText: String) =
       CommentBlock.twirlBlock(licenseText)
 
-    override def pattern: Regex = twirlBlockComment
+    override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
   }
 
 }
