@@ -40,25 +40,25 @@ sealed trait CommentCreator {
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    override val commentCreator = new CommentBlock("/*", " *", " */" + newLine)
+    override val commentCreator = new CommentBlock(Some("/*"), " *", Some(" */"))
 
     override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override val commentCreator = new CommentBlock("", "//", "")
+    override val commentCreator = new CommentBlock(None, "//", None)
 
     override val pattern: Regex = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
-    override val commentCreator = new CommentBlock("", "#", "")
+    override val commentCreator = new CommentBlock(None, "#", None)
 
     override val pattern: Regex = commentStartingWith("#")
   }
 
   case object TwirlStyleComment extends CommentStyle {
-    override val commentCreator = new CommentBlock("@*", " *", " *@" + newLine)
+    override val commentCreator = new CommentBlock(Some("@*"), " *", Some(" *@"))
 
     override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
   }
@@ -91,18 +91,27 @@ object TwirlCommentBlock extends CommentCreator {
   private def stars(count: Int) = "*" * count
 }
 
-final class CommentBlock(blockPrefix: String, linePrefix: String, blockSuffix: String)
+final class CommentBlock(blockPrefix: Option[String],
+                         linePrefix: String,
+                         blockSuffix: Option[String])
     extends CommentCreator {
 
   def apply(text: String): String = {
+
     def prependWithLinePrefix(s: String) =
       s match {
         case ""   => linePrefix
         case line => linePrefix + " " + line
       }
 
-    var commentBlock = text.lines.map(prependWithLinePrefix).mkString(newLine)
-    if (!blockPrefix.isEmpty) commentBlock = blockPrefix + newLine + commentBlock
-    commentBlock ++ newLine ++ blockSuffix ++ newLine
+    def mkLines(first: String, second: String) = first + newLine + second
+
+    def prependBlockPrefix(commentBlock: String) = blockPrefix.foldRight(commentBlock)(mkLines)
+
+    def appendBlockSuffix(commentBlock: String) = blockSuffix.foldLeft(commentBlock)(mkLines)
+
+    val commentBlock = text.lines.map(prependWithLinePrefix).mkString(newLine)
+
+    prependBlockPrefix(appendBlockSuffix(commentBlock)) + newLine + newLine
   }
 }
