@@ -34,7 +34,7 @@ sealed trait CommentStyle {
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    private val commentBlock = new CommentBlock("/*", " *", " */" + System.lineSeparator())
+    private val commentBlock = new CommentBlock("/*", " *", " */" + newLine)
 
     override def apply(licenseText: String) = commentBlock(licenseText)
 
@@ -58,7 +58,7 @@ object CommentStyle {
   }
 
   case object TwirlStyleComment extends CommentStyle {
-    private val commentStyle = new CommentBlock("@*", " *", " *@" + System.lineSeparator())
+    private val commentStyle = new CommentBlock("@*", " *", " *@" + newLine)
 
     override def apply(licenseText: String) = commentStyle(licenseText)
 
@@ -75,19 +75,17 @@ object CommentStyle {
 
 private object TwirlCommentBlock {
 
-  private final val NL = System.lineSeparator()
-
   def apply(text: String): String = {
     val maxLineLength = text.lines.map(_.length).max
 
     def fillLine(line: String) =
       " * " + line + spaces(maxLineLength - line.length) + " *"
 
-    val commentBlock = text.lines.map(fillLine).mkString(NL)
+    val commentBlock = text.lines.map(fillLine).mkString(newLine)
     val firstLine    = "@**" + stars(maxLineLength + 2)
     val lastLine     = " " + firstLine.reverse
 
-    firstLine ++ NL ++ commentBlock ++ NL ++ lastLine ++ NL ++ NL
+    firstLine ++ newLine ++ commentBlock ++ newLine ++ lastLine ++ newLine ++ newLine
   }
 
   private def spaces(count: Int) = " " * count
@@ -96,8 +94,6 @@ private object TwirlCommentBlock {
 }
 
 private final class CommentBlock(blockPrefix: String, linePrefix: String, blockSuffix: String) {
-
-  private val newLine = System.lineSeparator()
 
   def apply(text: String): String = {
     def prependWithLinePrefix(s: String) =
