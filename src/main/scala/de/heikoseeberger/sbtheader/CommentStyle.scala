@@ -24,35 +24,95 @@ import scala.util.matching.Regex
   * Representation of the different comment styles supported by this plugin.
   */
 sealed trait CommentStyle {
-  def apply(licenseText: String): (Regex, String)
-  def apply(license: License): (Regex, String) = apply(license.text)
+  val pattern: Regex
+
+  val commentCreator: CommentCreator
+
+  def apply(licenseText: String): String = commentCreator(licenseText) + newLine + newLine
+
+  def apply(license: License): String = apply(license.text)
+}
+
+sealed trait CommentCreator {
+  def apply(text: String): String
 }
 
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (cStyleBlockComment, CommentBlock.cStyle(licenseText))
+    override val commentCreator: CommentCreator =
+      new CommentBlockCreator("/*", " *", " */")
+
+    override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (cppStyleLineComment, CommentBlock.cppStyle(licenseText))
+    override val commentCreator: CommentCreator = new LineCommentCreator("//")
+
+    override val pattern: Regex = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (hashLineComment, CommentBlock.hashLines(licenseText))
-  }
+    override val commentCreator: CommentCreator = new LineCommentCreator("#")
 
-  case object TwirlStyleComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (twirlStyleComment, CommentBlock.twirlStyle(licenseText))
+    override val pattern: Regex = commentStartingWith("#")
   }
 
   case object TwirlStyleBlockComment extends CommentStyle {
-    override def apply(licenseText: String): (Regex, String) =
-      (twirlBlockComment, CommentBlock.twirlBlock(licenseText))
+    override val commentCreator: CommentCreator =
+      new CommentBlockCreator("@*", " *", " *@")
+
+    override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
   }
 
+  case object TwirlStyleFramedBlockComment extends CommentStyle {
+    override val commentCreator: CommentCreator = TwirlStyleFramedBlockCommentCreator
+
+    override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
+  }
+
+}
+
+private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
+
+  def apply(text: String): String = {
+    val maxLineLength = text.lines.map(_.length).max
+
+    def fillLine(line: String) =
+      " * " + line + spaces(maxLineLength - line.length) + " *"
+
+    val commentBlock = text.lines.map(fillLine).mkString(newLine)
+    val firstLine    = "@**" + stars(maxLineLength + 2)
+    val lastLine     = " " + firstLine.reverse
+
+    firstLine ++ newLine ++ commentBlock ++ newLine ++ lastLine
+  }
+
+  private def spaces(count: Int) = " " * count
+
+  private def stars(count: Int) = "*" * count
+}
+
+private final class LineCommentCreator(linePrefix: String) extends CommentCreator {
+
+  override def apply(text: String): String = {
+    def prependWithLinePrefix(s: String) =
+      s match {
+        case ""   => linePrefix
+        case line => linePrefix + " " + line
+      }
+
+    text.lines.map(prependWithLinePrefix).mkString(newLine)
+  }
+}
+
+private final class CommentBlockCreator(blockPrefix: String,
+                                        linePrefix: String,
+                                        blockSuffix: String)
+    extends CommentCreator {
+
+  private val lineCommentCreator = new LineCommentCreator(linePrefix)
+
+  def apply(text: String): String =
+    blockPrefix + newLine + lineCommentCreator(text) + newLine + blockSuffix
 }

@@ -1,9 +1,7 @@
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport._
-import de.heikoseeberger.sbtheader.CommentStyle.TwirlStyleBlockComment
 import play.twirl.sbt.Import.TwirlKeys
 
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
-headerMappings := Map("html" -> TwirlStyleBlockComment)
+headerMappings := Map("html" -> HeaderCommentStyle.TwirlStyleFramedBlockComment)
 
 unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 

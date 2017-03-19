@@ -56,21 +56,6 @@ object HeaderPlugin extends AutoPlugin {
 
     object HeaderPattern {
 
-      val cStyleBlockComment: Regex =
-        commentBetween("""/\*+""", "*", """\*/""")
-
-      val cppStyleLineComment: Regex =
-        commentStartingWith("//")
-
-      val hashLineComment: Regex =
-        commentStartingWith("#")
-
-      val twirlBlockComment: Regex =
-        commentBetween("""@\*+""", "*", """\*@""")
-
-      val twirlStyleComment: Regex =
-        commentBetween("""@\*""", "*", """\*@""")
-
       def commentBetween(start: String, middle: String, end: String): Regex =
         new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")
 
@@ -79,6 +64,8 @@ object HeaderPlugin extends AutoPlugin {
           raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)"""
         )
     }
+
+    val HeaderCommentStyle = CommentStyle
 
     val headerLicense: SettingKey[Option[License]] =
       settingKey(
@@ -157,8 +144,8 @@ object HeaderPlugin extends AutoPlugin {
     def createHeader(commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
-      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
-      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
+      val headerText = commentStyle.apply(headerLicense)
+      HeaderCreator(commentStyle.pattern, headerText, log, new FileInputStream(file)).createText
         .map(write)
     }
     val touchedFiles =
@@ -179,8 +166,8 @@ object HeaderPlugin extends AutoPlugin {
                                headerMappings: Map[String, CommentStyle],
                                log: Logger) = {
     def checkHeader(commentStyle: CommentStyle)(file: File) = {
-      val (headerPattern, headerText) = commentStyle.apply(headerLicense)
-      HeaderCreator(headerPattern, headerText, log, new FileInputStream(file)).createText
+      val headerText = commentStyle.apply(headerLicense)
+      HeaderCreator(commentStyle.pattern, headerText, log, new FileInputStream(file)).createText
         .map(_ => file)
     }
     val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
