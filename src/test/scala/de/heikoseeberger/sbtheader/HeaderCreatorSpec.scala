@@ -29,97 +29,111 @@ final class StubLogger extends Logger {
 
 final class HeaderCreatorSpec extends WordSpec with Matchers {
 
-  "CreatorHeader.createText" should {
-    "create a header with crlf and file crlf should produce file crlf" in {
-      val fileContent = "this is a file with lf endings\r\n"
-      val header      = "#this is a header text with lf endings\r\n"
+  "HeaderCreator" when {
 
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe Some(header + fileContent)
+    "given a file with crlf line endings" should {
+
+      val fileContent = "this is a file with crlf endings\r\n"
+
+      "produce a file with crlf line endings from a header with crlf line endings" in {
+        val header = "#this is a header text with lf endings\r\n"
+
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe Some(header + fileContent)
+      }
+
+      "produce a file with crlf line endings from a header with lf line endings" in {
+        val header         = "#this is a header text with lf endings\n"
+        val expectedResult = Some(header.replace("\n", "\r\n") + fileContent)
+
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe expectedResult
+      }
     }
 
-    "create a header with lf and file lf should produce file lf" in {
+    "given a file with lf line endings" should {
+
       val fileContent = "this is a file with lf endings\n"
-      val header      = "#this is a header text with lf endings\n"
 
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe Some(header + fileContent)
+      "produce a file with lf line endings from a header with lf line endings" in {
+        val header = "#this is a header text with lf endings\n"
+
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe Some(header + fileContent)
+      }
+
+      "produce a file with lf line endings from a header with crlf line endings" in {
+        val header         = "#this is a header text with crlf endings\r\n"
+        val expectedResult = Some(header.replace("\r\n", "\n") + fileContent)
+
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe expectedResult
+      }
     }
 
-    "create a header with lf and file crlf should produce file crlf" in {
-      val fileContent    = "this is a file with crlf endings\r\n"
-      val header         = "#this is a header text with lf endings\n"
-      val expectedResult = Some(header.replace("\n", "\r\n") + fileContent)
+    "given a file with cr line endings" should {
+      "produce a file with cr line endings from a header with crlf line endings" in {
+        val fileContent    = "this is a file with cr endings\r"
+        val header         = "#this is a header text with crlf endings\r\n"
+        val expectedResult = Some(header.replace("\r\n", "\r") + fileContent)
 
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe expectedResult
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe expectedResult
+      }
     }
 
-    "create a header with crlf and file lf should produce file lf" in {
-      val fileContent    = "this is a file with lf endings\n"
-      val header         = "#this is a header text with crlf endings\r\n"
-      val expectedResult = Some(header.replace("\r\n", "\n") + fileContent)
+    "given a header with some line breaks" should {
 
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe expectedResult
-    }
+      "add as many new lines to output" in {
+        val fileContent = "this is a file with lf endings\n" +
+          "this is a file with lf endings\n" +
+          "this is a file with lf endings\n"
+        val header         = "#this is a header text with multiple lf endings\n\n\n\n"
+        val expectedResult = Some(header + fileContent)
 
-    "create a header with crlf and file cr should produce file cr" in {
-      val fileContent    = "this is a file with cr endings\r"
-      val header         = "#this is a header text with crlf endings\r\n"
-      val expectedResult = Some(header.replace("\r\n", "\r") + fileContent)
-
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe expectedResult
-    }
-
-    "it should add as many new lines exists in header" in {
-      val fileContent = "this is a file with lf endings\n" +
-        "this is a file with lf endings\n" +
-        "this is a file with lf endings\n"
-      val header         = "#this is a header text with multiple lf endings\n\n\n\n"
-      val expectedResult = Some(header + fileContent)
-
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe expectedResult
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe expectedResult
+      }
     }
 
     //Due to java bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8028387
-    "it should work with large files" in {
-      val fileContent    = "this is a file with lf endings\n" * 50
-      val header         = "#this is a header text with multiple lf endings\n"
-      val expectedResult = Some(header + fileContent)
+    "given a large file" should {
+      "work" in {
+        val fileContent    = "this is a file with lf endings\n" * 50
+        val header         = "#this is a header text with multiple lf endings\n"
+        val expectedResult = Some(header + fileContent)
 
-      HeaderCreator(
-        HashLineComment.pattern,
-        header,
-        new StubLogger,
-        new ByteArrayInputStream(fileContent.getBytes)
-      ).createText shouldBe expectedResult
+        HeaderCreator(
+          HashLineComment.pattern,
+          header,
+          new StubLogger,
+          new ByteArrayInputStream(fileContent.getBytes)
+        ).createText shouldBe expectedResult
+      }
     }
   }
 }
