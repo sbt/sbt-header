@@ -40,38 +40,40 @@ sealed trait CommentCreator {
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    override val commentCreator = new CommentBlock(Some("/*"), " *", Some(" */"))
+    override val commentCreator: CommentCreator =
+      new SimpleCommentBlockCreator(Some("/*"), " *", Some(" */"))
 
     override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override val commentCreator = new CommentBlock(None, "//", None)
+    override val commentCreator: CommentCreator = new SimpleCommentBlockCreator(None, "//", None)
 
     override val pattern: Regex = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
-    override val commentCreator = new CommentBlock(None, "#", None)
+    override val commentCreator: CommentCreator = new SimpleCommentBlockCreator(None, "#", None)
 
     override val pattern: Regex = commentStartingWith("#")
   }
 
-  case object TwirlStyleComment extends CommentStyle {
-    override val commentCreator = new CommentBlock(Some("@*"), " *", Some(" *@"))
+  case object TwirlStyleBlockComment extends CommentStyle {
+    override val commentCreator: CommentCreator =
+      new SimpleCommentBlockCreator(Some("@*"), " *", Some(" *@"))
 
     override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
   }
 
-  case object TwirlStyleBlockComment extends CommentStyle {
-    override val commentCreator = TwirlCommentBlock
+  case object TwirlStyleFramedBlockComment extends CommentStyle {
+    override val commentCreator: CommentCreator = TwirlStyleFramedBlockCommentCreator
 
     override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
   }
 
 }
 
-object TwirlCommentBlock extends CommentCreator {
+private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
 
   def apply(text: String): String = {
     val maxLineLength = text.lines.map(_.length).max
@@ -91,9 +93,9 @@ object TwirlCommentBlock extends CommentCreator {
   private def stars(count: Int) = "*" * count
 }
 
-final class CommentBlock(blockPrefix: Option[String],
-                         linePrefix: String,
-                         blockSuffix: Option[String])
+private final class SimpleCommentBlockCreator(blockPrefix: Option[String],
+                                              linePrefix: String,
+                                              blockSuffix: Option[String])
     extends CommentCreator {
 
   def apply(text: String): String = {
