@@ -10,5 +10,6 @@ platform:
 build_script:
   - sbt compile
 test_script:
+  - sbt checkHeaders
   - sbt test
   - sbt scripted
