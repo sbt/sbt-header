@@ -28,7 +28,7 @@ sealed trait CommentStyle {
 
   val commentCreator: CommentCreator
 
-  def apply(licenseText: String): String = commentCreator(licenseText)
+  def apply(licenseText: String): String = commentCreator(licenseText) + newLine + newLine
 
   def apply(license: License): String = apply(license.text)
 }
@@ -41,26 +41,26 @@ object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
     override val commentCreator: CommentCreator =
-      new SimpleCommentBlockCreator(Some("/*"), " *", Some(" */"))
+      new CommentBlockCreator("/*", " *", " */")
 
     override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override val commentCreator: CommentCreator = new SimpleCommentBlockCreator(None, "//", None)
+    override val commentCreator: CommentCreator = new LineCommentCreator("//")
 
     override val pattern: Regex = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
-    override val commentCreator: CommentCreator = new SimpleCommentBlockCreator(None, "#", None)
+    override val commentCreator: CommentCreator = new LineCommentCreator("#")
 
     override val pattern: Regex = commentStartingWith("#")
   }
 
   case object TwirlStyleBlockComment extends CommentStyle {
     override val commentCreator: CommentCreator =
-      new SimpleCommentBlockCreator(Some("@*"), " *", Some(" *@"))
+      new CommentBlockCreator("@*", " *", " *@")
 
     override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
   }
@@ -85,7 +85,7 @@ private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
     val firstLine    = "@**" + stars(maxLineLength + 2)
     val lastLine     = " " + firstLine.reverse
 
-    firstLine ++ newLine ++ commentBlock ++ newLine ++ lastLine ++ newLine ++ newLine
+    firstLine ++ newLine ++ commentBlock ++ newLine ++ lastLine
   }
 
   private def spaces(count: Int) = " " * count
@@ -93,27 +93,26 @@ private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
   private def stars(count: Int) = "*" * count
 }
 
-private final class SimpleCommentBlockCreator(blockPrefix: Option[String],
-                                              linePrefix: String,
-                                              blockSuffix: Option[String])
-    extends CommentCreator {
+private final class LineCommentCreator(linePrefix: String) extends CommentCreator {
 
-  def apply(text: String): String = {
-
+  override def apply(text: String): String = {
     def prependWithLinePrefix(s: String) =
       s match {
         case ""   => linePrefix
         case line => linePrefix + " " + line
       }
 
-    def mkLines(first: String, second: String) = first + newLine + second
-
-    def prependBlockPrefix(commentBlock: String) = blockPrefix.foldRight(commentBlock)(mkLines)
-
-    def appendBlockSuffix(commentBlock: String) = blockSuffix.foldLeft(commentBlock)(mkLines)
-
-    val commentBlock = text.lines.map(prependWithLinePrefix).mkString(newLine)
-
-    prependBlockPrefix(appendBlockSuffix(commentBlock)) + newLine + newLine
+    text.lines.map(prependWithLinePrefix).mkString(newLine)
   }
+}
+
+private final class CommentBlockCreator(blockPrefix: String,
+                                        linePrefix: String,
+                                        blockSuffix: String)
+    extends CommentCreator {
+
+  private val lineCommentCreator = new LineCommentCreator(linePrefix)
+
+  def apply(text: String): String =
+    blockPrefix + newLine + lineCommentCreator(text) + newLine + blockSuffix
 }
