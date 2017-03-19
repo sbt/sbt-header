@@ -100,6 +100,26 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         createHeader(fileContent, header) shouldBe expectedResult
       }
     }
+
+    "given a file with shebang" should {
+
+      val shebang = "#!/bin/bash" + newLine
+      val script  = "echo Hello World"
+      val header  = HashLineComment("Copyright 2015 Heiko Seeberger")
+
+      "preserve shebang and add header when header is missing" in {
+        val fileContent    = shebang + script
+        val expectedResult = Some(shebang + header + script)
+
+        createHeader(fileContent, header) shouldBe expectedResult
+      }
+
+      "not touch file when header is present" in {
+        val fileContent = shebang + header + script
+
+        createHeader(fileContent, header) shouldBe None
+      }
+    }
   }
 
   private def createHeader(fileContent: String, header: String) =
