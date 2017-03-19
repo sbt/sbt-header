@@ -38,24 +38,14 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       "produce a file with crlf line endings from a header with crlf line endings" in {
         val header = "#this is a header text with lf endings\r\n"
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe Some(header + fileContent)
+        createHeader(fileContent, header) shouldBe Some(header + fileContent)
       }
 
       "produce a file with crlf line endings from a header with lf line endings" in {
         val header         = "#this is a header text with lf endings\n"
         val expectedResult = Some(header.replace("\n", "\r\n") + fileContent)
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe expectedResult
+        createHeader(fileContent, header) shouldBe expectedResult
       }
     }
 
@@ -66,24 +56,14 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       "produce a file with lf line endings from a header with lf line endings" in {
         val header = "#this is a header text with lf endings\n"
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe Some(header + fileContent)
+        createHeader(fileContent, header) shouldBe Some(header + fileContent)
       }
 
       "produce a file with lf line endings from a header with crlf line endings" in {
         val header         = "#this is a header text with crlf endings\r\n"
         val expectedResult = Some(header.replace("\r\n", "\n") + fileContent)
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe expectedResult
+        createHeader(fileContent, header) shouldBe expectedResult
       }
     }
 
@@ -93,12 +73,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header         = "#this is a header text with crlf endings\r\n"
         val expectedResult = Some(header.replace("\r\n", "\r") + fileContent)
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe expectedResult
+        createHeader(fileContent, header) shouldBe expectedResult
       }
     }
 
@@ -111,12 +86,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header         = "#this is a header text with multiple lf endings\n\n\n\n"
         val expectedResult = Some(header + fileContent)
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe expectedResult
+        createHeader(fileContent, header) shouldBe expectedResult
       }
     }
 
@@ -127,13 +97,16 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header         = "#this is a header text with multiple lf endings\n"
         val expectedResult = Some(header + fileContent)
 
-        HeaderCreator(
-          HashLineComment.pattern,
-          header,
-          new StubLogger,
-          new ByteArrayInputStream(fileContent.getBytes)
-        ).createText shouldBe expectedResult
+        createHeader(fileContent, header) shouldBe expectedResult
       }
     }
   }
+
+  private def createHeader(fileContent: String, header: String) =
+    HeaderCreator(
+      HashLineComment.pattern,
+      header,
+      new StubLogger,
+      new ByteArrayInputStream(fileContent.getBytes)
+    ).createText
 }
