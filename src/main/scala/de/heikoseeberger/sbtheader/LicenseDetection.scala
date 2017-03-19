@@ -16,21 +16,13 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
+import scala.collection.breakOut
 import sbt.URL
 
 private object LicenseDetection {
 
-  private val spdxMapping = Map(
-    "Apache-2.0"   -> ALv2,
-    "AGPL-3.0"     -> AGPLv3,
-    "BSD-2-Clause" -> BSD2Clause,
-    "BSD-3-Clause" -> BSD3Clause,
-    "GPL-3.0"      -> GPLv3,
-    "LGPL-3.0"     -> LGPLv3,
-    "MIT"          -> MIT,
-    "MPL-2.0"      -> MPLv2
-  )
+  private val spdxMapping: Map[String, SpdxLicense] =
+    License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut)
 
   def apply(licenses: Seq[(String, URL)],
             organizationName: String,
