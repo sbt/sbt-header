@@ -19,7 +19,8 @@ package de.heikoseeberger.sbtheader
 import java.io.ByteArrayInputStream
 import org.scalatest.{ Matchers, WordSpec }
 import sbt.Logger
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle._
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.HashLineComment
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
 final class StubLogger extends Logger {
   override def log(level: sbt.Level.Value, message: => String) = ()
@@ -36,16 +37,21 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val fileContent = "this is a file with crlf endings\r\n"
 
       "produce a file with crlf line endings from a header with crlf line endings" in {
-        val header = "#this is a header text with lf endings\r\n"
+        val licenseText = "this is a header text with lf endings\r\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe Some(header + fileContent)
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\r\n") + fileContent
+        )
       }
 
       "produce a file with crlf line endings from a header with lf line endings" in {
-        val header         = "#this is a header text with lf endings\n"
-        val expectedResult = Some(header.replace("\n", "\r\n") + fileContent)
+        val licenseText = "this is a header text with lf endings\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\r\n") + fileContent
+        )
       }
     }
 
@@ -54,26 +60,33 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val fileContent = "this is a file with lf endings\n"
 
       "produce a file with lf line endings from a header with lf line endings" in {
-        val header = "#this is a header text with lf endings\n"
+        val licenseText = "this is a header text with lf endings\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe Some(header + fileContent)
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\n") + fileContent
+        )
       }
 
       "produce a file with lf line endings from a header with crlf line endings" in {
-        val header         = "#this is a header text with crlf endings\r\n"
-        val expectedResult = Some(header.replace("\r\n", "\n") + fileContent)
+        val licenseText = "this is a header text with crlf endings\r\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\n") + fileContent
+        )
       }
     }
 
     "given a file with cr line endings" should {
       "produce a file with cr line endings from a header with crlf line endings" in {
-        val fileContent    = "this is a file with cr endings\r"
-        val header         = "#this is a header text with crlf endings\r\n"
-        val expectedResult = Some(header.replace("\r\n", "\r") + fileContent)
+        val fileContent = "this is a file with cr endings\r"
+        val licenseText = "this is a header text with crlf endings\r\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\r") + fileContent
+        )
       }
     }
 
@@ -83,49 +96,55 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val fileContent = "this is a file with lf endings\n" +
           "this is a file with lf endings\n" +
           "this is a file with lf endings\n"
-        val header         = "#this is a header text with multiple lf endings\n\n\n\n"
-        val expectedResult = Some(header + fileContent)
+        val licenseText = "this is a header text with multiple lf endings\n\n\n\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\n") + fileContent
+        )
       }
     }
 
     //Due to java bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8028387
     "given a large file" should {
       "work" in {
-        val fileContent    = "this is a file with lf endings\n" * 50
-        val header         = "#this is a header text with multiple lf endings\n"
-        val expectedResult = Some(header + fileContent)
+        val fileContent = "this is a file with lf endings\n" * 50
+        val licenseText = "this is a header text with multiple lf endings\n"
+        val header      = HashLineComment(licenseText)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(
+          header.replace(newLine, "\n") + fileContent
+        )
       }
     }
 
     "given a file with shebang" should {
 
-      val shebang = "#!/bin/bash" + newLine
-      val script  = "echo Hello World"
-      val header  = HashLineComment("Copyright 2015 Heiko Seeberger")
+      val shebang     = "#!/bin/bash" + newLine
+      val script      = "echo Hello World"
+      val licenseText = "Copyright 2015 Heiko Seeberger"
+      val header      = HashLineComment(licenseText)
 
       "preserve shebang and add header when header is missing" in {
         val fileContent    = shebang + script
         val expectedResult = Some(shebang + header + script)
 
-        createHeader(fileContent, header) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe expectedResult
       }
 
       "not touch file when header is present" in {
         val fileContent = shebang + header + script
 
-        createHeader(fileContent, header) shouldBe None
+        createHeader(fileContent, licenseText) shouldBe None
       }
     }
   }
 
   private def createHeader(fileContent: String, header: String) =
     HeaderCreator(
-      HashLineComment.pattern,
-      header,
+      FileType.sh,
+      HashLineComment,
+      Custom(header),
       new StubLogger,
       new ByteArrayInputStream(fileContent.getBytes)
     ).createText
