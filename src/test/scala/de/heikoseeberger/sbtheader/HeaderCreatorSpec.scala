@@ -17,10 +17,13 @@
 package de.heikoseeberger.sbtheader
 
 import java.io.ByteArrayInputStream
+
 import org.scalatest.{ Matchers, WordSpec }
 import sbt.Logger
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.HashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
+
+import scala.util.matching.Regex
 
 final class StubLogger extends Logger {
   override def log(level: sbt.Level.Value, message: => String) = ()
@@ -120,16 +123,18 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
     "given a file with shebang" should {
 
-      val shebang     = "#!/bin/bash" + newLine
-      val script      = "echo Hello World"
+      val shebang = "#!/bin/bash" + newLine
+      val script =
+        """|echo Hello World
+           |exit 0
+           |""".stripMargin
       val licenseText = "Copyright 2015 Heiko Seeberger"
       val header      = HashLineComment(licenseText)
 
       "preserve shebang and add header when header is missing" in {
-        val fileContent    = shebang + script
-        val expectedResult = Some(shebang + header + script)
+        val fileContent = shebang + script
 
-        createHeader(fileContent, licenseText) shouldBe expectedResult
+        createHeader(fileContent, licenseText) shouldBe Some(shebang + header + script)
       }
 
       "not touch file when header is present" in {
@@ -154,11 +159,11 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
            |  <artifactId>my-artifact</artifactId>
            |  <version>1.1-SNAPTHO</version>
            |</project>
-        """.stripMargin
+           |""".stripMargin
       val licenseText = "Copyright 2015 Heiko Seeberger"
       val header      = HashLineComment(licenseText)
 
-      "preserve shebang and add header when header is missing" in {
+      "preserve XML declaration and add header when header is missing" in {
         val fileContent    = xmlDeclaration + xmlBody
         val expectedResult = Some(xmlDeclaration + header + xmlBody)
 
