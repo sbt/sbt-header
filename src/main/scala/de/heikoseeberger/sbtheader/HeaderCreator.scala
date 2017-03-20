@@ -35,7 +35,6 @@ final class HeaderCreator private (fileType: FileType,
                                    log: Logger,
                                    input: InputStream) {
 
-  private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
   private val crlf           = """(?s)(?:.*)(\r\n)(?:.*)""".r
   private val cr             = """(?s)(?:.*)(\r)(?:.*)""".r
   private val headerText     = commentStyle(license)

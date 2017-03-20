@@ -18,7 +18,7 @@ package de.heikoseeberger.sbtheader
 
 import scala.util.matching.Regex
 
-case class FileType(extension: String, firstLinePattern: Option[Regex] = None)
+final case class FileType(extension: String, firstLinePattern: Option[Regex] = None)
 
 object FileType {
   def firstLinePattern(firstLinePattern: String): Regex =
