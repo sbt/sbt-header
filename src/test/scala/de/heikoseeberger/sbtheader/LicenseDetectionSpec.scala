@@ -76,8 +76,9 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
     licenses.foreach {
       case (license, sbtLicense) =>
         s"detect ${license.getClass.getSimpleName} license" in {
-          LicenseDetection(List(sbtLicense), organizationName, startYear) shouldBe Some(
-            license
+          LicenseDetection(List(sbtLicense), organizationName, startYear)
+            .map(_.text) shouldBe Some(
+            license.text
           )
         }
     }

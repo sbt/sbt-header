@@ -20,8 +20,25 @@ sealed trait License {
   def text: String
 }
 
-trait Licenses {
-  final case class ALv2(yyyy: String, copyrightOwner: String) extends License {
+sealed trait SpdxLicense {
+  def spdxIdentifier: String
+
+  def apply(yyyy: String, copyrightOwner: String): License
+}
+
+object License {
+
+  private[sbtheader] val spdxLicenses =
+    Vector(ALv2, MIT, MPLv2, BSD2Clause, BSD3Clause, GPLv3, LGPLv3, AGPLv3)
+
+  final case object ALv2 extends SpdxLicense {
+    override val spdxIdentifier = "Apache-2.0"
+
+    override def apply(yyyy: String, copyrightOwner: String): License =
+      new ALv2(yyyy, copyrightOwner)
+  }
+
+  final class ALv2(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright $yyyy $copyrightOwner
           |
@@ -39,7 +56,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class MIT(yyyy: String, copyrightOwner: String) extends License {
+  final case object MIT extends SpdxLicense {
+    override def spdxIdentifier = "MIT"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new MIT(yyyy, copyrightOwner)
+  }
+
+  final class MIT(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
@@ -62,7 +86,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class MPLv2(yyyy: String, copyrightOwner: String) extends License {
+  final case object MPLv2 extends SpdxLicense {
+    override def spdxIdentifier = "MPL-2.0"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new MPLv2(yyyy, copyrightOwner)
+  }
+
+  final class MPLv2(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy $copyrightOwner
           |
@@ -80,7 +111,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class BSD2Clause(yyyy: String, copyrightOwner: String) extends License {
+  final case object BSD2Clause extends SpdxLicense {
+    override def spdxIdentifier = "BSD-2-Clause"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new BSD2Clause(yyyy, copyrightOwner)
+  }
+
+  final class BSD2Clause(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
@@ -108,7 +146,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class BSD3Clause(yyyy: String, copyrightOwner: String) extends License {
+  final case object BSD3Clause extends SpdxLicense {
+    override def spdxIdentifier = "BSD-3-Clause"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new BSD3Clause(yyyy, copyrightOwner)
+  }
+
+  final class BSD3Clause(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (c) $yyyy, $copyrightOwner
           |All rights reserved.
@@ -140,7 +185,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class GPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case object GPLv3 extends SpdxLicense {
+    override def spdxIdentifier = "GPL-3.0"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new GPLv3(yyyy, copyrightOwner)
+  }
+
+  final class GPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
@@ -159,7 +211,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class LGPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case object LGPLv3 extends SpdxLicense {
+    override def spdxIdentifier = "LGPL-3.0"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new LGPLv3(yyyy, copyrightOwner)
+  }
+
+  final class LGPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
@@ -178,7 +237,14 @@ trait Licenses {
           |""".stripMargin
   }
 
-  final case class AGPLv3(yyyy: String, copyrightOwner: String) extends License {
+  final case object AGPLv3 extends SpdxLicense {
+    override def spdxIdentifier = "AGPL-3.0"
+
+    override def apply(yyyy: String, copyrightOwner: String) =
+      new AGPLv3(yyyy, copyrightOwner)
+  }
+
+  final class AGPLv3(yyyy: String, copyrightOwner: String) extends License {
     override val text =
       s"""|Copyright (C) $yyyy  $copyrightOwner
           |
@@ -198,4 +264,5 @@ trait Licenses {
   }
 
   final case class Custom(text: String) extends License
+
 }
