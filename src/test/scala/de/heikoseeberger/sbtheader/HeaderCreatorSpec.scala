@@ -138,11 +138,38 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         createHeader(fileContent, licenseText) shouldBe None
       }
     }
+
+    "given an XML file with XML declaration" should {
+
+      val xmlDeclaration = """<?xml version="1.0" encoding="UTF-8"?>""" + newLine
+      val xmlBody =
+        """|<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+           |  <parent>
+           |    <groupId>my.group</groupId>
+           |    <artifactId>my-parent</artifactId>
+           |    <version>42</version>
+           |  </parent>
+           |  <modelVersion>4.0.0</modelVersion>
+           |  <groupId>my.group</groupId>
+           |  <artifactId>my-artifact</artifactId>
+           |  <version>1.1-SNAPTHO</version>
+           |</project>
+        """.stripMargin
+      val licenseText = "Copyright 2015 Heiko Seeberger"
+      val header      = HashLineComment(licenseText)
+
+      "preserve shebang and add header when header is missing" in {
+        val fileContent    = xmlDeclaration + xmlBody
+        val expectedResult = Some(xmlDeclaration + header + xmlBody)
+
+        createHeader(fileContent, licenseText, FileType.xml) shouldBe expectedResult
+      }
+    }
   }
 
-  private def createHeader(fileContent: String, header: String) =
+  private def createHeader(fileContent: String, header: String, fileType: FileType = FileType.sh) =
     HeaderCreator(
-      FileType.sh,
+      fileType,
       HashLineComment,
       Custom(header),
       new StubLogger,
