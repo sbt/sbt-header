@@ -1,5 +1,5 @@
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
-headerMappings := headerMappings.value + ("scala" -> HeaderCommentStyle.CppStyleLineComment)
+headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.CppStyleLineComment)
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 

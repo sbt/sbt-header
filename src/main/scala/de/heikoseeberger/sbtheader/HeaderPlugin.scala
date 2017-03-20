@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 
 import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
-import de.heikoseeberger.sbtheader.{ FileType => HeaderFileType }
 import sbt.Keys.{
   licenses,
   organizationName,
@@ -64,7 +63,7 @@ object HeaderPlugin extends AutoPlugin {
         )
     }
 
-    type FileType = HeaderFileType
+    val HeaderFileType = FileType
 
     val HeaderCommentStyle = CommentStyle
 
