@@ -71,6 +71,11 @@ object CommentStyle {
     override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
   }
 
+  case object XmlStyleBlockComment extends CommentStyle {
+    override val commentCreator: CommentCreator = new CommentBlockCreator("<!--", "  ", "-->")
+
+    override val pattern: Regex = commentBetween("<!--", "  ", "-->")
+  }
 }
 
 private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {

@@ -349,4 +349,51 @@ class CommentStyleSpec extends WordSpec with Matchers {
       )
     }
   }
+
+  "XmlStyleBlockComment" should {
+
+    "create XML style comment blocks" in {
+      val expected =
+        s"""|<!--
+            |   $licenseText
+            |-->
+            |
+            |""".stripMargin
+
+      XmlStyleBlockComment(licenseText) shouldBe expected
+    }
+
+    "not match a single line comment without a trailing new line" in {
+      CStyleBlockComment.pattern.unapplySeq("<!-- comment -->") shouldBe None
+    }
+
+    "not match a multi line comment without a trailing new line" in {
+      XmlStyleBlockComment.pattern.unapplySeq(
+        """|<!--
+           |   comment/1
+           |   comment/2
+           |-->""".stripMargin
+      ) shouldBe None
+    }
+
+    "match a comment with trailing new lines not followed by a body" in {
+      val header = """|<!-- comment -->
+                      |
+                      |""".stripMargin
+      XmlStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+    }
+
+    "match a comment with a trailing new line followed by a body" in {
+      val header = """|<!--
+                      |   comment/1
+                      |   comment/2
+                      |-->
+                      |""".stripMargin
+      val body   = """|class Foo {
+                      |  val bar = "bar"
+                      |}
+                      |""".stripMargin
+      XmlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+    }
+  }
 }
