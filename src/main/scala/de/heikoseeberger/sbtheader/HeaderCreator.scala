@@ -18,31 +18,40 @@ package de.heikoseeberger.sbtheader
 
 import java.io.InputStream
 import sbt.Logger
-import scala.util.matching.Regex
 
 object HeaderCreator {
 
-  def apply(headerPattern: Regex,
-            headerText: String,
+  def apply(fileType: FileType,
+            commentStyle: CommentStyle,
+            license: License,
             log: Logger,
             input: InputStream): HeaderCreator =
-    new HeaderCreator(headerPattern, headerText, log, input)
+    new HeaderCreator(fileType, commentStyle, license, log, input)
 }
 
-final class HeaderCreator private (headerPattern: Regex,
-                                   headerText: String,
+final class HeaderCreator private (fileType: FileType,
+                                   commentStyle: CommentStyle,
+                                   license: License,
                                    log: Logger,
                                    input: InputStream) {
 
-  private val shebangAndBody = """(#!.*(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
-  private val crlf           = """(?s)(?:.*)(\r\n)(?:.*)""".r
-  private val cr             = """(?s)(?:.*)(\r)(?:.*)""".r
+  private val crlf          = """(?s)(?:.*)(\r\n)(?:.*)""".r
+  private val cr            = """(?s)(?:.*)(\r)(?:.*)""".r
+  private val headerText    = commentStyle(license)
+  private val headerPattern = commentStyle.pattern
 
-  private val (firstLine, text) =
-    scala.io.Source.fromInputStream(input).mkString match {
-      case shebangAndBody(s, b) => (s, b)
-      case other                => ("", other)
+  private val (firstLine, text) = {
+    val fileContent = scala.io.Source.fromInputStream(input).mkString
+    fileType.firstLinePattern match {
+      case Some(pattern) =>
+        fileContent match {
+          case pattern(first, rest) => (first, rest)
+          case other                => ("", other)
+        }
+      case _ => ("", fileContent)
     }
+  }
+
   log.debug(s"First line of file is:$newLine$firstLine")
   log.debug(s"Text of file is:$newLine$text")
 

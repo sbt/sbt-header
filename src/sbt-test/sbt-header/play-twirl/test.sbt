@@ -1,7 +1,7 @@
 import play.twirl.sbt.Import.TwirlKeys
 
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
-headerMappings := Map("html" -> HeaderCommentStyle.TwirlStyleFramedBlockComment)
+headerMappings := Map(HeaderFileType("html") -> HeaderCommentStyle.TwirlStyleFramedBlockComment)
 
 unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 
