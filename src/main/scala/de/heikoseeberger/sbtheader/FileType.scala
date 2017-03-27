@@ -24,9 +24,9 @@ object FileType {
   def firstLinePattern(firstLinePattern: String): Regex =
     s"""($firstLinePattern(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 
-  val conf  = FileType("conf")
-  val java  = FileType("java")
-  val scala = FileType("scala")
-  val sh    = FileType("sh", Some(firstLinePattern("#!.*")))
-  val xml   = FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
+  val conf: FileType  = FileType("conf")
+  val java: FileType  = FileType("java")
+  val scala: FileType = FileType("scala")
+  val sh: FileType    = FileType("sh", Some(firstLinePattern("#!.*")))
+  val xml: FileType   = FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
 }

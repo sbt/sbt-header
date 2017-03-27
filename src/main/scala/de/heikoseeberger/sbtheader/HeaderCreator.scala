@@ -35,10 +35,10 @@ final class HeaderCreator private (fileType: FileType,
                                    log: Logger,
                                    input: InputStream) {
 
-  private val crlf           = """(?s)(?:.*)(\r\n)(?:.*)""".r
-  private val cr             = """(?s)(?:.*)(\r)(?:.*)""".r
-  private val headerText     = commentStyle(license)
-  private val headerPattern  = commentStyle.pattern
+  private val crlf          = """(?s)(?:.*)(\r\n)(?:.*)""".r
+  private val cr            = """(?s)(?:.*)(\r)(?:.*)""".r
+  private val headerText    = commentStyle(license)
+  private val headerPattern = commentStyle.pattern
 
   private val (firstLine, text) = {
     val fileContent = scala.io.Source.fromInputStream(input).mkString
