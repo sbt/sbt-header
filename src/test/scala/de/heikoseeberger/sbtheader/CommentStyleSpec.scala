@@ -19,7 +19,7 @@ package de.heikoseeberger.sbtheader
 import de.heikoseeberger.sbtheader.CommentStyle._
 import org.scalatest.{ Matchers, WordSpec }
 
-class CommentStyleStec extends WordSpec with Matchers {
+class CommentStyleSpec extends WordSpec with Matchers {
 
   val licenseText = "License text"
 
