@@ -389,9 +389,9 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |   comment/2
                       |-->
                       |""".stripMargin
-      val body   = """|class Foo {
-                      |  val bar = "bar"
-                      |}
+      val body   = """|<order>
+                      |  <item quantity="5" name="Bottle of Beer" />
+                      |</order>
                       |""".stripMargin
       XmlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
