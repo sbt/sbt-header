@@ -18,6 +18,7 @@ package de.heikoseeberger.sbtheader
 
 import java.io.InputStream
 import sbt.Logger
+import scala.io.Codec
 
 object HeaderCreator {
 
@@ -41,7 +42,7 @@ final class HeaderCreator private (fileType: FileType,
   private val headerPattern = commentStyle.pattern
 
   private val (firstLine, text) = {
-    val fileContent = scala.io.Source.fromInputStream(input).mkString
+    val fileContent = scala.io.Source.fromInputStream(input)(Codec.UTF8).mkString
     fileType.firstLinePattern match {
       case Some(pattern) =>
         fileContent match {
