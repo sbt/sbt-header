@@ -23,8 +23,6 @@ import sbt.Logger
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.HashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
-import scala.util.matching.Regex
-
 final class StubLogger extends Logger {
   override def log(level: sbt.Level.Value, message: => String) = ()
   override def success(message: => String)                     = ()
@@ -168,6 +166,17 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val expectedResult = Some(xmlDeclaration + header + xmlBody)
 
         createHeader(fileContent, licenseText, FileType.xml) shouldBe expectedResult
+      }
+    }
+
+    "given a UTF-8 encoded file" should {
+      "preserve file encoding" in {
+        val fileContent = "this is a file with UTF-8 chars: árvíztűrő ütvefúrógép\n"
+        val licenseText = "license with UTF-8 chars $ → €\n"
+
+        createHeader(fileContent, licenseText) shouldBe Some(
+          HashLineComment(licenseText).replace(newLine, "\n") + fileContent
+        )
       }
     }
   }
