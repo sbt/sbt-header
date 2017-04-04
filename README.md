@@ -71,7 +71,7 @@ headers := Map(
   "scala" -> Apache2_0("2015", "Heiko Seeberger")
 )
 
-excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
+excludeFilter.in(unmanagedSources.in(createHeaders)) := HiddenFileFilter || "*Excluded.scala"
 ```
 
 The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/license/License.scala):
