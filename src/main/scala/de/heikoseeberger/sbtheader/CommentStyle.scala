@@ -103,7 +103,7 @@ private final class LineCommentCreator(linePrefix: String) extends CommentCreato
   override def apply(text: String): String = {
     def prependWithLinePrefix(s: String) =
       s match {
-        case ""   => if (!linePrefix.trim().isEmpty) linePrefix else ""
+        case ""   => if (!linePrefix.trim.isEmpty) linePrefix else ""
         case line => linePrefix + " " + line
       }
 
