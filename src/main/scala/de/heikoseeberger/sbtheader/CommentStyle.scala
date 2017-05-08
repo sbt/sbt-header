@@ -71,6 +71,11 @@ object CommentStyle {
     override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
   }
 
+  case object XmlStyleBlockComment extends CommentStyle {
+    override val commentCreator: CommentCreator = new CommentBlockCreator("<!--", "  ", "-->")
+
+    override val pattern: Regex = commentBetween("<!--", "  ", "-->")
+  }
 }
 
 private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
@@ -98,7 +103,7 @@ private final class LineCommentCreator(linePrefix: String) extends CommentCreato
   override def apply(text: String): String = {
     def prependWithLinePrefix(s: String) =
       s match {
-        case ""   => linePrefix
+        case ""   => if (!linePrefix.trim.isEmpty) linePrefix else ""
         case line => linePrefix + " " + line
       }
 

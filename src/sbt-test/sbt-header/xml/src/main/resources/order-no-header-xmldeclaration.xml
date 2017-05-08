@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<order>
+  <item>
+    <name>Beer</name>
+    <quantity>5</quantity>
+    <price currency="EUR">0.89</price>
+  </item>
+  <item>
+    <name>Chips</name>
+    <quantity>1</quantity>
+    <price currency="EUR">2.39</price>
+  </item>
+</order>
