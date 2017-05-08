@@ -58,7 +58,7 @@ In order to check whether all files have headers (for example for CI), execute t
 
 ## Configuration
 
-By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses`. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses). 
+By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses` settings. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses). 
 
 ### Setting the license to use explicitly
 
@@ -98,11 +98,11 @@ headerLicense := Some(HeaderLicense.Custom(
 ))
 ```
 
-Note that you don't need to add comment markers like `//` or `/*`. The comment style is configured on a per file type basis and it explained in the [next section](#build-in-comment-styles).
+Note that you don't need to add comment markers like `//` or `/*`. The comment style is configured on a per file type basis (see [next section](#build-in-comment-styles)).
 
 ### Configuring comment styles
 
-Comment styles are configured on a per file type basis. The default is to apply C Style block comments to Scala and Java files. The build-in comment styles are defined in [CommentStyle](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/CommentStyle.scala):
+Comment styles are configured on a per file type basis. The default is to apply C Style block comments to Scala and Java files. No other comment styles are predefined. If you want to create comments for example for your XML files, you have to add the corresponding mapping manually (see below). The build-in comment styles are defined in [CommentStyle](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/CommentStyle.scala):
 
 |Name|Description|
 |----|-----------|
@@ -112,7 +112,7 @@ Comment styles are configured on a per file type basis. The default is to apply 
 |TwirlStyleComment|Twirl style comment (blocks starting with "@*" and ending with "*@")|
 |TwirlStyleBlockComment|Twirl style block comments (comment blocks with a frame made of "*")|
 
-To override the configuration for Scala/Java files or add a configuration to some other files type, use the `headerMapping` setting:
+To override the configuration for Scala/Java files or add a configuration for some other file type, use the `headerMapping` setting:
 
 ``` scala
 headersMappings := headerMapping.value + ("scala" -> CppStyleLineComment)
@@ -166,7 +166,7 @@ AutomateHeaderPlugin.automateFor(It, MultiJvm)
 ## Integration with other plugins
 
 This plugin by default only handles `managedSources` and `managedResources` in `Compile` and `Test`. For this reason you
-need to tell sbt-header when it should also add headers to additional files managed by other plugins.
+need to tell sbt-header if it should also add headers to additional files managed by other plugins.
 
 ### sbt-twirl / play projects
 
