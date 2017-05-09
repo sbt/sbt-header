@@ -115,7 +115,7 @@ Comment styles are configured on a per file type basis. The default is to apply 
 To override the configuration for Scala/Java files or add a configuration for some other file type, use the `headerMapping` setting:
 
 ``` scala
-headersMappings := headerMapping.value + ("scala" -> CppStyleLineComment)
+headersMappings := headerMapping.value + (HeaderFileType.scala -> HeaderCommentStyle.CppStyleLineComment)
 ```
 
 ### Excluding files
@@ -175,33 +175,31 @@ project), the Twirl templates have to be added to the sources handled by sbt-hea
 definition:
 
 ```scala
-import de.heikoseeberger.sbtheader.license.Apache2_0
+import de.heikoseeberger.sbtheader.FileType
 import play.twirl.sbt.Import.TwirlKeys
 
-headers := Map(
-  "html" -> Apache2_0("2015", "Heiko Seeberger", "@*")
-)
+headersMappings := headerMapping.value + (FileType("html") -> HeaderCommentStyle.TwirlStyleBlockComment)
 
 unmanagedSources.in(Compile, createHeaders) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 ```
 
-sbt-header supports two comment styles for Twirl templates. `@*` will produce simple twirl comments, while `@**` produce
-twirl block comments.
+sbt-header supports two comment styles for Twirl templates. `TwirlStyleBlockComment` will produce simple twirl block comments, while `TwirlStyleFramedBlockComment` will produce
+framed twirl comments.
 
-`@*` comment style:
+`TwirlStyleBlockComment` comment style:
 
 ```scala
 @*
- * This is a simple twirl comment
+ * This is a simple twirl block comment
  *@
 ```
 
-`@**` comment style:
+`TwirlStyleFramedBlockComment` comment style:
 
 ```scala
-@*********************************
- * This is a twirl block comment *
- ********************************@
+@**********************************
+ * This is a framed twirl comment *
+ **********************************@
 ```
 
 ### sbt-boilerplate
