@@ -220,12 +220,78 @@ either `Compile` or `Test`.
 
 ## Migrating from 1.x
 
-TODO
+This section contains migration notes from version 1.x of sbt-header to version 2.x. The latest release of the 1.x line is 1.8.0. You can find the documentation of that release in the [corresponding git tag](https://github.com/sbt/sbt-header/tree/v1.8.0).
 
-- link to old documentation
-- renamed tasks and settings
-- migrating to `Custom` license
-- features which doe not work anymore: appling different licenses to different file types
+### Changed task names and settings keys
+
+The names of all tasks and settings have been changed from 1.x to 2.x. Furthermore types of settings have changed. The following tables give an overview of the changes:
+
+Changed task names:
+
+|Old Name|New Name|
+|--------|--------|
+|`createHeaders`|`headerCreate`|
+|`checkHeaders`|`headerCheck`|
+
+Changed settings:
+
+|Old Name : Old Type|New Name: New Type|
+|--------|--------|
+|`headers : Map[String, (Regex, String)]`|`headerMappings : Map[FileType, CommentStyle]`|
+| - | `headerLicense : Option[License]`|
+| `exclude : Seq[String]` | removed in favor of sbt include/excude filters|
+
+### `createFrom` method
+
+sbt-header 1.x featured some default header mappings as well as the `createFrom` method, which could be used to easily define header mappings:
+
+```scala
+headers := createFrom(Apache2_0, "2015", "Heiko Seeberger")
+```
+
+This method has been removed and the default mappings for Scala and Java files has been added as default mapping to the `headerMappings` setting.
+
+### Custom licenses
+
+In sbt-header 1.x when you needed to use a custom license this would typically look like this:
+
+```scala
+headers := Map(
+  "scala" -> (
+    HeaderPattern.cStyleBlockComment,
+    """|/*
+       | * Copyright 2015 Awesome Company
+       | */
+       |""".stripMargin
+  )
+)
+```
+
+In sbt-header 2.x, licenses are defined as instances of `de.hseeberger.sbtheader.License`. Further more, the license is only defined once and not per file type. So the above in 2.x is equivalent to:
+
+```scala
+headerLicense := Some(HeaderLicense.Custom(
+    """|/*
+       | * Copyright 2015 Awesome Company
+       | */
+       |""".stripMargin
+))
+```
+
+This will apply C style block comments to Java and Scala files. If you have mappings for additional file types, please add these to the `headerMappings` setting.
+
+### Dropped features
+
+In sbt-header 1.x it was possible to define different licenses for different files types, e.g.:
+
+```scala
+headers := Map(
+  "scala" -> Apache2_0("2015", "Heiko Seeberger"),
+  "java" -> MIT("2015", "Heiko Seeberger")
+)
+```
+
+Since we believe most of the projects out there will only ever have one license, we dropped this feature without replacement. In sbt-header 2.x users have to define a single license for the whole project using the `headerLicense` setting (or let sbt-header infer it from the `licenses` project setting, see [above](#getting-started)) and a mapping from file type to comment style using the `headerMappings` setting.
 
 ## Contribution policy ##
 
