@@ -4,6 +4,6 @@ jdk:
 - oraclejdk8
 
 script:
-  - sbt checkHeaders
+  - sbt headerCheck
   - sbt test
   - sbt scripted
