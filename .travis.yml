@@ -1,8 +1,9 @@
 language: scala
+
 jdk:
 - oraclejdk8
-script: 
+
+script:
   - sbt checkHeaders
   - sbt test
   - sbt scripted
-

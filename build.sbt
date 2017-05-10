@@ -20,7 +20,7 @@ lazy val `sbt-header` =
 lazy val library =
   new {
     object Version {
-      val scalaTest = "3.0.1"
+      val scalaTest = "3.0.3"
     }
     val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest
   }
@@ -37,9 +37,6 @@ lazy val settings =
 
 lazy val commonSettings =
   Seq(
-    // scalaVersion and crossScalaVersions from .travis.yml via sbt-travisci
-    // scalaVersion := "2.12.1",
-    // crossScalaVersions := Seq(scalaVersion.value, "2.11.8"),
     organization := "de.heikoseeberger",
     licenses += ("Apache 2.0",
                  url("http://www.apache.org/licenses/LICENSE-2.0")),
