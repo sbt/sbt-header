@@ -115,7 +115,7 @@ Comment styles are configured on a per file type basis. The default is to apply 
 To override the configuration for Scala/Java files or add a configuration for some other file type, use the `headerMapping` setting:
 
 ``` scala
-headersMappings := headerMapping.value + (HeaderFileType.scala -> HeaderCommentStyle.CppStyleLineComment)
+headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.CppStyleLineComment)
 ```
 
 ### Excluding files
@@ -178,9 +178,9 @@ definition:
 import de.heikoseeberger.sbtheader.FileType
 import play.twirl.sbt.Import.TwirlKeys
 
-headersMappings := headerMapping.value + (FileType("html") -> HeaderCommentStyle.TwirlStyleBlockComment)
+headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.TwirlStyleBlockComment)
 
-unmanagedSources.in(Compile, createHeaders) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
+unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 ```
 
 sbt-header supports two comment styles for Twirl templates. `TwirlStyleBlockComment` will produce simple twirl block comments, while `TwirlStyleFramedBlockComment` will produce
@@ -209,7 +209,7 @@ your build definition:
 
 ```scala
 def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
-  acc ++ (unmanagedSources in (conf, createHeaders) := (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get)
+  acc ++ (unmanagedSources in (conf, headerCreate) := (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get)
 }
 
 addBoilerplate(Compile, Test)
