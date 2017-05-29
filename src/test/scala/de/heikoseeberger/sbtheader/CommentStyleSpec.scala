@@ -30,7 +30,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
         s"""|/*
             | * $licenseText
             | */
-            |
             |""".stripMargin
 
       CStyleBlockComment(licenseText) shouldBe expected
@@ -107,7 +106,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
     "create C++ style line comments" in {
       val expected =
         s"""|// $licenseText
-            |
             |""".stripMargin
 
       CppStyleLineComment(licenseText) shouldBe expected
@@ -150,7 +148,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
     "create hash line comments" in {
       val expected =
         s"""|# $licenseText
-            |
             |""".stripMargin
 
       HashLineComment(licenseText) shouldBe expected
@@ -195,7 +192,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
         s"""|@*
             | * $licenseText
             | *@
-            |
             |""".stripMargin
 
       TwirlStyleBlockComment(licenseText) shouldBe expected
@@ -270,7 +266,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
         s"""|@****************
             | * $licenseText *
             | ****************@
-            |
             |""".stripMargin
 
       TwirlStyleFramedBlockComment(licenseText) shouldBe expected
@@ -357,7 +352,6 @@ class CommentStyleSpec extends WordSpec with Matchers {
         s"""|<!--
             |   $licenseText
             |-->
-            |
             |""".stripMargin
 
       XmlStyleBlockComment(licenseText) shouldBe expected

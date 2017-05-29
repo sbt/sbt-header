@@ -25,14 +25,16 @@ object HeaderCreator {
   def apply(fileType: FileType,
             commentStyle: CommentStyle,
             license: License,
+            headerEmptyLine: Boolean,
             log: Logger,
             input: InputStream): HeaderCreator =
-    new HeaderCreator(fileType, commentStyle, license, log, input)
+    new HeaderCreator(fileType, commentStyle, license, headerEmptyLine, log, input)
 }
 
 final class HeaderCreator private (fileType: FileType,
                                    commentStyle: CommentStyle,
                                    license: License,
+                                   headerEmptyLine: Boolean,
                                    log: Logger,
                                    input: InputStream) {
 
@@ -70,14 +72,21 @@ final class HeaderCreator private (fileType: FileType,
       case _       => "\n"
     }
 
-  private val newHeaderText = headerText.replace(headerNewLine, fileNewLine)
+  private val newHeaderText         = headerText.replace(headerNewLine, fileNewLine)
+  private val headerTextWithNewLine = headerText + newLine // the regex always checks for a new line at the end of a header text
 
   private val modifiedText =
     text match {
-      case headerPattern(`headerText`, _) => None
-      case headerPattern(_, body)         => Some(firstLine + newHeaderText + body)
-      case body if body.isEmpty           => None
-      case body                           => Some(firstLine + newHeaderText + body.replaceAll("""^\s+""", "")) // Trim left
+      case headerPattern(`headerText`, _)            => None
+      case headerPattern(`headerTextWithNewLine`, _) => None
+      case headerPattern(_, body) =>
+        Some(firstLine + newHeaderText + (if (headerEmptyLine) newLine else "") + body)
+      case body if body.isEmpty => None
+      case body =>
+        Some(
+          firstLine + newHeaderText + (if (headerEmptyLine) newLine else "") + body
+            .replaceAll("""^\s+""", "") // Trim left
+        )
     }
   log.debug(s"Modified text of file is:$newLine$modifiedText")
 

@@ -77,6 +77,11 @@ object HeaderPlugin extends AutoPlugin {
         "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
       )
 
+    val headerEmptyLine: SettingKey[Boolean] =
+      settingKey(
+        "If an empty line header should be added between the header and the body"
+      )
+
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
@@ -110,6 +115,7 @@ object HeaderPlugin extends AutoPlugin {
             sys.error("Unable to auto detect project license")
           ),
         headerMappings.value,
+        headerEmptyLine.value,
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
@@ -122,12 +128,14 @@ object HeaderPlugin extends AutoPlugin {
             sys.error("Unable to auto detect project license")
           ),
         headerMappings.value,
+        headerEmptyLine.value,
         streams.value.log
       )
     )
 
   private def notToBeScopedSettings =
     Vector(
+      headerEmptyLine := true,
       headerMappings := Map(
         FileType.scala -> CStyleBlockComment,
         FileType.java  -> CStyleBlockComment
@@ -140,6 +148,7 @@ object HeaderPlugin extends AutoPlugin {
   private def createHeadersTask(files: Seq[File],
                                 headerLicense: License,
                                 headerMappings: Map[FileType, CommentStyle],
+                                headerEmptyLine: Boolean,
                                 log: Logger) = {
     def createHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
@@ -148,6 +157,7 @@ object HeaderPlugin extends AutoPlugin {
       HeaderCreator(fileType,
                     commentStyle,
                     headerLicense,
+                    headerEmptyLine,
                     log,
                     Files.newInputStream(Paths.get(file.toURI))).createText
         .map(write)
@@ -168,12 +178,14 @@ object HeaderPlugin extends AutoPlugin {
   private def checkHeadersTask(files: Seq[File],
                                headerLicense: License,
                                headerMappings: Map[FileType, CommentStyle],
+                               headerEmptyLine: Boolean,
                                log: Logger) = {
     def checkHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       val headerText = commentStyle.apply(headerLicense)
       HeaderCreator(fileType,
                     commentStyle,
                     headerLicense,
+                    headerEmptyLine,
                     log,
                     Files.newInputStream(Paths.get(file.toURI))).createText
         .map(_ => file)

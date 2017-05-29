@@ -28,7 +28,7 @@ sealed trait CommentStyle {
 
   val commentCreator: CommentCreator
 
-  def apply(licenseText: String): String = commentCreator(licenseText) + newLine + newLine
+  def apply(licenseText: String): String = commentCreator(licenseText) + newLine
 
   def apply(license: License): String = apply(license.text)
 }
