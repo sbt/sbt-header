@@ -25,20 +25,22 @@ object HeaderCreator {
   def apply(fileType: FileType,
             commentStyle: CommentStyle,
             license: License,
+            headerEmptyLine: Boolean,
             log: Logger,
             input: InputStream): HeaderCreator =
-    new HeaderCreator(fileType, commentStyle, license, log, input)
+    new HeaderCreator(fileType, commentStyle, license, headerEmptyLine, log, input)
 }
 
 final class HeaderCreator private (fileType: FileType,
                                    commentStyle: CommentStyle,
                                    license: License,
+                                   headerEmptyLine: Boolean,
                                    log: Logger,
                                    input: InputStream) {
 
   private val crlf          = """(?s)(?:.*)(\r\n)(?:.*)""".r
   private val cr            = """(?s)(?:.*)(\r)(?:.*)""".r
-  private val headerText    = commentStyle(license)
+  private val hText         = commentStyle(license)
   private val headerPattern = commentStyle.pattern
 
   private val (firstLine, text) = {
@@ -64,20 +66,22 @@ final class HeaderCreator private (fileType: FileType,
     }
 
   private val headerNewLine =
-    headerText match {
+    hText match {
       case crlf(_) => "\r\n"
       case cr(_)   => "\r"
       case _       => "\n"
     }
 
-  private val newHeaderText = headerText.replace(headerNewLine, fileNewLine)
+  private val newHeaderText = hText.replace(headerNewLine, fileNewLine)
+  private val hTextNl       = hText + newLine // the regex always checks for a new line at the end of a header text
+  private val nl            = (if (headerEmptyLine) newLine else "")
 
   private val modifiedText =
     text match {
-      case headerPattern(`headerText`, _) => None
-      case headerPattern(_, body)         => Some(firstLine + newHeaderText + body)
-      case body if body.isEmpty           => None
-      case body                           => Some(firstLine + newHeaderText + body.replaceAll("""^\s+""", "")) // Trim left
+      case headerPattern(`hText` | `hTextNl`, _) => None
+      case headerPattern(_, body)                => Some(firstLine + newHeaderText + nl + body)
+      case body if body.isEmpty                  => None
+      case body                                  => Some(firstLine + newHeaderText + nl + body.replaceAll("""^\s+""", "")) // ltrim
     }
   log.debug(s"Modified text of file is:$newLine$modifiedText")
 

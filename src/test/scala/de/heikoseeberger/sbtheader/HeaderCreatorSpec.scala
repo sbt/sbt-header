@@ -42,7 +42,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r\n") + fileContent
+          header.replace(newLine, "\r\n") + newLine + fileContent
         )
       }
 
@@ -51,7 +51,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r\n") + fileContent
+          header.replace(newLine, "\r\n") + newLine + fileContent
         )
       }
     }
@@ -65,7 +65,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(newLine, "\n") + newLine + fileContent
         )
       }
 
@@ -74,7 +74,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(newLine, "\n") + newLine + fileContent
         )
       }
     }
@@ -86,7 +86,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r") + fileContent
+          header.replace(newLine, "\r") + newLine + fileContent
         )
       }
     }
@@ -101,7 +101,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(newLine, "\n") + newLine + fileContent
         )
       }
     }
@@ -114,7 +114,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val header      = HashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(newLine, "\n") + newLine + fileContent
         )
       }
     }
@@ -132,11 +132,11 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       "preserve shebang and add header when header is missing" in {
         val fileContent = shebang + script
 
-        createHeader(fileContent, licenseText) shouldBe Some(shebang + header + script)
+        createHeader(fileContent, licenseText) shouldBe Some(shebang + header + newLine + script)
       }
 
       "not touch file when header is present" in {
-        val fileContent = shebang + header + script
+        val fileContent = shebang + header + newLine + script
 
         createHeader(fileContent, licenseText) shouldBe None
       }
@@ -163,7 +163,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "preserve XML declaration and add header when header is missing" in {
         val fileContent    = xmlDeclaration + xmlBody
-        val expectedResult = Some(xmlDeclaration + header + xmlBody)
+        val expectedResult = Some(xmlDeclaration + header + newLine + xmlBody)
 
         createHeader(fileContent, licenseText, FileType.xml) shouldBe expectedResult
       }
@@ -175,7 +175,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val licenseText = "license with UTF-8 chars $ → €\n"
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          HashLineComment(licenseText).replace(newLine, "\n") + fileContent
+          HashLineComment(licenseText).replace(newLine, "\n") + newLine + fileContent
         )
       }
     }
@@ -186,6 +186,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       fileType,
       HashLineComment,
       Custom(header),
+      true,
       new StubLogger,
       new ByteArrayInputStream(fileContent.getBytes)
     ).createText

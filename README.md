@@ -125,6 +125,14 @@ To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.1
 excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
 ```
 
+### Empty line between header and body
+
+If an empty line header should be added between the header and the body of a file (defaults to `true`):
+
+```scala
+headerEmptyLine := false
+```
+
 ### Using an auto plugin
 
 If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:
