@@ -270,14 +270,12 @@ In sbt-header 2.x, licenses are defined as instances of `de.hseeberger.sbtheader
 
 ```scala
 headerLicense := Some(HeaderLicense.Custom(
-    """|/*
-       | * Copyright 2015 Awesome Company
-       | */
+    """|Copyright 2015 Awesome Company
        |""".stripMargin
 ))
 ```
 
-This will apply C style block comments to Java and Scala files. If you have mappings for additional file types, please add these to the `headerMappings` setting.
+Note that you only need to define the license text, but not the comment markers. The latter are configured via the `headerMappings` setting. The configuration above will use the default mappings which apply C style block comments to Java and Scala files. If you have mappings for additional file types, please add these to the `headerMappings` setting. 
 
 ### Dropped features
 
