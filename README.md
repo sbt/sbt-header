@@ -1,7 +1,6 @@
 # sbt-header #
 
 [![Build Status](https://travis-ci.org/sbt/sbt-header.svg?branch=master)](https://travis-ci.org/sbt/sbt-header)
-[![Build status](https://ci.appveyor.com/api/projects/status/bycajw36t0fie2s0/branch/master?svg=true)](https://ci.appveyor.com/project/britter/sbt-header/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2cd1ffe963484f45902e8ca2a72276c6)](https://www.codacy.com/app/britter/sbt-header?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sbt/sbt-header&amp;utm_campaign=Badge_Grade)
 [![Download](https://api.bintray.com/packages/hseeberger/sbt-plugins/sbt-header/images/download.svg)](https://bintray.com/hseeberger/sbt-plugins/sbt-header/_latestVersion)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
