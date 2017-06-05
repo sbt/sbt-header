@@ -105,7 +105,7 @@ Comment styles are configured on a per file type basis. The default is to apply 
 
 |Name|Description|
 |----|-----------|
-|CStyleBlockComment|C style block comments (blocks starting with "/*" and ending with "*/")|
+|CStyleBlockComment|C style block comments (blocks starting with "/\*" and ending with "\*/")|
 |CppStyleLineComment|C++ style line comments (lines prefixed with "//")|
 |HashLineComment|Hash line comments (lines prefixed with "#")|
 |TwirlStyleComment|Twirl style comment (blocks starting with "@*" and ending with "*@")|
