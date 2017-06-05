@@ -32,13 +32,14 @@ lazy val library =
 lazy val settings =
   commonSettings ++
   gitSettings ++
-  headerSettings ++
   pluginSettings
 
 lazy val commonSettings =
   Seq(
     organization := "de.heikoseeberger",
-    licenses += ("Apache 2.0",
+    organizationName := "Heiko Seeberger",
+    startYear := Some(2015),
+    licenses += ("Apache-2.0",
                  url("http://www.apache.org/licenses/LICENSE-2.0")),
     mappings.in(Compile, packageBin) += baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
     scalacOptions ++= Seq(
@@ -55,12 +56,6 @@ lazy val commonSettings =
 lazy val gitSettings =
   Seq(
     git.useGitDescribe := true
-  )
-
-import de.heikoseeberger.sbtheader.license._
-lazy val headerSettings =
-  Seq(
-    headers := Map("scala" -> Apache2_0("2015", "Heiko Seeberger"))
   )
 
 lazy val pluginSettings =
