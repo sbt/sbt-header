@@ -108,7 +108,7 @@ Comment styles are configured on a per file type basis. The default is to apply 
 |CStyleBlockComment|C style block comments (blocks starting with "/\*" and ending with "\*/")|
 |CppStyleLineComment|C++ style line comments (lines prefixed with "//")|
 |HashLineComment|Hash line comments (lines prefixed with "#")|
-|TwirlStyleComment|Twirl style comment (blocks starting with "@*" and ending with "*@")|
+|TwirlStyleComment|Twirl style comment (blocks starting with "@\*" and ending with "\*@")|
 |TwirlStyleBlockComment|Twirl style block comments (comment blocks with a frame made of "*")|
 
 To override the configuration for Scala/Java files or add a configuration for some other file type, use the `headerMapping` setting:
