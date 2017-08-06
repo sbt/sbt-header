@@ -55,7 +55,8 @@ lazy val commonSettings =
       s"[$project]> "
     },
     sbtPlugin := true,
-    publishMavenStyle := false
+    publishMavenStyle := false,
+    crossSbtVersions := Vector("1.0.0", "0.13.16")
 )
 
 lazy val gitSettings =
