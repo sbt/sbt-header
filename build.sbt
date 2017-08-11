@@ -5,7 +5,7 @@
 lazy val `sbt-header` =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning)
+    .enablePlugins(/*AutomateHeaderPlugin, */GitVersioning)
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
@@ -32,25 +32,30 @@ lazy val library =
 lazy val settings =
   commonSettings ++
   gitSettings ++
-  pluginSettings
+  scalafmtSettings ++
+  sbtScriptedSettings
 
 lazy val commonSettings =
   Seq(
     organization := "de.heikoseeberger",
     organizationName := "Heiko Seeberger",
     startYear := Some(2015),
-    licenses += ("Apache-2.0",
-                 url("http://www.apache.org/licenses/LICENSE-2.0")),
-    mappings.in(Compile, packageBin) += baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
+    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
       "-language:_",
-      "-target:jvm-1.7",
+      "-target:jvm-1.8",
       "-encoding", "UTF-8"
     ),
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
-    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value)
+    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
+    shellPrompt in ThisBuild := { state =>
+      val project = Project.extract(state).currentRef.project
+      s"[$project]> "
+    },
+    sbtPlugin := true,
+    publishMavenStyle := false
 )
 
 lazy val gitSettings =
@@ -58,11 +63,18 @@ lazy val gitSettings =
     git.useGitDescribe := true
   )
 
-lazy val pluginSettings =
-  scriptedSettings ++
+lazy val scalafmtSettings =
   Seq(
-    sbtPlugin := true,
-    publishMavenStyle := false,
-    scriptedLaunchOpts ++= Seq("-Xmx1024M", s"-Dplugin.version=${version.value}"),
+    scalafmtOnCompile := true,
+    scalafmtOnCompile.in(Sbt) := false,
+    scalafmtVersion := "1.1.0"
+  )
+
+lazy val sbtScriptedSettings =
+  Seq(
+    scriptedLaunchOpts ++= Seq(
+      "-Xmx1024M",
+      s"-Dplugin.version=${version.value}"
+    ),
     scriptedBufferLog := false
   )

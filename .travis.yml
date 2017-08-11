@@ -1,7 +1,10 @@
 language: scala
 
+scala:
+  - 2.12.3
+
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
 script:
   - sbt headerCheck
