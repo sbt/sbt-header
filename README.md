@@ -13,7 +13,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "2.0.0")
+addSbtPlugin("de.heikoseeberger" % "sbt-header" % "3.0.0")
 ```
 
 Then in your `build.sbt` configure the following settings:
@@ -52,12 +52,12 @@ In order to check whether all files have headers (for example for CI), execute t
 
 ### Requirements
 
-- Java 7 or higher
-- sbt 0.13.13 or higher
+- Java 8 or higher
+- sbt 1.0.0 or higher
 
 ## Configuration
 
-By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses` settings. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses). 
+By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses` settings. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses).
 
 ### Setting the license to use explicitly
 
@@ -138,7 +138,7 @@ object Build extends AutoPlugin {
 }
 ```
 
-### Adding headers to files in other configurations 
+### Adding headers to files in other configurations
 
 By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
@@ -275,7 +275,7 @@ headerLicense := Some(HeaderLicense.Custom(
 ))
 ```
 
-Note that you only need to define the license text, but not the comment markers. The latter are configured via the `headerMappings` setting. The configuration above will use the default mappings which apply C style block comments to Java and Scala files. If you have mappings for additional file types, please add these to the `headerMappings` setting. 
+Note that you only need to define the license text, but not the comment markers. The latter are configured via the `headerMappings` setting. The configuration above will use the default mappings which apply C style block comments to Java and Scala files. If you have mappings for additional file types, please add these to the `headerMappings` setting.
 
 ### Dropped features
 
