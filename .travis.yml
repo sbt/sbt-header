@@ -7,5 +7,5 @@ jdk:
   - oraclejdk8
 
 script:
-  - sbt test
-  - sbt scripted
+  - sbt ^test
+  - sbt ^scripted
