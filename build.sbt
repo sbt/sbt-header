@@ -50,7 +50,7 @@ lazy val commonSettings =
     scalacOptions += {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, 12)) => "-target:jvm-1.8"
-        case _ => "-target:jvm-1.7"
+        case _             => "-target:jvm-1.7"
       }
     },
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
@@ -60,7 +60,7 @@ lazy val commonSettings =
       s"[$project]> "
     },
     sbtPlugin := true,
-    crossSbtVersions := Seq("0.13.16", "1.0.0"),
+    crossSbtVersions := Seq("1.0.0", "0.13.16"),
     publishMavenStyle := false
 )
 
