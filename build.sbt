@@ -77,7 +77,6 @@ lazy val scalafmtSettings =
   )
 
 lazy val sbtScriptedSettings =
-  scriptedSettings ++
   Seq(
     scriptedLaunchOpts ++= Seq(
       "-Xmx1024M",
