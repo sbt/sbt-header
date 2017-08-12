@@ -45,9 +45,14 @@ lazy val commonSettings =
       "-unchecked",
       "-deprecation",
       "-language:_",
-      "-target:jvm-1.8",
       "-encoding", "UTF-8"
     ),
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n < 12 => Seq("-target:jvm-1.7")
+        case _                      => Nil
+      }
+    },
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
     shellPrompt in ThisBuild := { state =>
@@ -55,7 +60,8 @@ lazy val commonSettings =
       s"[$project]> "
     },
     sbtPlugin := true,
-    publishMavenStyle := false
+    publishMavenStyle := false,
+    crossSbtVersions := Vector("1.0.0", "0.13.16")
 )
 
 lazy val gitSettings =
