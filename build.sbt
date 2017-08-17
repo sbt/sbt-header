@@ -57,13 +57,9 @@ lazy val commonSettings =
     },
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
-    shellPrompt in ThisBuild := { state =>
-      val project = Project.extract(state).currentRef.project
-      s"[$project]> "
-    },
     sbtPlugin := true,
-    crossSbtVersions := Seq("1.0.0", "0.13.16"),
-    publishMavenStyle := false
+    publishMavenStyle := false,
+    crossSbtVersions := Seq("1.0.0", "0.13.16")
 )
 
 lazy val gitSettings =
