@@ -97,7 +97,7 @@ headerLicense := Some(HeaderLicense.Custom(
 ))
 ```
 
-Note that you don't need to add comment markers like `//` or `/*`. The comment style is configured on a per file type basis (see [next section](#build-in-comment-styles)).
+Note that you don't need to add comment markers like `//` or `/*`. The comment style is configured on a per file type basis (see [next section](#configuring-comment-styles)).
 
 ### Configuring comment styles
 
