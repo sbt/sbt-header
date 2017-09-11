@@ -16,9 +16,9 @@
 
 package de.heikoseeberger.sbtheader
 
-import java.io.{ File, FileInputStream }
+import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.{ Files, Paths }
+import java.nio.file.Files
 
 import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 import sbt.Keys.{
@@ -144,12 +144,7 @@ object HeaderPlugin extends AutoPlugin {
     def createHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
-      val headerText = commentStyle.apply(headerLicense)
-      HeaderCreator(fileType,
-                    commentStyle,
-                    headerLicense,
-                    log,
-                    Files.newInputStream(Paths.get(file.toURI))).createText
+      HeaderCreator(fileType, commentStyle, headerLicense, log, Files.newInputStream(file.toPath)).createText
         .map(write)
     }
     val touchedFiles =
@@ -169,15 +164,9 @@ object HeaderPlugin extends AutoPlugin {
                                headerLicense: License,
                                headerMappings: Map[FileType, CommentStyle],
                                log: Logger) = {
-    def checkHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
-      val headerText = commentStyle.apply(headerLicense)
-      HeaderCreator(fileType,
-                    commentStyle,
-                    headerLicense,
-                    log,
-                    Files.newInputStream(Paths.get(file.toURI))).createText
+    def checkHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) =
+      HeaderCreator(fileType, commentStyle, headerLicense, log, Files.newInputStream(file.toPath)).createText
         .map(_ => file)
-    }
     val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
       .flatMap {
         case ((fileType, commentStyle), groupedFiles) =>
