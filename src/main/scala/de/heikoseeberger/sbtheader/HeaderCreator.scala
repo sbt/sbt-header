@@ -42,7 +42,11 @@ final class HeaderCreator private (fileType: FileType,
   private val headerPattern = commentStyle.pattern
 
   private val (firstLine, text) = {
-    val fileContent = scala.io.Source.fromInputStream(input)(Codec.UTF8).mkString
+    val fileContent = try {
+      scala.io.Source.fromInputStream(input)(Codec.UTF8).mkString
+    } finally {
+      input.close()
+    }
     fileType.firstLinePattern match {
       case Some(pattern) =>
         fileContent match {
