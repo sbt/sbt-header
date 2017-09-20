@@ -21,12 +21,17 @@ import scala.util.matching.Regex
 final case class FileType(extension: String, firstLinePattern: Option[Regex] = None)
 
 object FileType {
-  def firstLinePattern(firstLinePattern: String): Regex =
-    s"""($firstLinePattern(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 
-  val conf: FileType  = FileType("conf")
-  val java: FileType  = FileType("java")
+  val conf: FileType = FileType("conf")
+
+  val java: FileType = FileType("java")
+
   val scala: FileType = FileType("scala")
-  val sh: FileType    = FileType("sh", Some(firstLinePattern("#!.*")))
-  val xml: FileType   = FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
+
+  val sh: FileType = FileType("sh", Some(firstLinePattern("#!.*")))
+
+  val xml: FileType = FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
+
+  private def firstLinePattern(firstLinePattern: String) =
+    s"""($firstLinePattern(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
 }

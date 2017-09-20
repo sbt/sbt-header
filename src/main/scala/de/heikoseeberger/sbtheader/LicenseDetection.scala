@@ -16,13 +16,13 @@
 
 package de.heikoseeberger.sbtheader
 
-import scala.collection.breakOut
 import sbt.URL
+import scala.collection.breakOut
 
 private object LicenseDetection {
 
-  private val spdxMapping: Map[String, SpdxLicense] =
-    License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut)
+  private val spdxMapping =
+    License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut): Map[String, SpdxLicense]
 
   def apply(licenses: Seq[(String, URL)],
             organizationName: String,
@@ -38,5 +38,4 @@ private object LicenseDetection {
       year    <- startYear
     } yield license(year.toString, organizationName)
   }
-
 }
