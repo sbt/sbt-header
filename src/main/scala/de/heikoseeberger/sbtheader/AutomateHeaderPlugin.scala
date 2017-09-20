@@ -16,8 +16,8 @@
 
 package de.heikoseeberger.sbtheader
 
+import sbt.{ AutoPlugin, Compile, Configuration, Setting, Test, inConfig }
 import sbt.Keys.compile
-import sbt.{ inConfig, AutoPlugin, Compile, Configuration, Setting, Test }
 
 /**
   * Enable this plugin to automate header creation/update on compile. By default the `Compile` and

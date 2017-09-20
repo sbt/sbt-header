@@ -16,21 +16,26 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern._
-
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern.{
+  commentBetween,
+  commentStartingWith
+}
 import scala.util.matching.Regex
 
 /**
   * Representation of the different comment styles supported by this plugin.
   */
 sealed trait CommentStyle {
-  val pattern: Regex
 
-  val commentCreator: CommentCreator
+  def pattern: Regex
 
-  def apply(licenseText: String): String = commentCreator(licenseText) + newLine + newLine
+  def commentCreator: CommentCreator
 
-  def apply(license: License): String = apply(license.text)
+  def apply(licenseText: String): String =
+    commentCreator(licenseText) + newLine + newLine
+
+  def apply(license: License): String =
+    apply(license.text)
 }
 
 sealed trait CommentCreator {
@@ -40,45 +45,49 @@ sealed trait CommentCreator {
 object CommentStyle {
 
   final case object CStyleBlockComment extends CommentStyle {
-    override val commentCreator: CommentCreator =
-      new CommentBlockCreator("/*", " *", " */")
 
-    override val pattern: Regex = commentBetween("""/\*+""", "*", """\*/""")
+    override val commentCreator = new CommentBlockCreator("/*", " *", " */")
+
+    override val pattern = commentBetween("""/\*+""", "*", """\*/""")
   }
 
   case object CppStyleLineComment extends CommentStyle {
-    override val commentCreator: CommentCreator = new LineCommentCreator("//")
 
-    override val pattern: Regex = commentStartingWith("//")
+    override val commentCreator = new LineCommentCreator("//")
+
+    override val pattern = commentStartingWith("//")
   }
 
   case object HashLineComment extends CommentStyle {
-    override val commentCreator: CommentCreator = new LineCommentCreator("#")
 
-    override val pattern: Regex = commentStartingWith("#")
+    override val commentCreator = new LineCommentCreator("#")
+
+    override val pattern = commentStartingWith("#")
   }
 
   case object TwirlStyleBlockComment extends CommentStyle {
-    override val commentCreator: CommentCreator =
-      new CommentBlockCreator("@*", " *", " *@")
 
-    override val pattern: Regex = commentBetween("""@\*""", "*", """\*@""")
+    override val commentCreator = new CommentBlockCreator("@*", " *", " *@")
+
+    override val pattern = commentBetween("""@\*""", "*", """\*@""")
   }
 
   case object TwirlStyleFramedBlockComment extends CommentStyle {
-    override val commentCreator: CommentCreator = TwirlStyleFramedBlockCommentCreator
 
-    override val pattern: Regex = commentBetween("""@\*+""", "*", """\*@""")
+    override val commentCreator = TwirlStyleFramedBlockCommentCreator
+
+    override val pattern = commentBetween("""@\*+""", "*", """\*@""")
   }
 
   case object XmlStyleBlockComment extends CommentStyle {
-    override val commentCreator: CommentCreator = new CommentBlockCreator("<!--", "  ", "-->")
 
-    override val pattern: Regex = commentBetween("<!--", "  ", "-->")
+    override val commentCreator = new CommentBlockCreator("<!--", "  ", "-->")
+
+    override val pattern = commentBetween("<!--", "  ", "-->")
   }
 }
 
-private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
+object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
 
   def apply(text: String): String = {
     val maxLineLength = text.lines.map(_.length).max
@@ -98,7 +107,7 @@ private object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
   private def stars(count: Int) = "*" * count
 }
 
-private final class LineCommentCreator(linePrefix: String) extends CommentCreator {
+final class LineCommentCreator(linePrefix: String) extends CommentCreator {
 
   override def apply(text: String): String = {
     def prependWithLinePrefix(s: String) =
@@ -111,9 +120,7 @@ private final class LineCommentCreator(linePrefix: String) extends CommentCreato
   }
 }
 
-private final class CommentBlockCreator(blockPrefix: String,
-                                        linePrefix: String,
-                                        blockSuffix: String)
+final class CommentBlockCreator(blockPrefix: String, linePrefix: String, blockSuffix: String)
     extends CommentCreator {
 
   private val lineCommentCreator = new LineCommentCreator(linePrefix)

@@ -16,11 +16,23 @@
 
 package de.heikoseeberger.sbtheader
 
+import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
 import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
-
-import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
+import sbt.{
+  AutoPlugin,
+  Compile,
+  Configuration,
+  Logger,
+  Setting,
+  SettingKey,
+  TaskKey,
+  Test,
+  inConfig,
+  settingKey,
+  taskKey
+}
 import sbt.Keys.{
   licenses,
   organizationName,
@@ -30,20 +42,6 @@ import sbt.Keys.{
   unmanagedSources
 }
 import sbt.plugins.JvmPlugin
-import sbt.{
-  inConfig,
-  settingKey,
-  taskKey,
-  AutoPlugin,
-  Compile,
-  Configuration,
-  Logger,
-  Setting,
-  SettingKey,
-  TaskKey,
-  Test
-}
-
 import scala.util.matching.Regex
 
 object HeaderPlugin extends AutoPlugin {
@@ -52,15 +50,13 @@ object HeaderPlugin extends AutoPlugin {
 
     val HeaderLicense = License
 
-    object HeaderPattern {
+    final object HeaderPattern {
 
       def commentBetween(start: String, middle: String, end: String): Regex =
-        new Regex(raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""")
+        raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""".r
 
       def commentStartingWith(start: String): Regex =
-        new Regex(
-          raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)"""
-        )
+        raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)""".r
     }
 
     val HeaderFileType = FileType
@@ -84,9 +80,7 @@ object HeaderPlugin extends AutoPlugin {
       taskKey[Iterable[File]]("Check whether files have headers")
 
     def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
-      configurations.foldLeft(List.empty[Setting[_]]) {
-        _ ++ inConfig(_)(toBeScopedSettings)
-      }
+      configurations.foldLeft(List.empty[Setting[_]]) { _ ++ inConfig(_)(toBeScopedSettings) }
   }
   import autoImport._
 
@@ -101,26 +95,16 @@ object HeaderPlugin extends AutoPlugin {
       unmanagedSources in headerCreate := unmanagedSources.value,
       unmanagedResources in headerCreate := unmanagedResources.value,
       headerCreate := createHeadersTask(
-        unmanagedSources
-          .in(headerCreate)
-          .value
-          .toList ++ unmanagedResources.in(headerCreate).value.toList,
-        headerLicense.value
-          .getOrElse(
-            sys.error("Unable to auto detect project license")
-          ),
+        unmanagedSources.in(headerCreate).value.toList ++
+        unmanagedResources.in(headerCreate).value.toList,
+        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
         headerMappings.value,
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
-        unmanagedSources
-          .in(headerCreate)
-          .value
-          .toList ++ unmanagedResources.in(headerCreate).value.toList,
-        headerLicense.value
-          .getOrElse(
-            sys.error("Unable to auto detect project license")
-          ),
+        unmanagedSources.in(headerCheck).value.toList ++
+        unmanagedResources.in(headerCheck).value.toList,
+        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
         headerMappings.value,
         streams.value.log
       )
@@ -148,7 +132,7 @@ object HeaderPlugin extends AutoPlugin {
         .map(write)
     }
     val touchedFiles =
-      groupFilesByCommentStyle(files, headerMappings)
+      groupFilesByFileTypeAndCommentStyle(files, headerMappings)
         .flatMap {
           case ((fileType, commentStyle), groupedFiles) =>
             groupedFiles.flatMap(createHeader(fileType, commentStyle))
@@ -167,28 +151,30 @@ object HeaderPlugin extends AutoPlugin {
     def checkHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) =
       HeaderCreator(fileType, commentStyle, headerLicense, log, Files.newInputStream(file.toPath)).createText
         .map(_ => file)
-    val filesWithoutHeader = groupFilesByCommentStyle(files, headerMappings)
-      .flatMap {
-        case ((fileType, commentStyle), groupedFiles) =>
-          groupedFiles.flatMap(checkHeader(fileType, commentStyle))
-      }
+    val filesWithoutHeader =
+      groupFilesByFileTypeAndCommentStyle(files, headerMappings)
+        .flatMap {
+          case ((fileType, commentStyle), groupedFiles) =>
+            groupedFiles.flatMap(checkHeader(fileType, commentStyle))
+        }
     if (filesWithoutHeader.nonEmpty)
       sys.error(
         s"""|There are files without headers!
-          |  ${filesWithoutHeader.mkString(s"$newLine  ")}
-          |""".stripMargin
+            |  ${filesWithoutHeader.mkString(s"$newLine  ")}
+            |""".stripMargin
       )
     filesWithoutHeader
   }
 
-  private def groupFilesByCommentStyle(files: Seq[File], headers: Map[FileType, CommentStyle]) =
+  private def groupFilesByFileTypeAndCommentStyle(files: Seq[File],
+                                                  headerMappings: Map[FileType, CommentStyle]) =
     files
       .groupBy(_.extension)
       .collect {
         case (Some(ext), groupedFiles) =>
-          headers
-            .find { case (FileType(extension, _), _) => extension == ext }
-            .map(_ -> groupedFiles)
+          headerMappings.collect {
+            case key @ (FileType(`ext`, _), _) => key -> groupedFiles
+          }
       }
       .flatten
 }
