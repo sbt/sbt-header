@@ -396,4 +396,29 @@ class CommentStyleSpec extends WordSpec with Matchers {
       XmlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
+
+  "NoneCommentCreator" should {
+
+    "not create any prefix in the header" in {
+      val expected =
+        s"""$licenseText""".stripMargin
+
+      NoneCommentCreator(licenseText) shouldBe expected
+    }
+
+    "create the same license text with new line characters" in {
+
+      val severalLinesLicense =
+        """
+          | Some random license text
+          | with several new line
+          | characters.
+        """.stripMargin
+
+      val expected = s"""$severalLinesLicense""".stripMargin
+
+      NoneCommentCreator(severalLinesLicense) shouldBe expected
+    }
+  }
+
 }
