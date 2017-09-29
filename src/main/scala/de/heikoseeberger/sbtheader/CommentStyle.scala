@@ -130,6 +130,5 @@ final class CommentBlockCreator(blockPrefix: String, linePrefix: String, blockSu
 }
 
 object NoneCommentCreator extends CommentCreator {
-  override def apply(text: String): String =
-    text.lines.mkString(newLine)
+  override def apply(text: String): String = text
 }
