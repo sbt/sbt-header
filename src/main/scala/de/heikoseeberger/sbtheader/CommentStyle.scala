@@ -128,3 +128,7 @@ final class CommentBlockCreator(blockPrefix: String, linePrefix: String, blockSu
   def apply(text: String): String =
     blockPrefix + newLine + lineCommentCreator(text) + newLine + blockSuffix
 }
+
+object IdentityCommentCreator extends CommentCreator {
+  override def apply(text: String) = text
+}
