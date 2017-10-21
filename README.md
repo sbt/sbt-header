@@ -67,7 +67,7 @@ If you can not setup your build in a way that sbt-header can detect the license 
 headerLicense := Some(HeaderLicense.MIT("2015", "Heiko Seeberger"))
 ```
 
-This will also given precedence if a license has been auto detected from project settings.
+This will also be given precedence if a license has been auto detected from project settings.
 
 ### Build in licenses
 
@@ -86,7 +86,7 @@ The most common licenses have been pre-canned in [License](https://github.com/sb
 
 ### Using a custom license text
 
-If you don't want to use one of the build in licenses, you can define a custom license test using the `Custom` case class:
+If you don't want to use one of the build in licenses, you can define a custom license text using the `Custom` case class:
 
 ```scala
 headerLicense := Some(HeaderLicense.Custom(
