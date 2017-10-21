@@ -48,7 +48,7 @@ In order to check whether all files have headers (for example for CI), execute t
 [error]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-`headerCheck` will not modify any files but will cause the build to file there are files without a license header.
+`headerCheck` will not modify any files but will cause the build to fail if there are files without a license header.
 
 ### Requirements
 
