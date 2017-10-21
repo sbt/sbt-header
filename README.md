@@ -24,7 +24,7 @@ startYear := Some(2015)
 licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 ```
 
-This configuration will add apply Apache License 2.0 headers to Scala and Java files. sbt-header provides two tasks: `headerCreate` and `headerCheck`, which are described in the following sub sections. For more information on how to customize sbt-header, please refer to the [Configuration](#configuration) section.
+This configuration will apply Apache License 2.0 headers to Scala and Java files. sbt-header provides two tasks: `headerCreate` and `headerCheck`, which are described in the following sub sections. For more information on how to customize sbt-header, please refer to the [Configuration](#configuration) section.
 
 ### Creating headers
 
