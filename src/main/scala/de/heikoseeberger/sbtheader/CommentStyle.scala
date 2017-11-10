@@ -25,11 +25,7 @@ import scala.util.matching.Regex
 /**
   * Representation of the different comment styles supported by this plugin.
   */
-sealed trait CommentStyle {
-
-  def pattern: Regex
-
-  def commentCreator: CommentCreator
+case class CommentStyle(commentCreator: CommentCreator, pattern: Regex) {
 
   def apply(licenseText: String): String =
     commentCreator(licenseText) + newLine + newLine
@@ -44,47 +40,22 @@ sealed trait CommentCreator {
 
 object CommentStyle {
 
-  final case object CStyleBlockComment extends CommentStyle {
+  val CStyleBlockComment = CommentStyle(new CommentBlockCreator("/*", " *", " */"),
+                                        commentBetween("""/\*+""", "*", """\*/"""))
 
-    override val commentCreator = new CommentBlockCreator("/*", " *", " */")
+  val CppStyleLineComment = CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
 
-    override val pattern = commentBetween("""/\*+""", "*", """\*/""")
-  }
+  val HashLineComment = CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
 
-  case object CppStyleLineComment extends CommentStyle {
+  val TwirlStyleBlockComment = CommentStyle(new CommentBlockCreator("@*", " *", " *@"),
+                                            commentBetween("""@\*""", "*", """\*@"""))
 
-    override val commentCreator = new LineCommentCreator("//")
+  val TwirlStyleFramedBlockComment =
+    CommentStyle(TwirlStyleFramedBlockCommentCreator, commentBetween("""@\*+""", "*", """\*@"""))
 
-    override val pattern = commentStartingWith("//")
-  }
+  val XmlStyleBlockComment =
+    CommentStyle(new CommentBlockCreator("<!--", "  ", "-->"), commentBetween("<!--", "  ", "-->"))
 
-  case object HashLineComment extends CommentStyle {
-
-    override val commentCreator = new LineCommentCreator("#")
-
-    override val pattern = commentStartingWith("#")
-  }
-
-  case object TwirlStyleBlockComment extends CommentStyle {
-
-    override val commentCreator = new CommentBlockCreator("@*", " *", " *@")
-
-    override val pattern = commentBetween("""@\*""", "*", """\*@""")
-  }
-
-  case object TwirlStyleFramedBlockComment extends CommentStyle {
-
-    override val commentCreator = TwirlStyleFramedBlockCommentCreator
-
-    override val pattern = commentBetween("""@\*+""", "*", """\*@""")
-  }
-
-  case object XmlStyleBlockComment extends CommentStyle {
-
-    override val commentCreator = new CommentBlockCreator("<!--", "  ", "-->")
-
-    override val pattern = commentBetween("<!--", "  ", "-->")
-  }
 }
 
 object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
