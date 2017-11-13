@@ -33,15 +33,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      CStyleBlockComment(licenseText) shouldBe expected
+      cStyleBlockComment(licenseText) shouldBe expected
     }
 
     "not match a singleline comment without a trailing new line" in {
-      CStyleBlockComment.pattern.unapplySeq("/* comment */") shouldBe None
+      cStyleBlockComment.pattern.unapplySeq("/* comment */") shouldBe None
     }
 
     "not match a multiline comment without a trailing new line" in {
-      CStyleBlockComment.pattern.unapplySeq(
+      cStyleBlockComment.pattern.unapplySeq(
         """|/*
            | * comment/1
            | * comment/2
@@ -53,7 +53,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val header = """|/* comment */
                       |
                       |""".stripMargin
-      CStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      cStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with a trailing new line followed by a body" in {
@@ -66,7 +66,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |  val bar = "bar"
                       |}
                       |""".stripMargin
-      CStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      cStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
 
     "match a comment with a trailing new line followed by a body with a ScalaDoc comment" in {
@@ -82,7 +82,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |  val bar = "bar"
                       |}
                       |""".stripMargin
-      CStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      cStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
 
     "match a left indented header with a trailing new line followed by a body with a ScalaDoc comment" in {
@@ -98,7 +98,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |  val bar = "bar"
                       |}
                       |""".stripMargin
-      CStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      cStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 
@@ -110,15 +110,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      CppStyleLineComment(licenseText) shouldBe expected
+      cppStyleLineComment(licenseText) shouldBe expected
     }
 
     "not match a singleline comment without trailing new lines" in {
-      CppStyleLineComment.pattern.unapplySeq("// comment") shouldBe None
+      cppStyleLineComment.pattern.unapplySeq("// comment") shouldBe None
     }
 
     "not match a multiline block comment with a single trailing new line" in {
-      CppStyleLineComment.pattern.unapplySeq(
+      cppStyleLineComment.pattern.unapplySeq(
         """|// comment/1
            |// comment/2
            |""".stripMargin
@@ -130,7 +130,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |
                       |
                       |""".stripMargin
-      CppStyleLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      cppStyleLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines followed by a body" in {
@@ -141,7 +141,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val body   = """|def foo(bar):
                       |    print(bar)
                       |""".stripMargin
-      CppStyleLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      cppStyleLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 
@@ -153,15 +153,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      HashLineComment(licenseText) shouldBe expected
+      hashLineComment(licenseText) shouldBe expected
     }
 
     "not match a singleline comment without trailing new lines" in {
-      HashLineComment.pattern.unapplySeq("# comment") shouldBe None
+      hashLineComment.pattern.unapplySeq("# comment") shouldBe None
     }
 
     "not match a multiline block comment with a single trailing new line" in {
-      HashLineComment.pattern.unapplySeq(
+      hashLineComment.pattern.unapplySeq(
         """|# comment/1
            |# comment/2
            |""".stripMargin
@@ -173,7 +173,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |
                       |
                       |""".stripMargin
-      HashLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      hashLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines followed by a body" in {
@@ -184,7 +184,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val body   = """|def foo(bar):
                       |    print(bar)
                       |""".stripMargin
-      HashLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      hashLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 
@@ -198,15 +198,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      TwirlStyleBlockComment(licenseText) shouldBe expected
+      twirlStyleBlockComment(licenseText) shouldBe expected
     }
 
     "not match a singleline comment without a trailing new line" in {
-      TwirlStyleBlockComment.pattern.unapplySeq("@* comment *@") shouldBe None
+      twirlStyleBlockComment.pattern.unapplySeq("@* comment *@") shouldBe None
     }
 
     "not match a multiline comment without a trailing new line" in {
-      TwirlStyleBlockComment.pattern.unapplySeq(
+      twirlStyleBlockComment.pattern.unapplySeq(
         """|@*
            | * comment/1
            | * comment/2
@@ -218,7 +218,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val header = """|@* comment *@
                       |
                       |""".stripMargin
-      TwirlStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      twirlStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with a trailing new line followed by a body" in {
@@ -237,7 +237,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |
                       |}
                       |""".stripMargin
-      TwirlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      twirlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
 
     "match a comment with a trailing new line followed by a body with a twirl block comment" in {
@@ -259,7 +259,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |
                       |}
                       |""".stripMargin
-      TwirlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      twirlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 
@@ -273,15 +273,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      TwirlStyleFramedBlockComment(licenseText) shouldBe expected
+      twirlStyleFramedBlockComment(licenseText) shouldBe expected
     }
 
     "not match a singleline comment without a trailing new line" in {
-      TwirlStyleFramedBlockComment.pattern.unapplySeq("@* comment *@") shouldBe None
+      twirlStyleFramedBlockComment.pattern.unapplySeq("@* comment *@") shouldBe None
     }
 
     "not match a multiline comment without a trailing new line" in {
-      TwirlStyleFramedBlockComment.pattern.unapplySeq(
+      twirlStyleFramedBlockComment.pattern.unapplySeq(
         """|@*************
            | * comment/1 *
            | * comment/2 *
@@ -293,7 +293,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val header = """|@* comment *@
                       |
                       |""".stripMargin
-      TwirlStyleFramedBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      twirlStyleFramedBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with a trailing new line followed by a body" in {
@@ -306,7 +306,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |
                       |<h1>Hello @name!</h1>
                       |""".stripMargin
-      TwirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
+      twirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
         List(header, body)
       )
     }
@@ -325,7 +325,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |<h1>Hello @name!</h1>
                       |
                       |""".stripMargin
-      TwirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
+      twirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
         List(header, body)
       )
     }
@@ -344,7 +344,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |<h1>Hello @name!</h1>
                       |
                       |""".stripMargin
-      TwirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
+      twirlStyleFramedBlockComment.pattern.unapplySeq(header + body) shouldBe Some(
         List(header, body)
       )
     }
@@ -360,15 +360,15 @@ class CommentStyleSpec extends WordSpec with Matchers {
             |
             |""".stripMargin
 
-      XmlStyleBlockComment(licenseText) shouldBe expected
+      xmlStyleBlockComment(licenseText) shouldBe expected
     }
 
     "not match a single line comment without a trailing new line" in {
-      CStyleBlockComment.pattern.unapplySeq("<!-- comment -->") shouldBe None
+      cStyleBlockComment.pattern.unapplySeq("<!-- comment -->") shouldBe None
     }
 
     "not match a multi line comment without a trailing new line" in {
-      XmlStyleBlockComment.pattern.unapplySeq(
+      xmlStyleBlockComment.pattern.unapplySeq(
         """|<!--
            |   comment/1
            |   comment/2
@@ -380,7 +380,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
       val header = """|<!-- comment -->
                       |
                       |""".stripMargin
-      XmlStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
+      xmlStyleBlockComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with a trailing new line followed by a body" in {
@@ -393,7 +393,7 @@ class CommentStyleSpec extends WordSpec with Matchers {
                       |  <item quantity="5" name="Bottle of Beer" />
                       |</order>
                       |""".stripMargin
-      XmlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
+      xmlStyleBlockComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
     }
   }
 

@@ -16,7 +16,7 @@
 
 package de.heikoseeberger.sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.CStyleBlockComment
+import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
 import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
@@ -113,8 +113,8 @@ object HeaderPlugin extends AutoPlugin {
   private def notToBeScopedSettings =
     Vector(
       headerMappings := Map(
-        FileType.scala -> CStyleBlockComment,
-        FileType.java  -> CStyleBlockComment
+        FileType.scala -> cStyleBlockComment,
+        FileType.java  -> cStyleBlockComment
       ),
       headerLicense := LicenseDetection(licenses.value.toList,
                                         organizationName.value,

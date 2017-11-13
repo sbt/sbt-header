@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream
 
 import org.scalatest.{ Matchers, WordSpec }
 import sbt.Logger
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.HashLineComment
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.hashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
 final class StubLogger extends Logger {
@@ -39,7 +39,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "produce a file with crlf line endings from a header with crlf line endings" in {
         val licenseText = "this is a header text with lf endings\r\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\r\n") + fileContent
@@ -48,7 +48,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "produce a file with crlf line endings from a header with lf line endings" in {
         val licenseText = "this is a header text with lf endings\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\r\n") + fileContent
@@ -62,7 +62,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "produce a file with lf line endings from a header with lf line endings" in {
         val licenseText = "this is a header text with lf endings\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\n") + fileContent
@@ -71,7 +71,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "produce a file with lf line endings from a header with crlf line endings" in {
         val licenseText = "this is a header text with crlf endings\r\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\n") + fileContent
@@ -83,7 +83,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       "produce a file with cr line endings from a header with crlf line endings" in {
         val fileContent = "this is a file with cr endings\r"
         val licenseText = "this is a header text with crlf endings\r\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\r") + fileContent
@@ -98,7 +98,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         "this is a file with lf endings\n" +
         "this is a file with lf endings\n"
         val licenseText = "this is a header text with multiple lf endings\n\n\n\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\n") + fileContent
@@ -111,7 +111,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       "work" in {
         val fileContent = "this is a file with lf endings\n" * 50
         val licenseText = "this is a header text with multiple lf endings\n"
-        val header      = HashLineComment(licenseText)
+        val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
           header.replace(newLine, "\n") + fileContent
@@ -127,7 +127,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
            |exit 0
            |""".stripMargin
       val licenseText = "Copyright 2015 Heiko Seeberger"
-      val header      = HashLineComment(licenseText)
+      val header      = hashLineComment(licenseText)
 
       "preserve shebang and add header when header is missing" in {
         val fileContent = shebang + script
@@ -159,7 +159,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
            |</project>
            |""".stripMargin
       val licenseText = "Copyright 2015 Heiko Seeberger"
-      val header      = HashLineComment(licenseText)
+      val header      = hashLineComment(licenseText)
 
       "preserve XML declaration and add header when header is missing" in {
         val fileContent    = xmlDeclaration + xmlBody
@@ -175,7 +175,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         val licenseText = "license with UTF-8 chars $ → €\n"
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          HashLineComment(licenseText).replace(newLine, "\n") + fileContent
+          hashLineComment(licenseText).replace(newLine, "\n") + fileContent
         )
       }
     }
@@ -184,7 +184,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
   private def createHeader(fileContent: String, header: String, fileType: FileType = FileType.sh) =
     HeaderCreator(
       fileType,
-      HashLineComment,
+      hashLineComment,
       Custom(header),
       new StubLogger,
       new ByteArrayInputStream(fileContent.getBytes)

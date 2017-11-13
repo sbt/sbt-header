@@ -1,6 +1,6 @@
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
-headerMappings := Map(HeaderFileType.xml -> HeaderCommentStyle.XmlStyleBlockComment)
+headerMappings := Map(HeaderFileType.xml -> HeaderCommentStyle.xmlStyleBlockComment)
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 

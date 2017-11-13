@@ -40,20 +40,20 @@ sealed trait CommentCreator {
 
 object CommentStyle {
 
-  val CStyleBlockComment = CommentStyle(new CommentBlockCreator("/*", " *", " */"),
+  val cStyleBlockComment = CommentStyle(new CommentBlockCreator("/*", " *", " */"),
                                         commentBetween("""/\*+""", "*", """\*/"""))
 
-  val CppStyleLineComment = CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
+  val cppStyleLineComment = CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
 
-  val HashLineComment = CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
+  val hashLineComment = CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
 
-  val TwirlStyleBlockComment = CommentStyle(new CommentBlockCreator("@*", " *", " *@"),
+  val twirlStyleBlockComment = CommentStyle(new CommentBlockCreator("@*", " *", " *@"),
                                             commentBetween("""@\*""", "*", """\*@"""))
 
-  val TwirlStyleFramedBlockComment =
+  val twirlStyleFramedBlockComment =
     CommentStyle(TwirlStyleFramedBlockCommentCreator, commentBetween("""@\*+""", "*", """\*@"""))
 
-  val XmlStyleBlockComment =
+  val xmlStyleBlockComment =
     CommentStyle(new CommentBlockCreator("<!--", "  ", "-->"), commentBetween("<!--", "  ", "-->"))
 
 }
