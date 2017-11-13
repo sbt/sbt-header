@@ -25,7 +25,7 @@ import scala.util.matching.Regex
 /**
   * Representation of the different comment styles supported by this plugin.
   */
-case class CommentStyle(commentCreator: CommentCreator, pattern: Regex) {
+final case class CommentStyle(commentCreator: CommentCreator, pattern: Regex) {
 
   def apply(licenseText: String): String =
     commentCreator(licenseText) + newLine + newLine
