@@ -105,16 +105,16 @@ Comment styles are configured on a per file type basis. The default is to apply 
 
 |Name|Description|
 |----|-----------|
-|CStyleBlockComment|C style block comments (blocks starting with "/\*" and ending with "\*/")|
-|CppStyleLineComment|C++ style line comments (lines prefixed with "//")|
-|HashLineComment|Hash line comments (lines prefixed with "#")|
-|TwirlStyleComment|Twirl style comment (blocks starting with "@\*" and ending with "\*@")|
-|TwirlStyleBlockComment|Twirl style block comments (comment blocks with a frame made of "*")|
+|cStyleBlockComment|C style block comments (blocks starting with "/\*" and ending with "\*/")|
+|cppStyleLineComment|C++ style line comments (lines prefixed with "//")|
+|hashLineComment|Hash line comments (lines prefixed with "#")|
+|twirlStyleComment|Twirl style comment (blocks starting with "@\*" and ending with "\*@")|
+|twirlStyleBlockComment|Twirl style block comments (comment blocks with a frame made of "*")|
 
 To override the configuration for Scala/Java files or add a configuration for some other file type, use the `headerMapping` setting:
 
 ``` scala
-headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.CppStyleLineComment)
+headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.cppStyleLineComment)
 ```
 
 ### Excluding files
@@ -177,15 +177,15 @@ definition:
 import de.heikoseeberger.sbtheader.FileType
 import play.twirl.sbt.Import.TwirlKeys
 
-headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.TwirlStyleBlockComment)
+headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.twirlStyleBlockComment)
 
 unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 ```
 
-sbt-header supports two comment styles for Twirl templates. `TwirlStyleBlockComment` will produce simple twirl block comments, while `TwirlStyleFramedBlockComment` will produce
+sbt-header supports two comment styles for Twirl templates. `twirlStyleBlockComment` will produce simple twirl block comments, while `twirlStyleFramedBlockComment` will produce
 framed twirl comments.
 
-`TwirlStyleBlockComment` comment style:
+`twirlStyleBlockComment` comment style:
 
 ```scala
 @*
@@ -193,7 +193,7 @@ framed twirl comments.
  *@
 ```
 
-`TwirlStyleFramedBlockComment` comment style:
+`twirlStyleFramedBlockComment` comment style:
 
 ```scala
 @**********************************
