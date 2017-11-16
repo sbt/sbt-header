@@ -59,7 +59,7 @@ lazy val commonSettings =
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
     sbtPlugin := true,
     publishMavenStyle := false,
-    crossSbtVersions := Seq("1.0.2", "0.13.16")
+    crossSbtVersions := Seq("1.0.3", "0.13.16")
 )
 
 lazy val gitSettings =
@@ -71,7 +71,7 @@ lazy val scalafmtSettings =
   Seq(
     scalafmtOnCompile := true,
     scalafmtOnCompile.in(Sbt) := false,
-    scalafmtVersion := "1.2.0"
+    scalafmtVersion := "1.3.0"
   )
 
 lazy val sbtScriptedSettings =
