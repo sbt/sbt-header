@@ -179,12 +179,51 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         )
       }
     }
+
+    "given a file with an existing copyright year" should {
+      val yearPreservingStyle =
+        CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
+          val Pattern = "(?s).*?(\\d{4}(-\\d{4})?).*".r
+          def findYear(header: String): Option[String] = header match {
+            case Pattern(years, _) => Some(years)
+            case _                 => None
+          }
+          override def apply(text: String, existingText: Option[String]): String = {
+            val newText = CommentStyle.cStyleBlockComment.commentCreator.apply(text, existingText)
+            existingText
+              .flatMap(findYear)
+              .map(year => newText.replace("2017", year))
+              .getOrElse(newText)
+          }
+        })
+      val licenseText = "Copyright 2017 MyCorp, Inc <https://mycorp.com>"
+
+      "allow updating the header retaining the copyright year" in {
+        val fileContent = """/*
+        | * Copyright 2016 MyCorp http://mycorp.com
+        | */
+        |This is the file content
+        |""".stripMargin
+
+        createHeader(fileContent, licenseText, commentCreator = yearPreservingStyle) shouldBe Some(
+          """/*
+          | * Copyright 2016 MyCorp, Inc <https://mycorp.com>
+          | */
+          |
+          |This is the file content
+          |""".stripMargin
+        )
+      }
+    }
   }
 
-  private def createHeader(fileContent: String, header: String, fileType: FileType = FileType.sh) =
+  private def createHeader(fileContent: String,
+                           header: String,
+                           fileType: FileType = FileType.sh,
+                           commentCreator: CommentStyle = hashLineComment) =
     HeaderCreator(
       fileType,
-      hashLineComment,
+      commentCreator,
       Custom(header),
       new StubLogger,
       new ByteArrayInputStream(fileContent.getBytes)
