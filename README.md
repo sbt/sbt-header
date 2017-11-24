@@ -86,7 +86,7 @@ The most common licenses have been pre-canned in [License](https://github.com/sb
 
 ### Using a custom license text
 
-If you don't want to use one of the build in licenses, you can define a custom license text using the `Custom` case class:
+If you don't want to use one of the built-in licenses, you can define a custom license text using the `Custom` case class:
 
 ```scala
 headerLicense := Some(HeaderLicense.Custom(
