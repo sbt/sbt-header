@@ -27,15 +27,23 @@ import scala.util.matching.Regex
   */
 final case class CommentStyle(commentCreator: CommentCreator, pattern: Regex) {
 
+  def apply(licenseText: String, existingHeader: Option[String]): String =
+    commentCreator(licenseText, existingHeader) + newLine + newLine
+
+  def apply(license: License, existingHeader: Option[String]): String =
+    apply(license.text, existingHeader)
+
   def apply(licenseText: String): String =
-    commentCreator(licenseText) + newLine + newLine
+    apply(licenseText, None)
 
   def apply(license: License): String =
     apply(license.text)
 }
 
-sealed trait CommentCreator {
-  def apply(text: String): String
+trait CommentCreator {
+  def apply(text: String, existingText: Option[String] = None): String
+
+  def apply(text: String): String = apply(text, None)
 }
 
 object CommentStyle {
@@ -60,7 +68,7 @@ object CommentStyle {
 
 object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
 
-  def apply(text: String): String = {
+  def apply(text: String, existingText: Option[String]): String = {
     val maxLineLength = text.lines.map(_.length).max
 
     def fillLine(line: String) =
@@ -80,7 +88,7 @@ object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
 
 final class LineCommentCreator(linePrefix: String) extends CommentCreator {
 
-  override def apply(text: String): String = {
+  override def apply(text: String, existingText: Option[String]): String = {
     def prependWithLinePrefix(s: String) =
       s match {
         case ""   => if (!linePrefix.trim.isEmpty) linePrefix else ""
@@ -96,10 +104,10 @@ final class CommentBlockCreator(blockPrefix: String, linePrefix: String, blockSu
 
   private val lineCommentCreator = new LineCommentCreator(linePrefix)
 
-  def apply(text: String): String =
+  def apply(text: String, existingText: Option[String]): String =
     blockPrefix + newLine + lineCommentCreator(text) + newLine + blockSuffix
 }
 
 object IdentityCommentCreator extends CommentCreator {
-  override def apply(text: String) = text
+  override def apply(text: String, existingText: Option[String]) = text
 }
