@@ -164,7 +164,7 @@ object Build extends AutoPlugin {
 By default sbt-header takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
 ``` scala
-HeaderPlugin.settingsFor(It, MultiJvm)
+headerSettings(It, MultiJvm)
 ```
 
 ### Automation
@@ -180,7 +180,7 @@ lazy val myProject = project
 By default automation takes `Compile` and `Test` configurations into account. If you need more, just add them:
 
 ``` scala
-AutomateHeaderPlugin.automateFor(It, MultiJvm)
+automateHeaderSettings(It, MultiJvm)
 ```
 
 ## Integration with other plugins
