@@ -1,3 +1,5 @@
 # check if headers get created
+-> headerCheck
 > headerCreate
 > checkFileContents
+> headerCheck
