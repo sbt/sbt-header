@@ -102,8 +102,8 @@ object HeaderPlugin extends AutoPlugin {
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
-        unmanagedSources.in(headerCheck).value.toList ++
-        unmanagedResources.in(headerCheck).value.toList,
+        unmanagedSources.in(headerCreate).value.toList ++
+        unmanagedResources.in(headerCreate).value.toList,
         headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
         headerMappings.value,
         streams.value.log
