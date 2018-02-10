@@ -24,6 +24,7 @@ import sbt.{
   AutoPlugin,
   Compile,
   Configuration,
+  FileFilter,
   Logger,
   Setting,
   SettingKey,
@@ -33,12 +34,17 @@ import sbt.{
   settingKey,
   taskKey
 }
+import sbt.Defaults.{ collectFiles }
 import sbt.Keys.{
+  excludeFilter,
+  includeFilter,
   licenses,
   organizationName,
   startYear,
   streams,
+  unmanagedResourceDirectories,
   unmanagedResources,
+  unmanagedSourceDirectories,
   unmanagedSources
 }
 import sbt.plugins.JvmPlugin
@@ -73,6 +79,22 @@ object HeaderPlugin extends AutoPlugin {
         "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
       )
 
+    val unmanagedSourcesIncludeFilter = settingKey[FileFilter](
+      "Filter for including sources from unmanaged source directories."
+    )
+
+    val unmanagedSourcesExcludeFilter = settingKey[FileFilter](
+      "Filter for excluding sources from unmanaged source directories."
+    )
+
+    val unmanagedResourcesIncludeFilter = settingKey[FileFilter](
+      "Filter for including resources from unmanaged source directories."
+    )
+
+    val unmanagedResourcesExcludeFilter = settingKey[FileFilter](
+      "Filter for excluding resources from unmanaged source directories."
+    )
+
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
@@ -82,6 +104,7 @@ object HeaderPlugin extends AutoPlugin {
     def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
       configurations.foldLeft(List.empty[Setting[_]]) { _ ++ inConfig(_)(toBeScopedSettings) }
   }
+
   import autoImport._
 
   override def trigger = allRequirements
@@ -92,8 +115,16 @@ object HeaderPlugin extends AutoPlugin {
 
   private def toBeScopedSettings =
     Vector(
-      unmanagedSources in headerCreate := unmanagedSources.value,
-      unmanagedResources in headerCreate := unmanagedResources.value,
+      unmanagedSources.in(headerCreate) := collectFiles(
+        unmanagedSourceDirectories.in(headerCreate),
+        unmanagedSourcesIncludeFilter.in(headerCreate),
+        unmanagedSourcesExcludeFilter.in(headerCreate)
+      ).value,
+      unmanagedResources.in(headerCreate) := collectFiles(
+        unmanagedResourceDirectories.in(headerCreate),
+        unmanagedResourcesIncludeFilter.in(headerCreate),
+        unmanagedResourcesExcludeFilter.in(headerCreate)
+      ).value,
       headerCreate := createHeadersTask(
         unmanagedSources.in(headerCreate).value.toList ++
         unmanagedResources.in(headerCreate).value.toList,
@@ -118,7 +149,11 @@ object HeaderPlugin extends AutoPlugin {
       ),
       headerLicense := LicenseDetection(licenses.value.toList,
                                         organizationName.value,
-                                        startYear.value)
+                                        startYear.value),
+      unmanagedSourcesIncludeFilter := includeFilter.in(unmanagedSources).value,
+      unmanagedSourcesExcludeFilter := excludeFilter.in(unmanagedSources).value,
+      unmanagedResourcesIncludeFilter := includeFilter.in(unmanagedResources).value,
+      unmanagedResourcesExcludeFilter := excludeFilter.in(unmanagedResources).value
     )
 
   private def createHeadersTask(files: Seq[File],

@@ -143,7 +143,7 @@ copyright year in existing headers but still update the rest:
 To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
 
 ``` scala
-excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
+unmanagedSourcesExcludeFilter.in(headerCreate) := HiddenFileFilter || "*Excluded.scala"
 ```
 
 ### Using an auto plugin
