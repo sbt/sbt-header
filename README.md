@@ -143,7 +143,7 @@ copyright year in existing headers but still update the rest:
 To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
 
 ``` scala
-excludeFilter.in(unmanagedSources.in(headerCreate)) := HiddenFileFilter || "*Excluded.scala"
+excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
 ```
 
 ### Using an auto plugin
@@ -200,7 +200,7 @@ import play.twirl.sbt.Import.TwirlKeys
 
 headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.twirlStyleBlockComment)
 
-unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
+headerSources.in(Compile) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 ```
 
 sbt-header supports two comment styles for Twirl templates. `twirlStyleBlockComment` will produce simple twirl block comments, while `twirlStyleFramedBlockComment` will produce

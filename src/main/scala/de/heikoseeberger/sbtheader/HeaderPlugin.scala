@@ -17,13 +17,14 @@
 package de.heikoseeberger.sbtheader
 
 import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
-import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
+
 import sbt.{
   AutoPlugin,
   Compile,
   Configuration,
+  File,
   Logger,
   Setting,
   SettingKey,
@@ -33,15 +34,10 @@ import sbt.{
   settingKey,
   taskKey
 }
-import sbt.Keys.{
-  licenses,
-  organizationName,
-  startYear,
-  streams,
-  unmanagedResources,
-  unmanagedSources
-}
+import sbt.Defaults.collectFiles
+import sbt.Keys._
 import sbt.plugins.JvmPlugin
+
 import scala.util.matching.Regex
 
 object HeaderPlugin extends AutoPlugin {
@@ -73,6 +69,12 @@ object HeaderPlugin extends AutoPlugin {
         "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
       )
 
+    val headerSources =
+      taskKey[scala.collection.Seq[File]]("Sources which need headers checked or created.")
+
+    val headerResources =
+      taskKey[scala.collection.Seq[File]]("Resources which need headers checked or created.")
+
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
@@ -82,6 +84,7 @@ object HeaderPlugin extends AutoPlugin {
     def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
       configurations.foldLeft(List.empty[Setting[_]]) { _ ++ inConfig(_)(toBeScopedSettings) }
   }
+
   import autoImport._
 
   override def trigger = allRequirements
@@ -92,18 +95,26 @@ object HeaderPlugin extends AutoPlugin {
 
   private def toBeScopedSettings =
     Vector(
-      unmanagedSources in headerCreate := unmanagedSources.value,
-      unmanagedResources in headerCreate := unmanagedResources.value,
+      headerSources := collectFiles(
+        unmanagedSourceDirectories.in(headerCreate),
+        includeFilter.in(headerSources),
+        excludeFilter.in(headerSources)
+      ).value,
+      headerResources := collectFiles(
+        unmanagedResourceDirectories.in(headerCreate),
+        includeFilter.in(headerResources),
+        excludeFilter.in(headerResources)
+      ).value,
       headerCreate := createHeadersTask(
-        unmanagedSources.in(headerCreate).value.toList ++
-        unmanagedResources.in(headerCreate).value.toList,
+        headerSources.value.toList ++
+        headerResources.value.toList,
         headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
         headerMappings.value,
         streams.value.log
       ),
       headerCheck := checkHeadersTask(
-        unmanagedSources.in(headerCreate).value.toList ++
-        unmanagedResources.in(headerCreate).value.toList,
+        headerSources.value.toList ++
+        headerResources.value.toList,
         headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
         headerMappings.value,
         streams.value.log
@@ -118,7 +129,11 @@ object HeaderPlugin extends AutoPlugin {
       ),
       headerLicense := LicenseDetection(licenses.value.toList,
                                         organizationName.value,
-                                        startYear.value)
+                                        startYear.value),
+      includeFilter.in(headerSources) := includeFilter.in(unmanagedSources).value,
+      excludeFilter.in(headerSources) := excludeFilter.in(unmanagedSources).value,
+      includeFilter.in(headerResources) := includeFilter.in(unmanagedResources).value,
+      excludeFilter.in(headerResources) := excludeFilter.in(unmanagedResources).value
     )
 
   private def createHeadersTask(files: Seq[File],
