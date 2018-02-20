@@ -1,6 +1,6 @@
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
-unmanagedSourcesExcludeFilter.in(headerCreate) := HiddenFileFilter || "*Excluded.scala"
+excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
 
 val checkFiles = taskKey[Unit]("Verify files match expected files")
 checkFiles := {
@@ -19,7 +19,7 @@ checkFiles := {
   // Check list of source files to process
 
   val nonHeaderCreateSources = unmanagedSources.in(Compile).value
-  val headerCreateSources = unmanagedSources.in(Compile, headerCreate).value
+  val headerCreateSources = headerSources.in(Compile).value
 
   def assertPathSetEquality(a: Seq[File], b: Seq[File], failureMessage: String): Unit = {
     val aSet = a.map(_.getCanonicalPath).toSet
