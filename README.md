@@ -229,7 +229,10 @@ your build definition:
 
 ```scala
 def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
-  acc ++ (unmanagedSources in (conf, headerCreate) := (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get)
+  acc ++ Seq(
+    headerSources in conf ++= (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get),
+    headerMappings        += (FileType("template") -> HeaderCommentStyle.cStyleBlockComment)
+  )
 }
 
 addBoilerplate(Compile, Test)
