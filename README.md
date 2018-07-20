@@ -144,6 +144,7 @@ To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.1
 
 ``` scala
 excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
+excludeFilter.in(headerResources) := HiddenFileFilter || "*.xml"
 ```
 
 ### Using an auto plugin
