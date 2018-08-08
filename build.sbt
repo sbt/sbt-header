@@ -5,7 +5,7 @@
 lazy val `sbt-header` =
   project
     .in(file("."))
-    .enablePlugins(/*AutomateHeaderPlugin, */GitVersioning)
+    .enablePlugins(/*AutomateHeaderPlugin, */GitVersioning, SbtPlugin)
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
@@ -57,7 +57,6 @@ lazy val commonSettings =
     },
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
-    sbtPlugin := true,
     publishMavenStyle := false,
     crossSbtVersions := Seq("1.1.6", "0.13.17")
 )
