@@ -147,6 +147,14 @@ excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
 excludeFilter.in(headerResources) := HiddenFileFilter || "*.xml"
 ```
 
+### Empty line between header and body
+
+If an empty line header should be added between the header and the body of a file (defaults to `true`):
+
+```scala
+headerEmptyLine := false
+```
+
 ### Using an auto plugin
 
 If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:

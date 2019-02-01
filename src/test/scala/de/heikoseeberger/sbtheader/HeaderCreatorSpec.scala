@@ -215,16 +215,35 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
         )
       }
     }
+
+    "configured not to add an empty line" should {
+      "not add it" in {
+        val fileContent = """/*
+          | * Copyright 2017 MyCorp, Inc <https://mycorp.com>
+          | */
+          |This is the file content
+          |""".stripMargin
+
+        createHeader(
+          fileContent = fileContent,
+          header = "Copyright 2017 MyCorp, Inc <https://mycorp.com>",
+          commentCreator = CommentStyle.cStyleBlockComment,
+          headerEmptyLine = false
+        ) shouldBe None
+      }
+    }
   }
 
   private def createHeader(fileContent: String,
                            header: String,
                            fileType: FileType = FileType.sh,
-                           commentCreator: CommentStyle = hashLineComment) =
+                           commentCreator: CommentStyle = hashLineComment,
+                           headerEmptyLine: Boolean = true) =
     HeaderCreator(
       fileType,
       commentCreator,
       Custom(header),
+      headerEmptyLine,
       new StubLogger,
       new ByteArrayInputStream(fileContent.getBytes)
     ).createText

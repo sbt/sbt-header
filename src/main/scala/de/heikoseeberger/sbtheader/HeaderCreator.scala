@@ -25,14 +25,16 @@ object HeaderCreator {
   def apply(fileType: FileType,
             commentStyle: CommentStyle,
             license: License,
+            headerEmptyLine: Boolean,
             log: Logger,
             input: InputStream): HeaderCreator =
-    new HeaderCreator(fileType, commentStyle, license, log, input)
+    new HeaderCreator(fileType, commentStyle, license, headerEmptyLine, log, input)
 }
 
 final class HeaderCreator private (fileType: FileType,
                                    commentStyle: CommentStyle,
                                    license: License,
+                                   headerEmptyLine: Boolean,
                                    log: Logger,
                                    input: InputStream) {
 
@@ -67,7 +69,8 @@ final class HeaderCreator private (fileType: FileType,
     }
 
   private def newHeaderText(existingHeader: Option[String]) = {
-    val headerText = commentStyle(license, existingHeader)
+    val suffix     = if (headerEmptyLine) "" else newLine
+    val headerText = commentStyle(license, existingHeader).stripSuffix(suffix)
     val headerNewLine =
       headerText match {
         case crlf(_) => "\r\n"
