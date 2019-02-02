@@ -1,10 +1,8 @@
 # sbt-header #
 
 [![Build Status](https://travis-ci.org/sbt/sbt-header.svg?branch=master)](https://travis-ci.org/sbt/sbt-header)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2cd1ffe963484f45902e8ca2a72276c6)](https://www.codacy.com/app/britter/sbt-header?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sbt/sbt-header&amp;utm_campaign=Badge_Grade)
 [![Download](https://api.bintray.com/packages/hseeberger/sbt-plugins/sbt-header/images/download.svg)](https://bintray.com/hseeberger/sbt-plugins/sbt-header/_latestVersion)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-[![Join the chat at https://gitter.im/sbt/sbt-header](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sbt/sbt-header?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
@@ -13,7 +11,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.0.0")
+addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.1.0") // Check the latest version above or look at the release tags
 ```
 
 Then in your `build.sbt` configure the following settings:
