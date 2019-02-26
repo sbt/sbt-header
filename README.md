@@ -55,7 +55,7 @@ In order to check whether all files have headers (for example for CI), execute t
 
 ## Configuration
 
-By default sbt-header tries to infer the license header you want to use from the `orgaizationName`, `startYear` and `licenses` settings. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses).
+By default sbt-header tries to infer the license header you want to use from the `organizationName`, `startYear` and `licenses` settings. For this to work, sbt-header requires the `licenses` setting to contain exactly one entry. The first component of that entry has to be the [SPDX license identifier](http://spdx.org/licenses/) of one of the [supported licenses](#build-in-licenses).
 
 ### Setting the license to use explicitly
 
