@@ -1,0 +1,9 @@
+/*
+ * Copyright 2015 Heiko Seeberger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+package de.heikoseeberger.sbtheader.test;
+
+class HasNoHeader

@@ -46,6 +46,8 @@ object HeaderPlugin extends AutoPlugin {
 
     val HeaderLicense = License
 
+    val HeaderLicenseStyle = LicenseStyle
+
     final object HeaderPattern {
 
       def commentBetween(start: String, middle: String, end: String): Regex =
