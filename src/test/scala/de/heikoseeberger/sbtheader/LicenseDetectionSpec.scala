@@ -25,10 +25,11 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
   val organizationName = "Heiko Seeberger"
   val yyyy             = 2017
   val startYear        = Some(yyyy)
-  val apache           = ("Apache-2.0", new URL("https://spdx.org/licenses/Apache-2.0.html#licenseText"))
-  val mit              = ("MIT", new URL("https://spdx.org/licenses/MIT.html#licenseText"))
+  val apache: (String, URL) =
+    ("Apache-2.0", new URL("https://spdx.org/licenses/Apache-2.0.html#licenseText"))
+  val mit: (String, URL) = ("MIT", new URL("https://spdx.org/licenses/MIT.html#licenseText"))
 
-  val licenses = Map(
+  val licenses: Map[License, (String, URL)] = Map(
     BSD2Clause(yyyy.toString, organizationName) -> ("BSD-2-Clause", new URL(
       "https://spdx.org/licenses/BSD-2-Clause.html#licenseText"
     )),

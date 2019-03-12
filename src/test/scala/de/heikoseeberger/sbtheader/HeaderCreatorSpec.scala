@@ -23,10 +23,12 @@ import sbt.Logger
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.hashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
+import scala.util.matching.Regex
+
 final class StubLogger extends Logger {
-  override def log(level: sbt.Level.Value, message: => String) = ()
-  override def success(message: => String)                     = ()
-  override def trace(t: => Throwable)                          = ()
+  override def log(level: sbt.Level.Value, message: => String): Unit = ()
+  override def success(message: => String): Unit                     = ()
+  override def trace(t: => Throwable): Unit                          = ()
 }
 
 final class HeaderCreatorSpec extends WordSpec with Matchers {
@@ -38,7 +40,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val fileContent = "this is a file with crlf endings\r\n"
 
       "produce a file with crlf line endings from a header with crlf line endings" in {
-        val licenseText = "this is a header text with lf endings\r\n"
+        val licenseText = "this is a header text with crlf endings\r\n"
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
@@ -107,8 +109,8 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
     }
 
     //Due to java bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8028387
-    "given a large file" should {
-      "work" in {
+    "given a large file with a lot of lf endings" should {
+      "produce a file with lf line endings from a header with lf line endings" in {
         val fileContent = "this is a file with lf endings\n" * 50
         val licenseText = "this is a header text with multiple lf endings\n"
         val header      = hashLineComment(licenseText)
@@ -183,7 +185,7 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
     "given a file with an existing copyright year" should {
       val yearPreservingStyle =
         CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
-          val Pattern = "(?s).*?(\\d{4}(-\\d{4})?).*".r
+          val Pattern: Regex = "(?s).*?(\\d{4}(-\\d{4})?).*".r
           def findYear(header: String): Option[String] = header match {
             case Pattern(years, _) => Some(years)
             case _                 => None
@@ -216,8 +218,8 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       }
     }
 
-    "configured not to add an empty line" should {
-      "not add it" in {
+    "given a file without an empty line between the header and the body" should {
+      "preserve the file without the empty line" in {
         val fileContent = """/*
           | * Copyright 2017 MyCorp, Inc <https://mycorp.com>
           | */

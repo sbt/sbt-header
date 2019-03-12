@@ -82,6 +82,23 @@ The most common licenses have been pre-canned in [License](https://github.com/sb
 |[MIT License](https://opensource.org/licenses/MIT)|`MIT`|
 |[Mozilla Public License, v. 2.0](http://mozilla.org/MPL/2.0/)|`MPL-2.0`|
 
+### Using the short SPDX license identifier syntax
+
+If you want to use the following syntax:
+```
+  /*
+   * Copyright 2015 Heiko Seeberger
+   *
+   * SPDX-License-Identifier: BSD-3-Clause
+   */
+```
+
+You have to pass the style when defining the headerLicense attribute
+
+```scala
+headerLicense := Some(HeaderLicense.MIT("2015", "Heiko Seeberger", HeaderLicenseStyle.SpdxSyntax))
+```
+
 ### Using a custom license text
 
 If you don't want to use one of the built-in licenses, you can define a custom license text using the `Custom` case class:
