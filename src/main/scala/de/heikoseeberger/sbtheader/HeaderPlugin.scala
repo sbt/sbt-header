@@ -194,7 +194,7 @@ object HeaderPlugin extends AutoPlugin {
             groupedFiles.flatMap(checkHeader(fileType, commentStyle))
         }
     if (filesWithoutHeader.nonEmpty)
-      sys.error(
+      log.error(
         s"""|There are files without headers!
             |  ${filesWithoutHeader.mkString(s"$newLine  ")}
             |""".stripMargin
