@@ -1,0 +1,7 @@
+# check if headers get created incrementally when file modified
+-> headerCheck
+> headerCreateIncremental
+> checkFileContents
+> stripHeaders
+> headerCreateIncremental
+> checkFileContents

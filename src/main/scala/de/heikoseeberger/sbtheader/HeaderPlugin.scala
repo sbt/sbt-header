@@ -20,6 +20,7 @@ import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 
+import sbt.util.{ CacheStoreFactory, Difference, FileInfo, FilesInfo }
 import sbt.{
   AutoPlugin,
   Compile,
@@ -83,6 +84,10 @@ object HeaderPlugin extends AutoPlugin {
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
+    val headerCreateIncremental = taskKey[Iterable[File]](
+      "Create/update headers incrementally."
+    )
+
     val headerCheck: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers")
 
@@ -120,6 +125,15 @@ object HeaderPlugin extends AutoPlugin {
         headerEmptyLine.value,
         streams.value.log
       ),
+      headerCreateIncremental := createHeadersIncrementalTask(
+        streams.value.cacheDirectory,
+        headerSources.value.toList ++
+        headerResources.value.toList,
+        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
+        headerMappings.value,
+        headerEmptyLine.value,
+        streams.value.log
+      ),
       headerCheck := checkHeadersTask(
         headerSources.value.toList ++
         headerResources.value.toList,
@@ -144,6 +158,27 @@ object HeaderPlugin extends AutoPlugin {
       includeFilter.in(headerResources) := includeFilter.in(unmanagedResources).value,
       excludeFilter.in(headerResources) := excludeFilter.in(unmanagedResources).value
     )
+
+  private def createHeadersIncrementalTask(cacheDirectory: File,
+                                           files: Seq[File],
+                                           headerLicense: License,
+                                           headerMappings: Map[FileType, CommentStyle],
+                                           headerEmptyLine: Boolean,
+                                           log: Logger) = {
+    val cache = Difference.inputs(
+      CacheStoreFactory(cacheDirectory).make("header-cache"),
+      FilesInfo.lastModified
+    )
+    cache(files.toSet) { inReport =>
+      if (inReport.modified.nonEmpty)
+        createHeadersTask(inReport.modified.toList,
+                          headerLicense,
+                          headerMappings,
+                          headerEmptyLine,
+                          log)
+      else Nil
+    }
+  }
 
   private def createHeadersTask(files: Seq[File],
                                 headerLicense: License,
