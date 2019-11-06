@@ -2,6 +2,6 @@
 -> headerCheck
 > headerCreateIncremental
 > checkFileContents
-> stripHeaders
+> stripHeader
 > headerCreateIncremental
 > checkFileContents

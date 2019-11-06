@@ -11,6 +11,7 @@ stripHeader := {
     val actualPath = (scalaSource.in(Compile).value / name).toString
     val headerDropped = (resourceDirectory.in(Compile).value / s"${name}_headerdropped").toString
 
+    Files.delete(file(actualPath).toPath)
     Files.copy(file(headerDropped).toPath, file(actualPath).toPath)
   }
 }

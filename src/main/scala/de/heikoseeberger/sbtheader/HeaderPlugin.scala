@@ -37,8 +37,10 @@ import sbt.{
 }
 import sbt.Defaults.collectFiles
 import sbt.Keys._
+import sbt.internal.util.MessageOnlyException
 import sbt.plugins.JvmPlugin
 
+import scala.util.control.NoStackTrace
 import scala.util.matching.Regex
 
 object HeaderPlugin extends AutoPlugin {
@@ -229,12 +231,12 @@ object HeaderPlugin extends AutoPlugin {
             groupedFiles.flatMap(checkHeader(fileType, commentStyle))
         }
     if (filesWithoutHeader.nonEmpty)
-      log.error(
+      throw new MessageOnlyException(
         s"""|There are files without headers!
-            |  ${filesWithoutHeader.mkString(s"$newLine  ")}
-            |""".stripMargin
+              |  ${filesWithoutHeader.mkString(s"$newLine  ")}
+              |""".stripMargin
       )
-    filesWithoutHeader
+    else Nil
   }
 
   private def groupFilesByFileTypeAndCommentStyle(files: Seq[File],
