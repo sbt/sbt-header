@@ -22,7 +22,7 @@ startYear := Some(2015)
 licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 ```
 
-This configuration will apply Apache License 2.0 headers to Scala and Java files. sbt-header provides two tasks: `headerCreate` and `headerCheck`, which are described in the following sub sections. For more information on how to customize sbt-header, please refer to the [Configuration](#configuration) section.
+This configuration will apply Apache License 2.0 headers to Scala and Java files. sbt-header provides three tasks: `headerCreate`, `headerCreateIncremental` and `headerCheck`, which are described in the following sub sections. For more information on how to customize sbt-header, please refer to the [Configuration](#configuration) section.
 
 ### Creating headers
 
@@ -34,6 +34,17 @@ In order to create or update file headers, execute the `headerCreate` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
+
+The plugin can also be triggered incrementally, meaning that it will not look at files that has not seen changes since
+the last time the task was run:
+
+```
+> headerCreateIncremental
+[info] Headers created for 2 files:
+[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
+[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
+```
+
 
 ### Checking headers
 
