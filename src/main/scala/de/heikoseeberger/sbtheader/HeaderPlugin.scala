@@ -86,10 +86,6 @@ object HeaderPlugin extends AutoPlugin {
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
-    val headerCreateIncremental = taskKey[Iterable[File]](
-      "Create/update headers incrementally."
-    )
-
     val headerCheck: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers")
 
@@ -120,14 +116,6 @@ object HeaderPlugin extends AutoPlugin {
         excludeFilter.in(headerResources)
       ).value,
       headerCreate := createHeadersTask(
-        headerSources.value.toList ++
-        headerResources.value.toList,
-        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
-        headerMappings.value,
-        headerEmptyLine.value,
-        streams.value.log
-      ),
-      headerCreateIncremental := createHeadersIncrementalTask(
         streams.value.cacheDirectory,
         headerSources.value.toList ++
         headerResources.value.toList,
@@ -161,32 +149,28 @@ object HeaderPlugin extends AutoPlugin {
       excludeFilter.in(headerResources) := excludeFilter.in(unmanagedResources).value
     )
 
-  private def createHeadersIncrementalTask(cacheDirectory: File,
-                                           files: Seq[File],
-                                           headerLicense: License,
-                                           headerMappings: Map[FileType, CommentStyle],
-                                           headerEmptyLine: Boolean,
-                                           log: Logger) = {
+  private def createHeadersTask(cacheDirectory: File,
+                                files: Seq[File],
+                                headerLicense: License,
+                                headerMappings: Map[FileType, CommentStyle],
+                                headerEmptyLine: Boolean,
+                                log: Logger) = {
     val cache = Difference.inputs(
       CacheStoreFactory(cacheDirectory).make("header-cache"),
       FilesInfo.lastModified
     )
     cache(files.toSet) { inReport =>
       if (inReport.modified.nonEmpty)
-        createHeadersTask(inReport.modified.toList,
-                          headerLicense,
-                          headerMappings,
-                          headerEmptyLine,
-                          log)
+        createHeaders(inReport.modified.toList, headerLicense, headerMappings, headerEmptyLine, log)
       else Nil
     }
   }
 
-  private def createHeadersTask(files: Seq[File],
-                                headerLicense: License,
-                                headerMappings: Map[FileType, CommentStyle],
-                                headerEmptyLine: Boolean,
-                                log: Logger) = {
+  private def createHeaders(files: Seq[File],
+                            headerLicense: License,
+                            headerMappings: Map[FileType, CommentStyle],
+                            headerEmptyLine: Boolean,
+                            log: Logger) = {
     def createHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
@@ -233,8 +217,8 @@ object HeaderPlugin extends AutoPlugin {
     if (filesWithoutHeader.nonEmpty)
       throw new MessageOnlyException(
         s"""|There are files without headers!
-              |  ${filesWithoutHeader.mkString(s"$newLine  ")}
-              |""".stripMargin
+            |  ${filesWithoutHeader.mkString(s"$newLine  ")}
+            |""".stripMargin
       )
     else Nil
   }

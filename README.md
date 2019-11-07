@@ -35,15 +35,8 @@ In order to create or update file headers, execute the `headerCreate` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
-The plugin can also be triggered incrementally, meaning that it will not look at files that has not seen changes since
-the last time the task was run:
-
-```
-> headerCreateIncremental
-[info] Headers created for 2 files:
-[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test.scala
-[info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
-```
+The task is incremental, meaning that it will not look at files that have not seen changes since
+the last time the task was run.
 
 
 ### Checking headers
