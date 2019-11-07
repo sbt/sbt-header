@@ -20,6 +20,7 @@ import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 
+import sbt.util.{ CacheStoreFactory, Difference, FileInfo, FilesInfo }
 import sbt.{
   AutoPlugin,
   Compile,
@@ -36,8 +37,10 @@ import sbt.{
 }
 import sbt.Defaults.collectFiles
 import sbt.Keys._
+import sbt.internal.util.MessageOnlyException
 import sbt.plugins.JvmPlugin
 
+import scala.util.control.NoStackTrace
 import scala.util.matching.Regex
 
 object HeaderPlugin extends AutoPlugin {
@@ -113,6 +116,7 @@ object HeaderPlugin extends AutoPlugin {
         excludeFilter.in(headerResources)
       ).value,
       headerCreate := createHeadersTask(
+        streams.value.cacheDirectory,
         headerSources.value.toList ++
         headerResources.value.toList,
         headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
@@ -145,11 +149,28 @@ object HeaderPlugin extends AutoPlugin {
       excludeFilter.in(headerResources) := excludeFilter.in(unmanagedResources).value
     )
 
-  private def createHeadersTask(files: Seq[File],
+  private def createHeadersTask(cacheDirectory: File,
+                                files: Seq[File],
                                 headerLicense: License,
                                 headerMappings: Map[FileType, CommentStyle],
                                 headerEmptyLine: Boolean,
                                 log: Logger) = {
+    val cache = Difference.inputs(
+      CacheStoreFactory(cacheDirectory).make("header-cache"),
+      FilesInfo.lastModified
+    )
+    cache(files.toSet) { inReport =>
+      if (inReport.modified.nonEmpty)
+        createHeaders(inReport.modified.toList, headerLicense, headerMappings, headerEmptyLine, log)
+      else Nil
+    }
+  }
+
+  private def createHeaders(files: Seq[File],
+                            headerLicense: License,
+                            headerMappings: Map[FileType, CommentStyle],
+                            headerEmptyLine: Boolean,
+                            log: Logger) = {
     def createHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
@@ -194,12 +215,12 @@ object HeaderPlugin extends AutoPlugin {
             groupedFiles.flatMap(checkHeader(fileType, commentStyle))
         }
     if (filesWithoutHeader.nonEmpty)
-      log.error(
+      throw new MessageOnlyException(
         s"""|There are files without headers!
             |  ${filesWithoutHeader.mkString(s"$newLine  ")}
             |""".stripMargin
       )
-    filesWithoutHeader
+    else Nil
   }
 
   private def groupFilesByFileTypeAndCommentStyle(files: Seq[File],

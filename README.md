@@ -35,6 +35,10 @@ In order to create or update file headers, execute the `headerCreate` task:
 [info]   /Users/heiko/projects/sbt-header/sbt-header-test/test2.scala
 ```
 
+The task is incremental, meaning that it will not look at files that have not seen changes since
+the last time the task was run.
+
+
 ### Checking headers
 
 In order to check whether all files have headers (for example for CI), execute the `headerCheck` task:
