@@ -20,7 +20,7 @@ import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 
-import sbt.util.{ CacheStoreFactory, Difference, FileInfo, FilesInfo }
+import sbt.util.{ CacheStoreFactory, Difference, FileFunction, FileInfo, FilesInfo }
 import sbt.{
   AutoPlugin,
   Compile,
@@ -154,23 +154,18 @@ object HeaderPlugin extends AutoPlugin {
                                 headerLicense: License,
                                 headerMappings: Map[FileType, CommentStyle],
                                 headerEmptyLine: Boolean,
-                                log: Logger) = {
-    val cache = Difference.inputs(
-      CacheStoreFactory(cacheDirectory).make("header-cache"),
-      FilesInfo.lastModified
-    )
-    cache(files.toSet) { inReport =>
-      if (inReport.modified.nonEmpty)
-        createHeaders(inReport.modified.toList, headerLicense, headerMappings, headerEmptyLine, log)
-      else Nil
-    }
-  }
+                                log: Logger): Iterable[File] =
+    FileFunction.cached(cacheDirectory) { files =>
+      if (files.nonEmpty)
+        createHeaders(files, headerLicense, headerMappings, headerEmptyLine, log)
+      else Set.empty
+    }(files.toSet)
 
-  private def createHeaders(files: Seq[File],
+  private def createHeaders(files: Set[File],
                             headerLicense: License,
                             headerMappings: Map[FileType, CommentStyle],
                             headerEmptyLine: Boolean,
-                            log: Logger) = {
+                            log: Logger): Set[File] = {
     def createHeader(fileType: FileType, commentStyle: CommentStyle)(file: File) = {
       def write(text: String) = Files.write(file.toPath, text.getBytes(UTF_8)).toFile
       log.debug(s"About to create/update header for $file")
@@ -192,7 +187,7 @@ object HeaderPlugin extends AutoPlugin {
       log.info(
         s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}"
       )
-    touchedFiles
+    touchedFiles.toSet
   }
 
   private def checkHeadersTask(files: Seq[File],
@@ -223,7 +218,7 @@ object HeaderPlugin extends AutoPlugin {
     else Nil
   }
 
-  private def groupFilesByFileTypeAndCommentStyle(files: Seq[File],
+  private def groupFilesByFileTypeAndCommentStyle(files: Iterable[File],
                                                   headerMappings: Map[FileType, CommentStyle]) =
     files
       .groupBy(_.extension)

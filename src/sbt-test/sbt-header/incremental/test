@@ -5,3 +5,5 @@
 > stripHeader
 > headerCreate
 > checkFileContents
+> removeFile
+> headerCreate

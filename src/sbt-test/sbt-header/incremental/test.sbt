@@ -1,7 +1,10 @@
+import java.nio.file.Files
+
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 val stripHeader = taskKey[Unit]("Strip headers")
+val removeFile = taskKey[Unit]("Remove one file")
 
 stripHeader := {
   import java.nio.file.Files
@@ -36,5 +39,10 @@ checkFileContents := {
           |$expected
           |""".stripMargin)
   }
+}
+
+removeFile := {
+  val actualPath = (scalaSource.in(Compile).value / "HasNoHeader.scala")
+  Files.delete(actualPath.toPath)
 }
 
