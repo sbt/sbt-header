@@ -48,15 +48,19 @@ trait CommentCreator {
 
 object CommentStyle {
 
-  val cStyleBlockComment = CommentStyle(new CommentBlockCreator("/*", " *", " */"),
-                                        commentBetween("""/\*+""", "*", """\*/"""))
+  val cStyleBlockComment = CommentStyle(
+    new CommentBlockCreator("/*", " *", " */"),
+    commentBetween("""/\*+""", "*", """\*/""")
+  )
 
   val cppStyleLineComment = CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
 
   val hashLineComment = CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
 
-  val twirlStyleBlockComment = CommentStyle(new CommentBlockCreator("@*", " *", " *@"),
-                                            commentBetween("""@\*""", "*", """\*@"""))
+  val twirlStyleBlockComment = CommentStyle(
+    new CommentBlockCreator("@*", " *", " *@"),
+    commentBetween("""@\*""", "*", """\*@""")
+  )
 
   val twirlStyleFramedBlockComment =
     CommentStyle(TwirlStyleFramedBlockCommentCreator, commentBetween("""@\*+""", "*", """\*@"""))

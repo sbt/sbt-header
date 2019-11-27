@@ -97,8 +97,8 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
 
       "add as many new lines to output" in {
         val fileContent = "this is a file with lf endings\n" +
-        "this is a file with lf endings\n" +
-        "this is a file with lf endings\n"
+          "this is a file with lf endings\n" +
+          "this is a file with lf endings\n"
         val licenseText = "this is a header text with multiple lf endings\n\n\n\n"
         val header      = hashLineComment(licenseText)
 
@@ -236,11 +236,13 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
     }
   }
 
-  private def createHeader(fileContent: String,
-                           header: String,
-                           fileType: FileType = FileType.sh,
-                           commentCreator: CommentStyle = hashLineComment,
-                           headerEmptyLine: Boolean = true) =
+  private def createHeader(
+      fileContent: String,
+      header: String,
+      fileType: FileType = FileType.sh,
+      commentCreator: CommentStyle = hashLineComment,
+      headerEmptyLine: Boolean = true
+  ) =
     HeaderCreator(
       fileType,
       commentCreator,

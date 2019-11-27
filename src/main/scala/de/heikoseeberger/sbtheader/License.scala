@@ -34,9 +34,11 @@ object License {
   private[sbtheader] val spdxLicenses =
     Vector(ALv2, MIT, MPLv2, BSD2Clause, BSD3Clause, GPLv3, LGPLv3, AGPLv3)
 
-  private[sbtheader] def buildSpdxSyntax(yyyy: String,
-                                         copyrightOwner: String,
-                                         spdxIdentifier: String): String =
+  private[sbtheader] def buildSpdxSyntax(
+      yyyy: String,
+      copyrightOwner: String,
+      spdxIdentifier: String
+  ): String =
     s"""|Copyright $yyyy $copyrightOwner
         |
         |SPDX-License-Identifier: $spdxIdentifier

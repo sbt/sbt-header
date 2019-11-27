@@ -22,21 +22,25 @@ import scala.io.Codec
 
 object HeaderCreator {
 
-  def apply(fileType: FileType,
-            commentStyle: CommentStyle,
-            license: License,
-            headerEmptyLine: Boolean,
-            log: Logger,
-            input: InputStream): HeaderCreator =
+  def apply(
+      fileType: FileType,
+      commentStyle: CommentStyle,
+      license: License,
+      headerEmptyLine: Boolean,
+      log: Logger,
+      input: InputStream
+  ): HeaderCreator =
     new HeaderCreator(fileType, commentStyle, license, headerEmptyLine, log, input)
 }
 
-final class HeaderCreator private (fileType: FileType,
-                                   commentStyle: CommentStyle,
-                                   license: License,
-                                   headerEmptyLine: Boolean,
-                                   log: Logger,
-                                   input: InputStream) {
+final class HeaderCreator private (
+    fileType: FileType,
+    commentStyle: CommentStyle,
+    license: License,
+    headerEmptyLine: Boolean,
+    log: Logger,
+    input: InputStream
+) {
 
   private val crlf          = """(?s)(?:.*)(\r\n)(?:.*)""".r
   private val cr            = """(?s)(?:.*)(\r)(?:.*)""".r
