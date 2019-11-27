@@ -24,9 +24,11 @@ private object LicenseDetection {
   private val spdxMapping =
     License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut): Map[String, SpdxLicense]
 
-  def apply(licenses: Seq[(String, URL)],
-            organizationName: String,
-            startYear: Option[Int]): Option[License] = {
+  def apply(
+      licenses: Seq[(String, URL)],
+      organizationName: String,
+      startYear: Option[Int]
+  ): Option[License] = {
     val licenseName = licenses match {
       case (name, _) :: Nil => Some(name)
       case _                => None

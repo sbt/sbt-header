@@ -5,11 +5,11 @@
 lazy val `sbt-header` =
   project
     .in(file("."))
-    .enablePlugins(/*AutomateHeaderPlugin, */GitVersioning, SbtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, SbtPlugin)
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
-        library.scalaTest % Test
+        library.scalaTest % Test,
       )
     )
 
@@ -20,7 +20,7 @@ lazy val `sbt-header` =
 lazy val library =
   new {
     object Version {
-      val scalaTest = "3.0.4"
+      val scalaTest = "3.0.8"
     }
     val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest
   }
@@ -31,7 +31,6 @@ lazy val library =
 
 lazy val settings =
   commonSettings ++
-  gitSettings ++
   scalafmtSettings ++
   sbtScriptedSettings
 
@@ -47,37 +46,25 @@ lazy val commonSettings =
       "-unchecked",
       "-deprecation",
       "-language:_",
-      "-encoding", "UTF-8"
+      "-target:jvm-1.8",
+      "-encoding", "UTF-8",
+      "-Ywarn-unused:imports",
     ),
-    scalacOptions += {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 12)) => "-target:jvm-1.8"
-        case _             => "-target:jvm-1.7"
-      }
-    },
-    unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
-    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
+    Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
+    Test / unmanagedSourceDirectories := Seq((Test / scalaSource).value),
     publishMavenStyle := false,
-    crossSbtVersions := Seq("1.1.6")
 )
-
-lazy val gitSettings =
-  Seq(
-    git.useGitDescribe := true
-  )
 
 lazy val scalafmtSettings =
   Seq(
     scalafmtOnCompile := true,
-    scalafmtOnCompile.in(Sbt) := false,
-    scalafmtVersion := "1.3.0"
   )
 
 lazy val sbtScriptedSettings =
   Seq(
     scriptedLaunchOpts ++= Seq(
       "-Xmx1024M",
-      s"-Dplugin.version=${version.value}"
+      s"-Dplugin.version=${version.value}",
     ),
-    scriptedBufferLog := false
+    scriptedBufferLog := false,
   )
