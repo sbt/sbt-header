@@ -1,0 +1,8 @@
+# check if headers get created
+-> headerCheckAll
+> headerCreateAll
+$ must-mirror src/main/scala/HasHeader.scala src/main/resources/HasHeader.scala_expected
+$ must-mirror src/main/scala/HasNoHeader.scala src/main/resources/HasNoHeader.scala_expected
+$ must-mirror src/test/scala/HasHeader.scala src/test/resources/HasHeader.scala_expected
+$ must-mirror src/test/scala/HasNoHeader.scala src/test/resources/HasNoHeader.scala_expected
+> headerCheckAll
