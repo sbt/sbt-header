@@ -25,10 +25,12 @@ import sbt.{
   Configuration,
   File,
   Logger,
+  ScopeFilter,
   Setting,
   SettingKey,
   TaskKey,
   Test,
+  inAnyConfiguration,
   inConfig,
   settingKey,
   taskKey
@@ -83,8 +85,14 @@ object HeaderPlugin extends AutoPlugin {
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
+    val headerCreateAll: TaskKey[Iterable[File]] =
+      taskKey[Iterable[File]]("Create/update headers in all configurations")
+
     val headerCheck: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers")
+
+    val headerCheckAll: TaskKey[Iterable[File]] =
+      taskKey[Iterable[File]]("Check whether files have headers in all configurations")
 
     def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
       configurations.foldLeft(List.empty[Setting[_]]) { _ ++ inConfig(_)(toBeScopedSettings) }
@@ -121,6 +129,7 @@ object HeaderPlugin extends AutoPlugin {
           headerEmptyLine.value,
           streams.value.log
         ),
+      headerCreateAll := headerCreate.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.flatten.toSet,
       headerCheck := checkHeadersTask(
           headerSources.value.toList ++
           headerResources.value.toList,
@@ -128,7 +137,8 @@ object HeaderPlugin extends AutoPlugin {
           headerMappings.value,
           headerEmptyLine.value,
           streams.value.log
-        )
+        ),
+      headerCheckAll := headerCheck.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.flatten.toSet
     )
 
   private def notToBeScopedSettings =
