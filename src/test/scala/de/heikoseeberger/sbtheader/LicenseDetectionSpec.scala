@@ -36,13 +36,31 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
     BSD3Clause(yyyy.toString, organizationName) -> ("BSD-3-Clause", new URL(
       "https://spdx.org/licenses/BSD-3-Clause.html#licenseText"
     )),
+    AGPLv3OrLater(yyyy.toString, organizationName) -> ("AGPL-3.0-or-later", new URL(
+      "https://spdx.org/licenses/AGPL-3.0-or-later.html#licenseText"
+    )),
+    AGPLv3Only(yyyy.toString, organizationName) -> ("AGPL-3.0-only", new URL(
+      "https://spdx.org/licenses/AGPL-3.0-only.html#licenseText"
+    )),
     AGPLv3(yyyy.toString, organizationName) -> ("AGPL-3.0", new URL(
       "https://spdx.org/licenses/AGPL-3.0.html#licenseText"
     )),
     ALv2(yyyy.toString, organizationName) ->
     apache,
+    GPLv3OrLater(yyyy.toString, organizationName) -> ("GPL-3.0-or-later", new URL(
+      "https://spdx.org/licenses/GPL-3.0-or-later.html#licenseText"
+    )),
+    GPLv3Only(yyyy.toString, organizationName) -> ("GPL-3.0-only", new URL(
+      "https://spdx.org/licenses/GPL-3.0-only.html#licenseText"
+    )),
     GPLv3(yyyy.toString, organizationName) -> ("GPL-3.0", new URL(
       "https://spdx.org/licenses/GPL-3.0.html#licenseText"
+    )),
+    LGPLv3OrLater(yyyy.toString, organizationName) -> ("LGPL-3.0-or-later", new URL(
+      "https://spdx.org/licenses/LGPL-3.0-or-later.html#licenseText"
+    )),
+    LGPLv3Only(yyyy.toString, organizationName) -> ("LGPL-3.0-only", new URL(
+      "https://spdx.org/licenses/LGPL-3.0-only.html#licenseText"
     )),
     LGPLv3(yyyy.toString, organizationName) -> ("LGPL-3.0", new URL(
       "https://spdx.org/licenses/LGPL-3.0.html#licenseText"
