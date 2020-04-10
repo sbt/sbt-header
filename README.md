@@ -80,9 +80,15 @@ The most common licenses have been pre-canned in [License](https://github.com/sb
 |[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)|`Apache-2.0`|
 |[BSD 2 Clause](https://opensource.org/licenses/BSD-2-Clause)|`BSD-2-Clause`|
 |[BSD 3 Clause](https://opensource.org/licenses/BSD-3-Clause)|`BSD-3-Clause`|
-|[GNU General Public License v3](http://www.gnu.org/licenses/gpl-3.0.en.html)|`GPL-3.0`|
-|[GNU Lesser General Public License v3](http://www.gnu.org/licenses/lgpl-3.0.en.html)|`LGPL-3.0`|
-|[GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl.html)|`AGPL-3.0`|
+|[GNU General Public License v3 or later](https://spdx.org/licenses/GPL-3.0-or-later.html)|`GPL-3.0-or-later`|
+|[GNU General Public License v3 only](https://spdx.org/licenses/GPL-3.0-only.html)|`GPL-3.0-only`|
+|[GNU General Public License v3 (deprecated)](https://spdx.org/licenses/GPL-3.0.html)|`GPL-3.0`|
+|[GNU Lesser General Public License v3 or later](https://spdx.org/licenses/LGPL-3.0-or-later.html)|`LGPL-3.0-or-later`|
+|[GNU Lesser General Public License v3 only](https://spdx.org/licenses/LGPL-3.0-only.html)|`LGPL-3.0-only`|
+|[GNU Lesser General Public License v3 (deprecated)](https://spdx.org/licenses/LGPL-3.0.html)|`LGPL-3.0`|
+|[GNU Affero General Public License v3 or later](https://spdx.org/licenses/AGPL-3.0-or-later.html)|`AGPL-3.0-or-later`|
+|[GNU Affero General Public License v3 only](https://spdx.org/licenses/AGPL-3.0-only.html)|`AGPL-3.0-only`|
+|[GNU Affero General Public License v3 (deprecated)](https://spdx.org/licenses/AGPL-3.0.html)|`AGPL-3.0`|
 |[MIT License](https://opensource.org/licenses/MIT)|`MIT`|
 |[Mozilla Public License, v. 2.0](http://mozilla.org/MPL/2.0/)|`MPL-2.0`|
 

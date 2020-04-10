@@ -32,7 +32,22 @@ sealed trait SpdxLicense {
 object License {
 
   private[sbtheader] val spdxLicenses =
-    Vector(ALv2, MIT, MPLv2, BSD2Clause, BSD3Clause, GPLv3, LGPLv3, AGPLv3)
+    Vector(
+      ALv2,
+      MIT,
+      MPLv2,
+      BSD2Clause,
+      BSD3Clause,
+      GPLv3OrLater,
+      GPLv3Only,
+      GPLv3,
+      LGPLv3OrLater,
+      LGPLv3Only,
+      LGPLv3,
+      AGPLv3OrLater,
+      AGPLv3Only,
+      AGPLv3
+    )
 
   private[sbtheader] def buildSpdxSyntax(
       yyyy: String,
@@ -239,6 +254,76 @@ object License {
     }
   }
 
+  final case object GPLv3OrLater extends SpdxLicense {
+
+    override def spdxIdentifier = "GPL-3.0-or-later"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new GPLv3OrLater(yyyy, copyrightOwner, licenseStyle)
+
+    def detailed(yyyy: String, copyrightOwner: String) =
+      s"""|Copyright (C) $yyyy  $copyrightOwner
+          |
+          |This program is free software: you can redistribute it and/or modify
+          |it under the terms of the GNU General Public License as published by
+          |the Free Software Foundation, either version 3 of the License, or
+          |(at your option) any later version.
+          |
+          |This program is distributed in the hope that it will be useful,
+          |but WITHOUT ANY WARRANTY; without even the implied warranty of
+          |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          |GNU General Public License for more details.
+          |
+          |You should have received a copy of the GNU General Public License
+          |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+          |""".stripMargin
+  }
+
+  final class GPLv3OrLater(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, GPLv3OrLater.spdxIdentifier)
+
+      case Detailed =>
+        GPLv3OrLater.detailed(yyyy, copyrightOwner)
+    }
+  }
+
+  final case object GPLv3Only extends SpdxLicense {
+
+    override def spdxIdentifier = "GPL-3.0-only"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new GPLv3Only(yyyy, copyrightOwner, licenseStyle)
+  }
+
+  final class GPLv3Only(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, GPLv3Only.spdxIdentifier)
+
+      case Detailed =>
+        s"""|Copyright (C) $yyyy  $copyrightOwner
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU General Public License as published by
+            |the Free Software Foundation, version 3.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU General Public License for more details.
+            |
+            |You should have received a copy of the GNU General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+    }
+  }
+
   final case object GPLv3 extends SpdxLicense {
 
     override def spdxIdentifier = "GPL-3.0"
@@ -255,19 +340,73 @@ object License {
         buildSpdxSyntax(yyyy, copyrightOwner, GPLv3.spdxIdentifier)
 
       case Detailed =>
+        GPLv3OrLater.detailed(yyyy, copyrightOwner)
+    }
+  }
+
+  final case object LGPLv3OrLater extends SpdxLicense {
+
+    override def spdxIdentifier = "LGPL-3.0-or-later"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new LGPLv3OrLater(yyyy, copyrightOwner, licenseStyle)
+
+    def detailed(yyyy: String, copyrightOwner: String) =
+      s"""|Copyright (C) $yyyy  $copyrightOwner
+          |
+          |This program is free software: you can redistribute it and/or modify
+          |it under the terms of the GNU Lesser General Public License as published
+          |by the Free Software Foundation, either version 3 of the License, or
+          |(at your option) any later version.
+          |
+          |This program is distributed in the hope that it will be useful,
+          |but WITHOUT ANY WARRANTY; without even the implied warranty of
+          |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          |GNU Lesser General Public License for more details.
+          |
+          |You should have received a copy of the GNU General Lesser Public License
+          |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+          |""".stripMargin
+  }
+
+  final class LGPLv3OrLater(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, LGPLv3OrLater.spdxIdentifier)
+
+      case Detailed =>
+        LGPLv3OrLater.detailed(yyyy, copyrightOwner)
+    }
+  }
+
+  final case object LGPLv3Only extends SpdxLicense {
+
+    override def spdxIdentifier = "LGPL-3.0-only"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new LGPLv3Only(yyyy, copyrightOwner, licenseStyle)
+  }
+
+  final class LGPLv3Only(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, LGPLv3Only.spdxIdentifier)
+
+      case Detailed =>
         s"""|Copyright (C) $yyyy  $copyrightOwner
             |
             |This program is free software: you can redistribute it and/or modify
-            |it under the terms of the GNU General Public License as published by
-            |the Free Software Foundation, either version 3 of the License, or
-            |(at your option) any later version.
+            |it under the terms of the GNU Lesser General Public License as published
+            |by the Free Software Foundation, version 3.
             |
             |This program is distributed in the hope that it will be useful,
             |but WITHOUT ANY WARRANTY; without even the implied warranty of
             |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-            |GNU General Public License for more details.
+            |GNU Lesser General Public License for more details.
             |
-            |You should have received a copy of the GNU General Public License
+            |You should have received a copy of the GNU General Lesser Public License
             |along with this program.  If not, see <http://www.gnu.org/licenses/>.
             |""".stripMargin
     }
@@ -288,19 +427,73 @@ object License {
         buildSpdxSyntax(yyyy, copyrightOwner, LGPLv3.spdxIdentifier)
 
       case Detailed =>
+        LGPLv3OrLater.detailed(yyyy, copyrightOwner)
+    }
+  }
+
+  final case object AGPLv3OrLater extends SpdxLicense {
+    override def spdxIdentifier = "AGPL-3.0-or-later"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new AGPLv3OrLater(yyyy, copyrightOwner, licenseStyle)
+
+    def detailed(yyyy: String, copyrightOwner: String) =
+      s"""|Copyright (C) $yyyy  $copyrightOwner
+          |
+          |This program is free software: you can redistribute it and/or modify
+          |it under the terms of the GNU Affero General Public License as
+          |published by the Free Software Foundation, either version 3 of the
+          |License, or (at your option) any later version.
+          |
+          |This program is distributed in the hope that it will be useful,
+          |but WITHOUT ANY WARRANTY; without even the implied warranty of
+          |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          |GNU Affero General Public License for more details.
+          |
+          |You should have received a copy of the GNU Affero General Public License
+          |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+          |""".stripMargin
+  }
+
+  final class AGPLv3OrLater(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, AGPLv3OrLater.spdxIdentifier)
+
+      case Detailed =>
+        AGPLv3OrLater.detailed(yyyy, copyrightOwner)
+    }
+  }
+
+  final case object AGPLv3Only extends SpdxLicense {
+    override def spdxIdentifier = "AGPL-3.0-only"
+
+    override def apply(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle) =
+      new AGPLv3Only(yyyy, copyrightOwner, licenseStyle)
+  }
+
+  final class AGPLv3Only(yyyy: String, copyrightOwner: String, licenseStyle: LicenseStyle)
+      extends License {
+
+    override val text: String = licenseStyle match {
+      case SpdxSyntax =>
+        buildSpdxSyntax(yyyy, copyrightOwner, AGPLv3Only.spdxIdentifier)
+
+      case Detailed =>
         s"""|Copyright (C) $yyyy  $copyrightOwner
             |
             |This program is free software: you can redistribute it and/or modify
-            |it under the terms of the GNU Lesser General Public License as published
-            |by the Free Software Foundation, either version 3 of the License, or
-            |(at your option) any later version.
+            |it under the terms of the GNU Affero General Public License as
+            |published by the Free Software Foundation, version 3.
             |
             |This program is distributed in the hope that it will be useful,
             |but WITHOUT ANY WARRANTY; without even the implied warranty of
             |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-            |GNU Lesser General Public License for more details.
+            |GNU Affero General Public License for more details.
             |
-            |You should have received a copy of the GNU General Lesser Public License
+            |You should have received a copy of the GNU Affero General Public License
             |along with this program.  If not, see <http://www.gnu.org/licenses/>.
             |""".stripMargin
     }
@@ -321,21 +514,7 @@ object License {
         buildSpdxSyntax(yyyy, copyrightOwner, AGPLv3.spdxIdentifier)
 
       case Detailed =>
-        s"""|Copyright (C) $yyyy  $copyrightOwner
-            |
-            |This program is free software: you can redistribute it and/or modify
-            |it under the terms of the GNU Affero General Public License as
-            |published by the Free Software Foundation, either version 3 of the
-            |License, or (at your option) any later version.
-            |
-            |This program is distributed in the hope that it will be useful,
-            |but WITHOUT ANY WARRANTY; without even the implied warranty of
-            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-            |GNU Affero General Public License for more details.
-            |
-            |You should have received a copy of the GNU Affero General Public License
-            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
-            |""".stripMargin
+        AGPLv3OrLater.detailed(yyyy, copyrightOwner)
     }
   }
 

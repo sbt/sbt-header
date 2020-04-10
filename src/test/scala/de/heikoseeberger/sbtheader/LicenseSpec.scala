@@ -19,7 +19,56 @@ package de.heikoseeberger.sbtheader
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
 import org.scalatest.{ Matchers, WordSpec }
 
-class LicenseSpec extends WordSpec with Matchers {
+class licenseSpec extends WordSpec with Matchers {
+
+  "AGPLv3OrLater" should {
+
+    "contain the AGPLv3 or later license with the given copyright year and owner" in {
+      val agplv3 = AGPLv3OrLater("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU Affero General Public License as
+            |published by the Free Software Foundation, either version 3 of the
+            |License, or (at your option) any later version.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU Affero General Public License for more details.
+            |
+            |You should have received a copy of the GNU Affero General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      agplv3 shouldBe expected
+    }
+  }
+
+  "AGPLv3Only" should {
+
+    "contain the AGPLv3 only license with the given copyright year and owner" in {
+      val agplv3 = AGPLv3Only("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU Affero General Public License as
+            |published by the Free Software Foundation, version 3.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU Affero General Public License for more details.
+            |
+            |You should have received a copy of the GNU Affero General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      agplv3 shouldBe expected
+    }
+  }
 
   "AGPLv3" should {
 
@@ -142,6 +191,55 @@ class LicenseSpec extends WordSpec with Matchers {
     }
   }
 
+  "GPLv3OrLater" should {
+
+    "contain the GPLv3 or later license with the given copyright year and owner" in {
+      val gplv3 = GPLv3OrLater("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU General Public License as published by
+            |the Free Software Foundation, either version 3 of the License, or
+            |(at your option) any later version.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU General Public License for more details.
+            |
+            |You should have received a copy of the GNU General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      gplv3 shouldBe expected
+    }
+  }
+
+  "GPLv3Only" should {
+
+    "contain the GPLv3 only license with the given copyright year and owner" in {
+      val gplv3 = GPLv3Only("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU General Public License as published by
+            |the Free Software Foundation, version 3.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU General Public License for more details.
+            |
+            |You should have received a copy of the GNU General Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      gplv3 shouldBe expected
+    }
+  }
+
   "GPLv3" should {
 
     "contain the GPLv3 license with the given copyright year and owner" in {
@@ -164,6 +262,55 @@ class LicenseSpec extends WordSpec with Matchers {
             |""".stripMargin
 
       gplv3 shouldBe expected
+    }
+  }
+
+  "LGPLv3OrLater" should {
+
+    "contain the LGPLv3 or later license with the given copyright year and owner" in {
+      val lgplv3 = LGPLv3OrLater("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU Lesser General Public License as published
+            |by the Free Software Foundation, either version 3 of the License, or
+            |(at your option) any later version.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU Lesser General Public License for more details.
+            |
+            |You should have received a copy of the GNU General Lesser Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      lgplv3 shouldBe expected
+    }
+  }
+
+  "LGPLv3Only" should {
+
+    "contain the LGPLv3 only license with the given copyright year and owner" in {
+      val lgplv3 = LGPLv3Only("2020", "Edward Samson").text
+      val expected =
+        s"""|Copyright (C) 2020  Edward Samson
+            |
+            |This program is free software: you can redistribute it and/or modify
+            |it under the terms of the GNU Lesser General Public License as published
+            |by the Free Software Foundation, version 3.
+            |
+            |This program is distributed in the hope that it will be useful,
+            |but WITHOUT ANY WARRANTY; without even the implied warranty of
+            |MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            |GNU Lesser General Public License for more details.
+            |
+            |You should have received a copy of the GNU General Lesser Public License
+            |along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            |""".stripMargin
+
+      lgplv3 shouldBe expected
     }
   }
 
