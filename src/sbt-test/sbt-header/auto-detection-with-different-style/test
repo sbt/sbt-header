@@ -1,0 +1,5 @@
+# check if headers get created with different style
+-> headerCheck
+> headerCreate
+$ must-mirror src/main/scala/HasNoHeader.scala src/main/resources/HasNoHeader.scala_expected
+> headerCheck
