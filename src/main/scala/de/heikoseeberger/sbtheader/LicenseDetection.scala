@@ -19,7 +19,7 @@ package de.heikoseeberger.sbtheader
 import sbt.URL
 import scala.collection.breakOut
 
-private object LicenseDetection {
+object LicenseDetection {
 
   private val spdxMapping =
     License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut): Map[String, SpdxLicense]
