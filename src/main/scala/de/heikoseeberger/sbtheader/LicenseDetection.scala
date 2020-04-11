@@ -27,7 +27,8 @@ object LicenseDetection {
   def apply(
       licenses: Seq[(String, URL)],
       organizationName: String,
-      startYear: Option[String]
+      startYear: Option[String],
+      licenseStyle: LicenseStyle = LicenseStyle.Detailed
   ): Option[License] = {
     val licenseName = licenses match {
       case (name, _) :: Nil => Some(name)
@@ -38,6 +39,6 @@ object LicenseDetection {
       name    <- licenseName
       license <- spdxMapping.get(name)
       year    <- startYear
-    } yield license(year, organizationName)
+    } yield license(year, organizationName, licenseStyle)
   }
 }

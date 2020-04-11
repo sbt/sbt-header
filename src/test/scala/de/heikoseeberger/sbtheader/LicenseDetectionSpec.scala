@@ -92,6 +92,17 @@ class LicenseDetectionSpec extends WordSpec with Matchers {
       ) shouldBe None
     }
 
+    "allow changing license style" in {
+      val expected = ALv2(yyyy, organizationName, LicenseStyle.SpdxSyntax)
+
+      LicenseDetection(
+        List(apache),
+        organizationName,
+        startYear,
+        LicenseStyle.SpdxSyntax
+      ).map(_.text) shouldBe Some(expected.text)
+    }
+
     licenses.foreach {
       case (license, sbtLicense) =>
         s"detect ${license.getClass.getSimpleName} license" in {
