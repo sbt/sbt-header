@@ -23,7 +23,7 @@ import sbt.URL
 class LicenseDetectionSpec extends WordSpec with Matchers {
 
   val organizationName = "Heiko Seeberger"
-  val yyyy             = 2017
+  val yyyy             = "2017"
   val startYear        = Some(yyyy)
   val apache: (String, URL) =
     ("Apache-2.0", new URL("https://spdx.org/licenses/Apache-2.0.html#licenseText"))

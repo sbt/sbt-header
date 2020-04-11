@@ -150,7 +150,7 @@ object HeaderPlugin extends AutoPlugin {
       headerLicense := LicenseDetection(
           licenses.value.toList,
           organizationName.value,
-          startYear.value
+          startYear.value.map(_.toString)
         ),
       includeFilter.in(headerSources) := includeFilter.in(unmanagedSources).value,
       excludeFilter.in(headerSources) := excludeFilter.in(unmanagedSources).value,
