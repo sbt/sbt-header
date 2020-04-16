@@ -19,7 +19,7 @@ package de.heikoseeberger.sbtheader
 import sbt.URL
 import scala.collection.breakOut
 
-private object LicenseDetection {
+object LicenseDetection {
 
   private val spdxMapping =
     License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut): Map[String, SpdxLicense]
@@ -27,7 +27,8 @@ private object LicenseDetection {
   def apply(
       licenses: Seq[(String, URL)],
       organizationName: String,
-      startYear: Option[Int]
+      startYear: Option[String],
+      licenseStyle: LicenseStyle = LicenseStyle.Detailed
   ): Option[License] = {
     val licenseName = licenses match {
       case (name, _) :: Nil => Some(name)
@@ -38,6 +39,6 @@ private object LicenseDetection {
       name    <- licenseName
       license <- spdxMapping.get(name)
       year    <- startYear
-    } yield license(year.toString, organizationName)
+    } yield license(year, organizationName, licenseStyle)
   }
 }

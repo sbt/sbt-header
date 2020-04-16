@@ -68,6 +68,10 @@ object HeaderPlugin extends AutoPlugin {
         "The license to apply to files; None by default (enabling auto detection from project settings)"
       )
 
+    val headerLicenseStyle: SettingKey[LicenseStyle] = settingKey[LicenseStyle] {
+      "The license style to be used. Can be `Detailed` or `SpdxSyntax`. Defaults to Detailed."
+    }
+
     val headerMappings: SettingKey[Map[FileType, CommentStyle]] =
       settingKey(
         "CommentStyles to be used by file extension they should be applied to; C style block comments for Scala and Java files by default"
@@ -150,8 +154,10 @@ object HeaderPlugin extends AutoPlugin {
       headerLicense := LicenseDetection(
           licenses.value.toList,
           organizationName.value,
-          startYear.value
+          startYear.value.map(_.toString),
+          headerLicenseStyle.value
         ),
+      headerLicenseStyle := LicenseStyle.Detailed,
       includeFilter.in(headerSources) := includeFilter.in(unmanagedSources).value,
       excludeFilter.in(headerSources) := excludeFilter.in(unmanagedSources).value,
       includeFilter.in(headerResources) := includeFilter.in(unmanagedResources).value,

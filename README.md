@@ -103,7 +103,15 @@ If you want to use the following syntax:
    */
 ```
 
-You have to pass the style when defining the headerLicense attribute
+You have two possibilites:
+
+- If you are using auto-detection, you just need to add the following to your `build.sbt`
+
+```sbt
+headerLicenseStyle := HeaderLicenseStyle.SpdxSyntax
+```
+
+- On the other hand, if you are defining your license explicitly, you'll have to pass the style when defining the `headerLicense` attribute:
 
 ```scala
 headerLicense := Some(HeaderLicense.MIT("2015", "Heiko Seeberger", HeaderLicenseStyle.SpdxSyntax))

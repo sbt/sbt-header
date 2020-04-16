@@ -1,0 +1,9 @@
+/*
+ * Copyright 2015 Heiko Seeberger
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+package de.heikoseeberger.sbtheader.test;
+
+class HasNoHeader
