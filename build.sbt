@@ -20,7 +20,7 @@ lazy val `sbt-header` =
 lazy val library =
   new {
     object Version {
-      val scalaTest = "3.1.0"
+      val scalaTest = "3.1.1"
     }
     val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest
   }
