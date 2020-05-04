@@ -99,7 +99,7 @@ object HeaderPlugin extends AutoPlugin {
       taskKey[Iterable[File]]("Check whether files have headers in all configurations")
 
     def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
-      configurations.foldLeft(List.empty[Setting[_]]) { _ ++ inConfig(_)(toBeScopedSettings) }
+      configurations.foldLeft(List.empty[Setting[_]])(_ ++ inConfig(_)(toBeScopedSettings))
   }
 
   import autoImport._
@@ -133,7 +133,9 @@ object HeaderPlugin extends AutoPlugin {
           headerEmptyLine.value,
           streams.value.log
         ),
-      headerCreateAll := headerCreate.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.flatten.toSet,
+      headerCreateAll := headerCreate.?.all(
+          ScopeFilter(configurations = inAnyConfiguration)
+        ).value.flatten.flatten.toSet,
       headerCheck := checkHeadersTask(
           headerSources.value.toList ++
           headerResources.value.toList,
@@ -142,7 +144,9 @@ object HeaderPlugin extends AutoPlugin {
           headerEmptyLine.value,
           streams.value.log
         ),
-      headerCheckAll := headerCheck.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.flatten.toSet
+      headerCheckAll := headerCheck.?.all(
+          ScopeFilter(configurations = inAnyConfiguration)
+        ).value.flatten.flatten.toSet
     )
 
   private def notToBeScopedSettings =

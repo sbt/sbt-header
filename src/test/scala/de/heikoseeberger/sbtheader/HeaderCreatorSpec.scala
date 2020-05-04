@@ -186,10 +186,11 @@ final class HeaderCreatorSpec extends WordSpec with Matchers {
       val yearPreservingStyle =
         CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
           val Pattern: Regex = "(?s).*?(\\d{4}(-\\d{4})?).*".r
-          def findYear(header: String): Option[String] = header match {
-            case Pattern(years, _) => Some(years)
-            case _                 => None
-          }
+          def findYear(header: String): Option[String] =
+            header match {
+              case Pattern(years, _) => Some(years)
+              case _                 => None
+            }
           override def apply(text: String, existingText: Option[String]): String = {
             val newText = CommentStyle.cStyleBlockComment.commentCreator.apply(text, existingText)
             existingText
