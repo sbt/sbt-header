@@ -17,9 +17,10 @@
 package de.heikoseeberger.sbtheader
 
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class licenseSpec extends WordSpec with Matchers {
+class licenseSpec extends AnyWordSpec with Matchers {
 
   "AGPLv3OrLater" should {
 

@@ -17,10 +17,11 @@
 package de.heikoseeberger.sbtheader
 
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
-import org.scalatest.{ Matchers, WordSpec }
 import sbt.URL
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class LicenseDetectionSpec extends WordSpec with Matchers {
+class LicenseDetectionSpec extends AnyWordSpec with Matchers {
 
   val organizationName = "Heiko Seeberger"
   val yyyy             = "2017"

@@ -18,12 +18,13 @@ package de.heikoseeberger.sbtheader
 
 import java.io.ByteArrayInputStream
 
-import org.scalatest.{ Matchers, WordSpec }
 import sbt.Logger
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.hashLineComment
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
 import scala.util.matching.Regex
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 final class StubLogger extends Logger {
   override def log(level: sbt.Level.Value, message: => String): Unit = ()
@@ -31,7 +32,7 @@ final class StubLogger extends Logger {
   override def trace(t: => Throwable): Unit                          = ()
 }
 
-final class HeaderCreatorSpec extends WordSpec with Matchers {
+final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
 
   "HeaderCreator" when {
 
