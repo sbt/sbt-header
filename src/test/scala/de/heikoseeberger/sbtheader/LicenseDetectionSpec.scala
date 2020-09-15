@@ -104,14 +104,13 @@ class LicenseDetectionSpec extends AnyWordSpec with Matchers {
       ).map(_.text) shouldBe Some(expected.text)
     }
 
-    licenses.foreach {
-      case (license, sbtLicense) =>
-        s"detect ${license.getClass.getSimpleName} license" in {
-          LicenseDetection(List(sbtLicense), organizationName, startYear)
-            .map(_.text) shouldBe Some(
-            license.text
-          )
-        }
+    licenses.foreach { case (license, sbtLicense) =>
+      s"detect ${license.getClass.getSimpleName} license" in {
+        LicenseDetection(List(sbtLicense), organizationName, startYear)
+          .map(_.text) shouldBe Some(
+          license.text
+        )
+      }
     }
   }
 }

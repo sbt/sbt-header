@@ -115,52 +115,52 @@ object HeaderPlugin extends AutoPlugin {
   private def toBeScopedSettings =
     Vector(
       headerSources := collectFiles(
-          unmanagedSourceDirectories.in(headerCreate),
-          includeFilter.in(headerSources),
-          excludeFilter.in(headerSources)
-        ).value,
+        unmanagedSourceDirectories.in(headerCreate),
+        includeFilter.in(headerSources),
+        excludeFilter.in(headerSources)
+      ).value,
       headerResources := collectFiles(
-          unmanagedResourceDirectories.in(headerCreate),
-          includeFilter.in(headerResources),
-          excludeFilter.in(headerResources)
-        ).value,
+        unmanagedResourceDirectories.in(headerCreate),
+        includeFilter.in(headerResources),
+        excludeFilter.in(headerResources)
+      ).value,
       headerCreate := createHeadersTask(
-          streams.value.cacheDirectory,
-          headerSources.value.toList ++
-          headerResources.value.toList,
-          headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
-          headerMappings.value,
-          headerEmptyLine.value,
-          streams.value.log
-        ),
+        streams.value.cacheDirectory,
+        headerSources.value.toList ++
+        headerResources.value.toList,
+        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
+        headerMappings.value,
+        headerEmptyLine.value,
+        streams.value.log
+      ),
       headerCreateAll := headerCreate.?.all(
-          ScopeFilter(configurations = inAnyConfiguration)
-        ).value.flatten.flatten.toSet,
+        ScopeFilter(configurations = inAnyConfiguration)
+      ).value.flatten.flatten.toSet,
       headerCheck := checkHeadersTask(
-          headerSources.value.toList ++
-          headerResources.value.toList,
-          headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
-          headerMappings.value,
-          headerEmptyLine.value,
-          streams.value.log
-        ),
+        headerSources.value.toList ++
+        headerResources.value.toList,
+        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
+        headerMappings.value,
+        headerEmptyLine.value,
+        streams.value.log
+      ),
       headerCheckAll := headerCheck.?.all(
-          ScopeFilter(configurations = inAnyConfiguration)
-        ).value.flatten.flatten.toSet
+        ScopeFilter(configurations = inAnyConfiguration)
+      ).value.flatten.flatten.toSet
     )
 
   private def notToBeScopedSettings =
     Vector(
       headerMappings := Map(
-          FileType.scala -> cStyleBlockComment,
-          FileType.java  -> cStyleBlockComment
-        ),
+        FileType.scala -> cStyleBlockComment,
+        FileType.java  -> cStyleBlockComment
+      ),
       headerLicense := LicenseDetection(
-          licenses.value.toList,
-          organizationName.value,
-          startYear.value.map(_.toString),
-          headerLicenseStyle.value
-        ),
+        licenses.value.toList,
+        organizationName.value,
+        startYear.value.map(_.toString),
+        headerLicenseStyle.value
+      ),
       headerLicenseStyle := LicenseStyle.Detailed,
       includeFilter.in(headerSources) := includeFilter.in(unmanagedSources).value,
       excludeFilter.in(headerSources) := excludeFilter.in(unmanagedSources).value,
@@ -204,9 +204,8 @@ object HeaderPlugin extends AutoPlugin {
     }
     val touchedFiles =
       groupFilesByFileTypeAndCommentStyle(files, headerMappings)
-        .flatMap {
-          case ((fileType, commentStyle), groupedFiles) =>
-            groupedFiles.flatMap(createHeader(fileType, commentStyle))
+        .flatMap { case ((fileType, commentStyle), groupedFiles) =>
+          groupedFiles.flatMap(createHeader(fileType, commentStyle))
         }
     if (touchedFiles.nonEmpty)
       log.info(
@@ -234,9 +233,8 @@ object HeaderPlugin extends AutoPlugin {
         .map(_ => file)
     val filesWithoutHeader =
       groupFilesByFileTypeAndCommentStyle(files, headerMappings)
-        .flatMap {
-          case ((fileType, commentStyle), groupedFiles) =>
-            groupedFiles.flatMap(checkHeader(fileType, commentStyle))
+        .flatMap { case ((fileType, commentStyle), groupedFiles) =>
+          groupedFiles.flatMap(checkHeader(fileType, commentStyle))
         }
     if (filesWithoutHeader.nonEmpty)
       throw new MessageOnlyException(
@@ -253,11 +251,10 @@ object HeaderPlugin extends AutoPlugin {
   ) =
     files
       .groupBy(_.extension)
-      .collect {
-        case (Some(ext), groupedFiles) =>
-          headerMappings.collect {
-            case key @ (FileType(`ext`, _), _) => key -> groupedFiles
-          }
+      .collect { case (Some(ext), groupedFiles) =>
+        headerMappings.collect { case key @ (FileType(`ext`, _), _) =>
+          key -> groupedFiles
+        }
       }
       .flatten
 }
