@@ -16,7 +16,7 @@
 
 package de.heikoseeberger.sbtheader
 
-import sbt.{ AutoPlugin, Compile, Configuration, Setting, Test, inConfig }
+import sbt.{ AutoPlugin, Compile, Configuration, Def, Plugins, Setting, Test, inConfig }
 import sbt.Keys.compile
 
 /**
@@ -34,7 +34,9 @@ object AutomateHeaderPlugin extends AutoPlugin {
       }
   }
 
-  override def requires = HeaderPlugin
+  override def requires: Plugins =
+    HeaderPlugin
 
-  override def projectSettings = autoImport.automateHeaderSettings(Compile, Test)
+  override def projectSettings: Seq[Def.Setting[_]] =
+    autoImport.automateHeaderSettings(Compile, Test)
 }

@@ -26,10 +26,6 @@ package object sbtheader {
   type Seq[+A]         = scala.collection.immutable.Seq[A]
   type IndexedSeq[+A]  = scala.collection.immutable.IndexedSeq[A]
 
-  final object FileOps {
-    val extensionPattern: Regex = """.+\.(.+)""".r
-  }
-
   final implicit class FileOps(val file: File) extends AnyVal {
     def extension: Option[String] =
       file.getName match {
@@ -38,5 +34,9 @@ package object sbtheader {
       }
   }
 
-  val newLine: String = System.lineSeparator()
+  private final object FileOps {
+    val extensionPattern: Regex = """.+\.(.+)""".r
+  }
+
+  final val NewLine = System.lineSeparator()
 }

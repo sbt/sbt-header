@@ -41,7 +41,6 @@ final class HeaderCreator private (
     log: Logger,
     input: InputStream
 ) {
-
   private val crlf          = """(?s)(?:.*)(\r\n)(?:.*)""".r
   private val cr            = """(?s)(?:.*)(\r)(?:.*)""".r
   private val headerPattern = commentStyle.pattern
@@ -50,36 +49,17 @@ final class HeaderCreator private (
     val fileContent =
       try scala.io.Source.fromInputStream(input)(Codec.UTF8).mkString
       finally input.close()
+
     fileType.firstLinePattern match {
       case Some(pattern) =>
         fileContent match {
           case pattern(first, rest) => (first, rest)
           case other                => ("", other)
         }
-      case _ => ("", fileContent)
+
+      case _ =>
+        ("", fileContent)
     }
-  }
-
-  log.debug(s"First line of file is:$newLine$firstLine")
-  log.debug(s"Text of file is:$newLine$text")
-
-  private val fileNewLine =
-    text match {
-      case crlf(_) => "\r\n"
-      case cr(_)   => "\r"
-      case _       => "\n"
-    }
-
-  private def newHeaderText(existingHeader: Option[String]) = {
-    val suffix     = if (headerEmptyLine) "" else newLine
-    val headerText = commentStyle(license, existingHeader).stripSuffix(suffix)
-    val headerNewLine =
-      headerText match {
-        case crlf(_) => "\r\n"
-        case cr(_)   => "\r"
-        case _       => "\n"
-      }
-    headerText.replace(headerNewLine, fileNewLine)
   }
 
   private val modifiedText =
@@ -88,12 +68,28 @@ final class HeaderCreator private (
         val newText = newHeaderText(Some(existingText))
         if (newText == existingText) None
         else Some(firstLine + newText + body.replaceAll("""^\s+""", "")) // Trim left
-      case body if body.isEmpty => None
+
+      case body if body.isEmpty =>
+        None
+
       case body =>
         Some(firstLine + newHeaderText(None) + body.replaceAll("""^\s+""", "")) // Trim left
     }
-  log.debug(s"Modified text of file is:$newLine$modifiedText")
 
   def createText: Option[String] =
     modifiedText
+
+  private def newHeaderText(existingHeader: Option[String]) = {
+    val suffix        = if (headerEmptyLine) "" else NewLine
+    val headerText    = commentStyle(license, existingHeader).stripSuffix(suffix)
+    val headerNewLine = newLine(headerText)
+    headerText.replace(headerNewLine, newLine(text))
+  }
+
+  private def newLine(s: String) =
+    s match {
+      case crlf(_) => "\r\n"
+      case cr(_)   => "\r"
+      case _       => "\n"
+    }
 }

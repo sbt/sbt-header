@@ -28,7 +28,7 @@ import scala.util.matching.Regex
 final case class CommentStyle(commentCreator: CommentCreator, pattern: Regex) {
 
   def apply(licenseText: String, existingHeader: Option[String]): String =
-    commentCreator(licenseText, existingHeader) + newLine + newLine
+    commentCreator(licenseText, existingHeader) + NewLine + NewLine
 
   def apply(license: License, existingHeader: Option[String]): String =
     apply(license.text, existingHeader)
@@ -48,24 +48,28 @@ trait CommentCreator {
 
 object CommentStyle {
 
-  val cStyleBlockComment = CommentStyle(
-    new CommentBlockCreator("/*", " *", " */"),
-    commentBetween("""/\*+""", "*", """\*/""")
-  )
+  val cStyleBlockComment: CommentStyle =
+    CommentStyle(
+      new CommentBlockCreator("/*", " *", " */"),
+      commentBetween("""/\*+""", "*", """\*/""")
+    )
 
-  val cppStyleLineComment = CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
+  val cppStyleLineComment: CommentStyle =
+    CommentStyle(new LineCommentCreator("//"), commentStartingWith("//"))
 
-  val hashLineComment = CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
+  val hashLineComment: CommentStyle =
+    CommentStyle(new LineCommentCreator("#"), commentStartingWith("#"))
 
-  val twirlStyleBlockComment = CommentStyle(
-    new CommentBlockCreator("@*", " *", " *@"),
-    commentBetween("""@\*""", "*", """\*@""")
-  )
+  val twirlStyleBlockComment: CommentStyle =
+    CommentStyle(
+      new CommentBlockCreator("@*", " *", " *@"),
+      commentBetween("""@\*""", "*", """\*@""")
+    )
 
-  val twirlStyleFramedBlockComment =
+  val twirlStyleFramedBlockComment: CommentStyle =
     CommentStyle(TwirlStyleFramedBlockCommentCreator, commentBetween("""@\*+""", "*", """\*@"""))
 
-  val xmlStyleBlockComment =
+  val xmlStyleBlockComment: CommentStyle =
     CommentStyle(new CommentBlockCreator("<!--", "  ", "-->"), commentBetween("<!--", "  ", "-->"))
 
 }
@@ -78,11 +82,11 @@ object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
     def fillLine(line: String) =
       " * " + line + spaces(maxLineLength - line.length) + " *"
 
-    val commentBlock = text.linesIterator.map(fillLine).mkString(newLine)
+    val commentBlock = text.linesIterator.map(fillLine).mkString(NewLine)
     val firstLine    = "@**" + stars(maxLineLength + 2)
     val lastLine     = " " + firstLine.reverse
 
-    firstLine ++ newLine ++ commentBlock ++ newLine ++ lastLine
+    s"$firstLine$NewLine$commentBlock$NewLine$lastLine"
   }
 
   private def spaces(count: Int) = " " * count
@@ -95,11 +99,11 @@ final class LineCommentCreator(linePrefix: String) extends CommentCreator {
   override def apply(text: String, existingText: Option[String]): String = {
     def prependWithLinePrefix(s: String) =
       s match {
-        case ""   => if (!linePrefix.trim.isEmpty) linePrefix else ""
-        case line => linePrefix + " " + line
+        case ""   => if (linePrefix.trim.nonEmpty) linePrefix else ""
+        case line => s"$linePrefix $line"
       }
 
-    text.linesIterator.map(prependWithLinePrefix).mkString(newLine)
+    text.linesIterator.map(prependWithLinePrefix).mkString(NewLine)
   }
 }
 
@@ -108,10 +112,13 @@ final class CommentBlockCreator(blockPrefix: String, linePrefix: String, blockSu
 
   private val lineCommentCreator = new LineCommentCreator(linePrefix)
 
-  def apply(text: String, existingText: Option[String]): String =
-    blockPrefix + newLine + lineCommentCreator(text) + newLine + blockSuffix
+  def apply(text: String, existingText: Option[String]): String = {
+    val lineComment = lineCommentCreator(text)
+    s"$blockPrefix$NewLine$lineComment$NewLine$blockSuffix"
+  }
 }
 
 object IdentityCommentCreator extends CommentCreator {
-  override def apply(text: String, existingText: Option[String]) = text
+  override def apply(text: String, existingText: Option[String]): String =
+    text
 }
