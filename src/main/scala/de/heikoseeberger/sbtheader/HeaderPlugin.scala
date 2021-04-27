@@ -68,9 +68,10 @@ object HeaderPlugin extends AutoPlugin {
         "The license to apply to files; None by default (enabling auto detection from project settings)"
       )
 
-    val headerLicenseStyle: SettingKey[LicenseStyle] = settingKey[LicenseStyle] {
-      "The license style to be used. Can be `Detailed` or `SpdxSyntax`. Defaults to Detailed."
-    }
+    val headerLicenseStyle: SettingKey[LicenseStyle] =
+      settingKey[LicenseStyle] {
+        "The license style to be used. Can be `Detailed` or `SpdxSyntax`. Defaults to Detailed."
+      }
 
     val headerMappings: SettingKey[Map[FileType, CommentStyle]] =
       settingKey(
@@ -115,14 +116,14 @@ object HeaderPlugin extends AutoPlugin {
   private def toBeScopedSettings =
     Vector(
       headerSources := collectFiles(
-        unmanagedSourceDirectories.in(headerCreate),
-        includeFilter.in(headerSources),
-        excludeFilter.in(headerSources)
+        headerCreate / unmanagedSourceDirectories,
+        headerSources / includeFilter,
+        headerSources / excludeFilter
       ).value,
       headerResources := collectFiles(
-        unmanagedResourceDirectories.in(headerCreate),
-        includeFilter.in(headerResources),
-        excludeFilter.in(headerResources)
+        headerCreate / unmanagedResourceDirectories,
+        headerResources / includeFilter,
+        headerResources / excludeFilter
       ).value,
       headerCreate := createHeadersTask(
         streams.value.cacheDirectory,
@@ -162,10 +163,10 @@ object HeaderPlugin extends AutoPlugin {
         headerLicenseStyle.value
       ),
       headerLicenseStyle := LicenseStyle.Detailed,
-      includeFilter.in(headerSources) := includeFilter.in(unmanagedSources).value,
-      excludeFilter.in(headerSources) := excludeFilter.in(unmanagedSources).value,
-      includeFilter.in(headerResources) := includeFilter.in(unmanagedResources).value,
-      excludeFilter.in(headerResources) := excludeFilter.in(unmanagedResources).value
+      headerSources / includeFilter := (unmanagedSources / includeFilter).value,
+      headerSources / excludeFilter := (unmanagedSources / excludeFilter).value,
+      headerResources / includeFilter := (unmanagedResources / includeFilter).value,
+      headerResources / excludeFilter := (unmanagedResources / excludeFilter).value
     )
 
   private def createHeadersTask(
@@ -209,7 +210,7 @@ object HeaderPlugin extends AutoPlugin {
         }
     if (touchedFiles.nonEmpty)
       log.info(
-        s"Headers created for ${touchedFiles.size} files:$newLine  ${touchedFiles.mkString(s"$newLine  ")}"
+        s"Headers created for ${touchedFiles.size} files:$NewLine  ${touchedFiles.mkString(s"$NewLine  ")}"
       )
     touchedFiles.toSet
   }
@@ -239,7 +240,7 @@ object HeaderPlugin extends AutoPlugin {
     if (filesWithoutHeader.nonEmpty)
       throw new MessageOnlyException(
         s"""|There are files without headers!
-            |  ${filesWithoutHeader.mkString(s"$newLine  ")}
+            |  ${filesWithoutHeader.mkString(s"$NewLine  ")}
             |""".stripMargin
       )
     else Nil

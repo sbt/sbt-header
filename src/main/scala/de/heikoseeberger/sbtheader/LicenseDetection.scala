@@ -30,10 +30,11 @@ object LicenseDetection {
       startYear: Option[String],
       licenseStyle: LicenseStyle = LicenseStyle.Detailed
   ): Option[License] = {
-    val licenseName = licenses match {
-      case (name, _) :: Nil => Some(name)
-      case _                => None
-    }
+    val licenseName =
+      licenses match {
+        case (name, _) :: Nil => Some(name)
+        case _                => None
+      }
 
     for {
       name    <- licenseName

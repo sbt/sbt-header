@@ -45,7 +45,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r\n") + fileContent
+          header.replace(NewLine, "\r\n") + fileContent
         )
       }
 
@@ -54,7 +54,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r\n") + fileContent
+          header.replace(NewLine, "\r\n") + fileContent
         )
       }
     }
@@ -68,7 +68,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(NewLine, "\n") + fileContent
         )
       }
 
@@ -77,7 +77,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(NewLine, "\n") + fileContent
         )
       }
     }
@@ -89,7 +89,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\r") + fileContent
+          header.replace(NewLine, "\r") + fileContent
         )
       }
     }
@@ -104,7 +104,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(NewLine, "\n") + fileContent
         )
       }
     }
@@ -117,14 +117,14 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val header      = hashLineComment(licenseText)
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          header.replace(newLine, "\n") + fileContent
+          header.replace(NewLine, "\n") + fileContent
         )
       }
     }
 
     "given a file with shebang" should {
 
-      val shebang = "#!/bin/bash" + newLine
+      val shebang = "#!/bin/bash" + NewLine
       val script =
         """|echo Hello World
            |exit 0
@@ -147,7 +147,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
 
     "given an XML file with XML declaration" should {
 
-      val xmlDeclaration = """<?xml version="1.0" encoding="UTF-8"?>""" + newLine
+      val xmlDeclaration = """<?xml version="1.0" encoding="UTF-8"?>""" + NewLine
       val xmlBody =
         """|<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
            |  <parent>
@@ -178,7 +178,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
         val licenseText = "license with UTF-8 chars $ → €\n"
 
         createHeader(fileContent, licenseText) shouldBe Some(
-          hashLineComment(licenseText).replace(newLine, "\n") + fileContent
+          hashLineComment(licenseText).replace(NewLine, "\n") + fileContent
         )
       }
     }

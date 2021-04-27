@@ -22,15 +22,20 @@ final case class FileType(extension: String, firstLinePattern: Option[Regex] = N
 
 object FileType {
 
-  val conf: FileType = FileType("conf")
+  val conf: FileType =
+    FileType("conf")
 
-  val java: FileType = FileType("java")
+  val java: FileType =
+    FileType("java")
 
-  val scala: FileType = FileType("scala")
+  val scala: FileType =
+    FileType("scala")
 
-  val sh: FileType = FileType("sh", Some(firstLinePattern("#!.*")))
+  val sh: FileType =
+    FileType("sh", Some(firstLinePattern("#!.*")))
 
-  val xml: FileType = FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
+  val xml: FileType =
+    FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
 
   private def firstLinePattern(firstLinePattern: String) =
     s"""($firstLinePattern(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
