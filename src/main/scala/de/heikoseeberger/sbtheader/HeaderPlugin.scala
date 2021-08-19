@@ -162,9 +162,9 @@ object HeaderPlugin extends AutoPlugin {
         startYear.value.map(_.toString),
         headerLicenseStyle.value
       ),
-      headerLicenseStyle := LicenseStyle.Detailed,
-      headerSources / includeFilter := (unmanagedSources / includeFilter).value,
-      headerSources / excludeFilter := (unmanagedSources / excludeFilter).value,
+      headerLicenseStyle              := LicenseStyle.Detailed,
+      headerSources / includeFilter   := (unmanagedSources / includeFilter).value,
+      headerSources / excludeFilter   := (unmanagedSources / excludeFilter).value,
       headerResources / includeFilter := (unmanagedResources / includeFilter).value,
       headerResources / excludeFilter := (unmanagedResources / excludeFilter).value
     )
