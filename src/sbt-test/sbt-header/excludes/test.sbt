@@ -19,7 +19,7 @@ checkFiles := {
   // Check list of source files to process
 
   val nonHeaderCreateSources = unmanagedSources.in(Compile).value
-  val headerCreateSources = headerSources.in(Compile).value
+  val headerCreateSources    = headerSources.in(Compile).value
 
   def assertPathSetEquality(a: Seq[File], b: Seq[File], failureMessage: String): Unit = {
     val aSet = a.map(_.getCanonicalPath).toSet
@@ -27,8 +27,7 @@ checkFiles := {
     if (aSet != bSet) {
       val abDiff = a diff b
       val baDiff = b diff a
-      sys.error(
-        s"""|$failureMessage.
+      sys.error(s"""|$failureMessage.
             |  actual: $aSet
             |  expected: $bSet
             |  actual - expected: $abDiff
@@ -41,16 +40,20 @@ checkFiles := {
   assertPathSetEquality(
     nonHeaderCreateSources,
     (includeFiles ++ excludeFiles).map(new File(_)),
-    "Expected source files for other (non-headerCreate) tasks to match include and exclude files.")
+    "Expected source files for other (non-headerCreate) tasks to match include and exclude files."
+  )
   assertPathSetEquality(
     headerCreateSources,
     includeFiles.map(new File(_)),
-    "Expected source files for headerCreate task to match include files only.")
+    "Expected source files for headerCreate task to match include files only."
+  )
 
   // Check contents of files
 
-  val expectedExcludedFile = (resourceDirectory.in(Compile).value / "Excluded.scala_expected").toString
-  val expectedIncludedFile = (resourceDirectory.in(Compile).value / "Included.scala_expected").toString
+  val expectedExcludedFile =
+    (resourceDirectory.in(Compile).value / "Excluded.scala_expected").toString
+  val expectedIncludedFile =
+    (resourceDirectory.in(Compile).value / "Included.scala_expected").toString
 
   checkFileContents(excludeFiles, expectedExcludedFile)
   checkFileContents(includeFiles, expectedIncludedFile)
@@ -60,9 +63,9 @@ checkFiles := {
 
     filePaths.foreach { actualPath =>
       val actual = scala.io.Source.fromFile(actualPath).mkString
-  
-      if (actual != expected) sys.error(
-        s"""|Actual file contents do not match expected file contents!
+
+      if (actual != expected)
+        sys.error(s"""|Actual file contents do not match expected file contents!
             |  actual:   $actualPath
             |  expected: $expectedPath
             |""".stripMargin)

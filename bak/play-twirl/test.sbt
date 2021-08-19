@@ -1,6 +1,6 @@
 import play.twirl.sbt.Import.TwirlKeys
 
-headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
+headerLicense  := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 headerMappings := Map(HeaderFileType("html") -> HeaderCommentStyle.TwirlStyleFramedBlockComment)
 
 unmanagedSources.in(Compile, headerCreate) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
@@ -11,14 +11,13 @@ checkFileContents := {
   checkFile("views/main.scala.html")
 
   def checkFile(name: String) = {
-    val actualPath = (scalaSource.in(Compile).value / name).toString
+    val actualPath   = (scalaSource.in(Compile).value / name).toString
     val expectedPath = (scalaSource.in(Compile).value / (name + "_expected")).toString
 
-    val actual = scala.io.Source.fromFile(actualPath).mkString
+    val actual   = scala.io.Source.fromFile(actualPath).mkString
     val expected = scala.io.Source.fromFile(expectedPath).mkString
 
-    if (actual != expected) sys.error(
-      s"""|Actual file contents do not match expected file contents!
+    if (actual != expected) sys.error(s"""|Actual file contents do not match expected file contents!
           |  expected: $expectedPath
           |$expected
           |

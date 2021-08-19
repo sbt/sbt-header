@@ -38,22 +38,23 @@ lazy val commonSettings =
   Seq(
     // scalaVersion from .travis.yml via sbt-travisci
     // scalaVersion := "2.12.3",
-    organization := "de.heikoseeberger",
+    organization     := "de.heikoseeberger",
     organizationName := "Heiko Seeberger",
-    startYear := Some(2015),
+    startYear        := Some(2015),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
       "-language:_",
       "-target:jvm-1.8",
-      "-encoding", "UTF-8",
+      "-encoding",
+      "UTF-8",
       "-Ywarn-unused:imports",
     ),
     Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
-    Test / unmanagedSourceDirectories := Seq((Test / scalaSource).value),
-    publishMavenStyle := false,
-)
+    Test / unmanagedSourceDirectories    := Seq((Test / scalaSource).value),
+    publishMavenStyle                    := false,
+  )
 
 lazy val scalafmtSettings =
   Seq(

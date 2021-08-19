@@ -63,7 +63,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body   = """|class Foo {
+      val body = """|class Foo {
                       |  val bar = "bar"
                       |}
                       |""".stripMargin
@@ -76,7 +76,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body   = """|/**
+      val body = """|/**
                       |  * ScalaDoc for Foo
                       |  */
                       |class Foo {
@@ -92,7 +92,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2
                       | */
                       |""".stripMargin
-      val body   = """|/**
+      val body = """|/**
                       |  * ScalaDoc for Foo
                       |  */
                       |class Foo {
@@ -139,7 +139,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       |// comment/2
                       |
                       |""".stripMargin
-      val body   = """|def foo(bar):
+      val body = """|def foo(bar):
                       |    print(bar)
                       |""".stripMargin
       cppStyleLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
@@ -182,7 +182,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       |# comment/2
                       |
                       |""".stripMargin
-      val body   = """|def foo(bar):
+      val body = """|def foo(bar):
                       |    print(bar)
                       |""".stripMargin
       hashLineComment.pattern.unapplySeq(header + body) shouldBe Some(List(header, body))
@@ -228,7 +228,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2
                       | *@
                       |""".stripMargin
-      val body   = """|@main("Welcome to Play") {
+      val body = """|@main("Welcome to Play") {
                       |
                       |    @*
                       |     * Get an `Html` object by calling the built-in Play welcome
@@ -247,7 +247,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2
                       | *@
                       |""".stripMargin
-      val body   = """|@*************************
+      val body = """|@*************************
                       | * A twirl block comment *
                       | *************************@
                       |@main("Welcome to Play") {
@@ -303,7 +303,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body   = """|@(name: String)
+      val body = """|@(name: String)
                       |
                       |<h1>Hello @name!</h1>
                       |""".stripMargin
@@ -318,7 +318,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body   = """|@*****************
+      val body = """|@*****************
                       | * Twirl comment *
                       | *****************@
                       |@(name: String)
@@ -337,7 +337,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       | * comment/2 *
                       | *************@
                       |""".stripMargin
-      val body   = """|@*
+      val body = """|@*
                       | * Twirl comment
                       | *@
                       |@(name: String)
@@ -390,7 +390,7 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
                       |   comment/2
                       |-->
                       |""".stripMargin
-      val body   = """|<order>
+      val body = """|<order>
                       |  <item quantity="5" name="Bottle of Beer" />
                       |</order>
                       |""".stripMargin
