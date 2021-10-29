@@ -109,7 +109,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
       }
     }
 
-    //Due to java bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8028387
+    // Due to java bug http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8028387
     "given a large file with a lot of lf endings" should {
       "produce a file with lf line endings from a header with lf line endings" in {
         val fileContent = "this is a file with lf endings\n" * 50
