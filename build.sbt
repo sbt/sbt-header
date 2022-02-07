@@ -53,7 +53,6 @@ lazy val commonSettings =
     ),
     Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
     Test / unmanagedSourceDirectories    := Seq((Test / scalaSource).value),
-    publishMavenStyle                    := false,
   )
 
 lazy val scalafmtSettings =
