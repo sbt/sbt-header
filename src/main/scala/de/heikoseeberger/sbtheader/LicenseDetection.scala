@@ -29,6 +29,15 @@ object LicenseDetection {
       organizationName: String,
       startYear: Option[String],
       licenseStyle: LicenseStyle = LicenseStyle.Detailed
+  ): Option[License] =
+    apply(licenses, organizationName, startYear.map(_.toInt), None, licenseStyle)
+
+  private[sbtheader] def apply(
+      licenses: Seq[(String, URL)],
+      organizationName: String,
+      startYear: Option[Int],
+      endYear: Option[Int],
+      licenseStyle: LicenseStyle
   ): Option[License] = {
     val licenseName =
       licenses match {
@@ -39,7 +48,14 @@ object LicenseDetection {
     for {
       name    <- licenseName
       license <- spdxMapping.get(name)
-      year    <- startYear
+      year    <- combineYears(startYear, endYear)
     } yield license(year, organizationName, licenseStyle)
   }
+
+  private def combineYears(startYear: Option[Int], endYear: Option[Int]): Option[String] =
+    (startYear, endYear) match {
+      case (Some(start), Some(end)) if start < end => Some(s"$start-$end")
+      case (Some(start), _)                        => Some(start.toString)
+      case (None, _)                               => None
+    }
 }

@@ -63,6 +63,11 @@ object HeaderPlugin extends AutoPlugin {
 
     val HeaderCommentStyle = CommentStyle
 
+    val headerEndYear: SettingKey[Option[Int]] =
+      settingKey(
+        "The end of the range of years to specify in the header. Defaults to None (only the `startYear` is used)."
+      )
+
     val headerLicense: SettingKey[Option[License]] =
       settingKey(
         "The license to apply to files; None by default (enabling auto detection from project settings)"
@@ -159,9 +164,11 @@ object HeaderPlugin extends AutoPlugin {
       headerLicense := LicenseDetection(
         licenses.value.toList,
         organizationName.value,
-        startYear.value.map(_.toString),
+        startYear.value,
+        headerEndYear.value,
         headerLicenseStyle.value
       ),
+      headerEndYear                   := None,
       headerLicenseStyle              := LicenseStyle.Detailed,
       headerSources / includeFilter   := (unmanagedSources / includeFilter).value,
       headerSources / excludeFilter   := (unmanagedSources / excludeFilter).value,
