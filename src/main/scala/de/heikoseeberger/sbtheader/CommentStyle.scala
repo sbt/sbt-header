@@ -94,7 +94,7 @@ object TwirlStyleFramedBlockCommentCreator extends CommentCreator {
   private def stars(count: Int) = "*" * count
 }
 
-final class LineCommentCreator(linePrefix: String) extends CommentCreator {
+final class LineCommentCreator(linePrefix: String, lineSuffix: String = "") extends CommentCreator {
 
   override def apply(text: String, existingText: Option[String]): String = {
     def prependWithLinePrefix(s: String) =
@@ -102,8 +102,14 @@ final class LineCommentCreator(linePrefix: String) extends CommentCreator {
         case ""   => if (linePrefix.trim.nonEmpty) linePrefix else ""
         case line => s"$linePrefix $line"
       }
+    def appendLineSuffix(s: String) =
+      s match {
+        case "" => ""
+        case line => // Only add the suffix when a prefix was added before
+          if (linePrefix.trim.nonEmpty && lineSuffix.trim.nonEmpty) s"$line $lineSuffix" else line
+      }
 
-    text.linesIterator.map(prependWithLinePrefix).mkString(NewLine)
+    text.linesIterator.map(prependWithLinePrefix).map(appendLineSuffix).mkString(NewLine)
   }
 }
 
