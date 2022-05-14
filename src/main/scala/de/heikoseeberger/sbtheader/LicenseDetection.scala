@@ -32,8 +32,8 @@ object LicenseDetection {
   ): Option[License] = {
     val licenseName =
       licenses match {
-        case (name, _) :: Nil => Some(name)
-        case _                => None
+        case name, _ :: Nil => Some(name)
+        case _              => None
       }
 
     for {

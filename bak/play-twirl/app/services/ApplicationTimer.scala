@@ -19,7 +19,7 @@ import scala.concurrent.Future
   * [[ApplicationLifecycle]] to register a stop hook.
   */
 @Singleton
-class ApplicationTimer @Inject() (clock: Clock, appLifecycle: ApplicationLifecycle) {
+class ApplicationTimer @Inject(clock: Clock, appLifecycle: ApplicationLifecycle) {
 
   // This code is called when the application starts.
   private val start: Instant = clock.instant

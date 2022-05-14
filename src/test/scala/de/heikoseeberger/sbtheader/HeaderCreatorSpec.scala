@@ -185,7 +185,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
 
     "given a file with an existing copyright year" should {
       val yearPreservingStyle =
-        CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
+        CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator {
           val Pattern: Regex = "(?s).*?(\\d{4}(-\\d{4})?).*".r
           def findYear(header: String): Option[String] =
             header match {
