@@ -18,7 +18,11 @@ package de.heikoseeberger.sbtheader
 
 import scala.util.matching.Regex
 
-final case class FileType(extension: String, firstLinePattern: Option[Regex] = None)
+final case class FileType(
+    extension: String,
+    firstLinePattern: Option[Regex] = None,
+    name: String = ""
+)
 
 object FileType {
 
