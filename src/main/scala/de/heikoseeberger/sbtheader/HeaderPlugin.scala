@@ -259,10 +259,18 @@ object HeaderPlugin extends AutoPlugin {
   ) =
     files
       .groupBy(_.extension)
-      .collect { case (Some(ext), groupedFiles) =>
-        headerMappings.collect { case key @ (FileType(`ext`, _), _) =>
-          key -> groupedFiles
-        }
+      .collect {
+        case (Some(ext), groupedFiles) =>
+          headerMappings.collect {
+            case key @ (FileType(`ext`, _, ""), _) =>
+              key -> groupedFiles.filter(_.isFile)
+            case key @ (FileType(`ext`, _, name), _) =>
+              key -> groupedFiles.filter(file => file.getName == s"$name.$ext" && file.isFile)
+          }
+        case (None, groupedFiles) =>
+          headerMappings.collect { case key @ (FileType("", _, name), _) =>
+            key -> groupedFiles.filter(file => file.getName == name && file.isFile)
+          }
       }
       .flatten
 }
