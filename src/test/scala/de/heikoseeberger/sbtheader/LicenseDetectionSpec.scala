@@ -104,6 +104,32 @@ class LicenseDetectionSpec extends AnyWordSpec with Matchers {
       ).map(_.text) shouldBe Some(expected.text)
     }
 
+    "use only the start year even when end year is set and equal" in {
+      val expected = ALv2(yyyy, organizationName, LicenseStyle.SpdxSyntax)
+
+      LicenseDetection(
+        List(apache),
+        organizationName,
+        startYear.map(_.toInt),
+        startYear.map(_.toInt),
+        LicenseStyle.SpdxSyntax
+      ).map(_.text) shouldBe Some(expected.text)
+    }
+
+    "detect end year when it is set and larger than start year" in {
+      val endYYYY  = yyyy.toInt + 2
+      val endYear  = Some(endYYYY)
+      val expected = ALv2(s"$yyyy-$endYYYY", organizationName, LicenseStyle.SpdxSyntax)
+
+      LicenseDetection(
+        List(apache),
+        organizationName,
+        startYear.map(_.toInt),
+        endYear,
+        LicenseStyle.SpdxSyntax
+      ).map(_.text) shouldBe Some(expected.text)
+    }
+
     licenses.foreach { case (license, sbtLicense) =>
       s"detect ${license.getClass.getSimpleName} license" in {
         LicenseDetection(List(sbtLicense), organizationName, startYear)
