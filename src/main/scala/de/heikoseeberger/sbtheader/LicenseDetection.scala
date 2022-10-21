@@ -32,7 +32,7 @@ object LicenseDetection {
   ): Option[License] =
     apply(licenses, organizationName, startYear.map(_.toInt), None, licenseStyle)
 
-  private[sbtheader] def apply(
+  def apply(
       licenses: Seq[(String, URL)],
       organizationName: String,
       startYear: Option[Int],
