@@ -68,6 +68,11 @@ object HeaderPlugin extends AutoPlugin {
         "The end of the range of years to specify in the header. Defaults to None (only the `startYear` is used)."
       )
 
+    val headerCopyrightOwner: SettingKey[String] =
+      settingKey(
+        "The copyright owner for the header. Defaults to the value for `organizationName`."
+      )
+
     val headerLicense: SettingKey[Option[License]] =
       settingKey(
         "The license to apply to files; None by default (enabling auto detection from project settings)"
@@ -163,11 +168,12 @@ object HeaderPlugin extends AutoPlugin {
       ),
       headerLicense := LicenseDetection(
         licenses.value.toList,
-        organizationName.value,
+        headerCopyrightOwner.value,
         startYear.value,
         headerEndYear.value,
         headerLicenseStyle.value
       ),
+      headerCopyrightOwner            := organizationName.value,
       headerEndYear                   := None,
       headerLicenseStyle              := LicenseStyle.Detailed,
       headerSources / includeFilter   := (unmanagedSources / includeFilter).value,
