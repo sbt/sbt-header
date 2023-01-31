@@ -160,7 +160,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
            |  <artifactId>my-artifact</artifactId>
            |  <version>1.1-SNAPTHO</version>
            |</project>
-           |""".stripMargin
+           |""".stripMargin * 100
       val licenseText = "Copyright 2015 Heiko Seeberger"
       val header      = hashLineComment(licenseText)
 
