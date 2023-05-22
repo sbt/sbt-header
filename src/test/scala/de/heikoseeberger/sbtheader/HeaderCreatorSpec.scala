@@ -221,7 +221,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
     }
 
     "given a file without an empty line between the header and the body" should {
-      "preserve the file without the empty line" in {
+      "preserve the file with C style without the empty line" in {
         val fileContent = """/*
           | * Copyright 2017 MyCorp, Inc <https://mycorp.com>
           | */
@@ -232,6 +232,34 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
           fileContent = fileContent,
           header = "Copyright 2017 MyCorp, Inc <https://mycorp.com>",
           commentCreator = CommentStyle.cStyleBlockComment,
+          headerEmptyLine = false
+        ) shouldBe None
+      }
+
+      "preserve the file with C++ style without the empty line" in {
+        val fileContent =
+          """// Copyright 2017 MyCorp, Inc <https://mycorp.com>
+            |This is the file content
+            |""".stripMargin
+
+        createHeader(
+          fileContent = fileContent,
+          header = "Copyright 2017 MyCorp, Inc <https://mycorp.com>",
+          commentCreator = CommentStyle.cppStyleLineComment,
+          headerEmptyLine = false
+        ) shouldBe None
+      }
+
+      "preserve the file with hash style without the empty line" in {
+        val fileContent =
+          """# Copyright 2017 MyCorp, Inc <https://mycorp.com>
+            |This is the file content
+            |""".stripMargin
+
+        createHeader(
+          fileContent = fileContent,
+          header = "Copyright 2017 MyCorp, Inc <https://mycorp.com>",
+          commentCreator = CommentStyle.hashLineComment,
           headerEmptyLine = false
         ) shouldBe None
       }

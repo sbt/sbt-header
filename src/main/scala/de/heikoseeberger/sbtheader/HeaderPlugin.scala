@@ -56,7 +56,7 @@ object HeaderPlugin extends AutoPlugin {
         raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""".r
 
       def commentStartingWith(start: String): Regex =
-        raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n){2,}|(?:\r){2,}|(?:\r\n){2,})+))(.*)""".r
+        raw"""(?s)((?:$start[^\n\r]*(?:\n|\r|\r\n))*(?:$start[^\n\r]*(?:(?:\n)+|(?:\r)+|(?:\r\n)+)+))(.*)""".r
     }
 
     val HeaderFileType = FileType
