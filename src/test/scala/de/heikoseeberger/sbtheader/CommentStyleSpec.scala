@@ -119,11 +119,10 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
     }
 
     "not match a multiline block comment with a single trailing new line" in {
-      cppStyleLineComment.pattern.unapplySeq(
-        """|// comment/1
-           |// comment/2
-           |""".stripMargin
-      ) shouldBe None
+      val header = """|// comment/1
+                      |// comment/2
+                      |""".stripMargin
+      cppStyleLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines not followed by a body" in {
@@ -161,12 +160,11 @@ class CommentStyleSpec extends AnyWordSpec with Matchers {
       hashLineComment.pattern.unapplySeq("# comment") shouldBe None
     }
 
-    "not match a multiline block comment with a single trailing new line" in {
-      hashLineComment.pattern.unapplySeq(
-        """|# comment/1
-           |# comment/2
-           |""".stripMargin
-      ) shouldBe None
+    "match a multiline block comment with a single trailing new line" in {
+      val header = """|# comment/1
+                      |# comment/2
+                      |""".stripMargin
+      hashLineComment.pattern.unapplySeq(header) shouldBe Some(List(header, ""))
     }
 
     "match a comment with trailing new lines not followed by a body" in {
