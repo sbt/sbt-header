@@ -42,5 +42,5 @@ object FileType {
     FileType("xml", Some(firstLinePattern("<\\?xml.*\\?>")))
 
   private def firstLinePattern(firstLinePattern: String) =
-    s"""($firstLinePattern(?:\n|(?:\r\n))+)((?:.|\n|(?:\r\n))*)""".r
+    s"""($firstLinePattern(?:\\s+))([\\S\\s]*)""".r
 }
