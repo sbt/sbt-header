@@ -19,8 +19,8 @@ checkFileContents := {
   checkFile(".routes")
 
   def checkFile(name: String) = {
-    val actualPath   = (resourceDirectory.in(Compile).value / name).toString
-    val expectedPath = (resourceDirectory.in(Compile).value / s"${name}_expected").toString
+    val actualPath   = ((Compile / resourceDirectory).value / name).toString
+    val expectedPath = ((Compile / resourceDirectory).value / s"${name}_expected").toString
 
     val actual   = scala.io.Source.fromFile(actualPath).mkString
     val expected = scala.io.Source.fromFile(expectedPath).mkString

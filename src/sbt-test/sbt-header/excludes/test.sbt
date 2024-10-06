@@ -1,25 +1,25 @@
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
-excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
+headerSources / excludeFilter := HiddenFileFilter || "*Excluded.scala"
 
 val checkFiles = taskKey[Unit]("Verify files match expected files")
 checkFiles := {
 
   val includeFiles = Seq(
-    (scalaSource.in(Compile).value / "Included.scala").toString,
-    (scalaSource.in(Compile).value / "de/heikoseeberger/allincluded/Included.scala").toString,
-    (scalaSource.in(Compile).value / "de/heikoseeberger/mixed/Included.scala").toString
+    ((Compile / scalaSource).value / "Included.scala").toString,
+    ((Compile / scalaSource).value / "de/heikoseeberger/allincluded/Included.scala").toString,
+    ((Compile / scalaSource).value / "de/heikoseeberger/mixed/Included.scala").toString
   )
   val excludeFiles = Seq(
-    (scalaSource.in(Compile).value / "Excluded.scala").toString,
-    (scalaSource.in(Compile).value / "de/heikoseeberger/allexcluded/Excluded.scala").toString,
-    (scalaSource.in(Compile).value / "de/heikoseeberger/mixed/Excluded.scala").toString
+    ((Compile / scalaSource).value / "Excluded.scala").toString,
+    ((Compile / scalaSource).value / "de/heikoseeberger/allexcluded/Excluded.scala").toString,
+    ((Compile / scalaSource).value / "de/heikoseeberger/mixed/Excluded.scala").toString
   )
 
   // Check list of source files to process
 
-  val nonHeaderCreateSources = unmanagedSources.in(Compile).value
-  val headerCreateSources    = headerSources.in(Compile).value
+  val nonHeaderCreateSources = (Compile / unmanagedSources).value
+  val headerCreateSources    = (Compile / headerSources).value
 
   def assertPathSetEquality(a: Seq[File], b: Seq[File], failureMessage: String): Unit = {
     val aSet = a.map(_.getCanonicalPath).toSet
@@ -51,9 +51,9 @@ checkFiles := {
   // Check contents of files
 
   val expectedExcludedFile =
-    (resourceDirectory.in(Compile).value / "Excluded.scala_expected").toString
+    ((Compile / resourceDirectory).value / "Excluded.scala_expected").toString
   val expectedIncludedFile =
-    (resourceDirectory.in(Compile).value / "Included.scala_expected").toString
+    ((Compile / resourceDirectory).value / "Included.scala_expected").toString
 
   checkFileContents(excludeFiles, expectedExcludedFile)
   checkFileContents(includeFiles, expectedIncludedFile)

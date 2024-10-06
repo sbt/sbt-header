@@ -11,8 +11,8 @@ checkFileContents := {
   checkFile("views/main.scala.html")
 
   def checkFile(name: String) = {
-    val actualPath   = (scalaSource.in(Compile).value / name).toString
-    val expectedPath = (scalaSource.in(Compile).value / (name + "_expected")).toString
+    val actualPath   = (Compile / scalaSource).value / name).toString
+    val expectedPath = (Compile / scalaSource).value / (name + "_expected")).toString
 
     val actual   = scala.io.Source.fromFile(actualPath).mkString
     val expected = scala.io.Source.fromFile(expectedPath).mkString

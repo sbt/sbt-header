@@ -11,8 +11,8 @@ stripHeader := {
   stripHeader("HasHeader.scala")
 
   def stripHeader(name: String) = {
-    val actualPath    = (scalaSource.in(Compile).value / name).toString
-    val headerDropped = (resourceDirectory.in(Compile).value / s"${name}_headerdropped").toString
+    val actualPath    = ((Compile / scalaSource).value / name).toString
+    val headerDropped = ((Compile / resourceDirectory).value / s"${name}_headerdropped").toString
 
     Files.delete(file(actualPath).toPath)
     Files.copy(file(headerDropped).toPath, file(actualPath).toPath)
@@ -24,8 +24,8 @@ checkFileContents := {
   checkFile("HasNoHeader.scala")
 
   def checkFile(name: String) = {
-    val actualPath   = (scalaSource.in(Compile).value / name).toString
-    val expectedPath = (resourceDirectory.in(Compile).value / s"${name}_expected").toString
+    val actualPath   = ((Compile / scalaSource).value / name).toString
+    val expectedPath = ((Compile / resourceDirectory).value / s"${name}_expected").toString
 
     val actual   = scala.io.Source.fromFile(actualPath).mkString
     val expected = scala.io.Source.fromFile(expectedPath).mkString
@@ -41,6 +41,6 @@ checkFileContents := {
 }
 
 removeFile := {
-  val actualPath = scalaSource.in(Compile).value / "HasNoHeader.scala"
+  val actualPath = (Compile / scalaSource).value / "HasNoHeader.scala"
   Files.delete(actualPath.toPath)
 }
