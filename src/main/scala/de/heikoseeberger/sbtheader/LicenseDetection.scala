@@ -17,12 +17,11 @@
 package de.heikoseeberger.sbtheader
 
 import sbt.URL
-import scala.collection.breakOut
 
 object LicenseDetection {
 
-  private val spdxMapping =
-    License.spdxLicenses.map(l => (l.spdxIdentifier, l))(breakOut): Map[String, SpdxLicense]
+  private val spdxMapping: Map[String, SpdxLicense] =
+    License.spdxLicenses.iterator.map(l => (l.spdxIdentifier, l)).toMap
 
   def apply(
       licenses: Seq[(String, URL)],
