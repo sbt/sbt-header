@@ -34,7 +34,7 @@ package object sbtheader {
       }
   }
 
-  private final object FileOps {
+  private object FileOps {
     val extensionPattern: Regex = """.+\.(.+)""".r
   }
 
