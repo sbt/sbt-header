@@ -54,6 +54,18 @@ lazy val `sbt-header` =
         "-Xmx1024M",
         s"-Dplugin.version=${version.value}",
       ),
+      (pluginCrossBuild / sbtVersion) := {
+        scalaBinaryVersion.value match {
+          case "2.12" => "1.5.8"
+          case _      => "2.0.0-RC4"
+        }
+      },
+      scriptedSbt := {
+        scalaBinaryVersion.value match {
+          case "2.12" => "1.11.6"
+          case _      => (pluginCrossBuild / sbtVersion).value
+        }
+      },
     )
 
 // *****************************************************************************
