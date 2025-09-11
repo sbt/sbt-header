@@ -47,13 +47,15 @@ lazy val `sbt-header` =
     .enablePlugins(AutomateHeaderPlugin, SbtPlugin)
     .settings(commonSettings)
     .settings(
-      headerLicense := Some(HeaderLicense.Custom(
-        """|Copyright (c) 2015 - 2025, Heiko Seeberger
-           |Copyright (c) 2025, sbt plugin contributors
-           |
-           |SPDX-License-Identifier: Apache-2.0
-           |""".stripMargin
-      )),
+      headerLicense := Some(
+        HeaderLicense.Custom(
+          """|Copyright (c) 2015 - 2025, Heiko Seeberger
+             |Copyright (c) 2025, sbt plugin contributors
+             |
+             |SPDX-License-Identifier: Apache-2.0
+             |""".stripMargin
+        )
+      ),
       libraryDependencies ++= Seq(
         library.scalaTest % Test,
       ),

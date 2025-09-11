@@ -22,4 +22,4 @@ jobs:
           java-version: 8
           cache: sbt
       - uses: sbt/setup-sbt@v1
-      - run: sbt -v +scripted
+      - run: sbt -v scalafmtSbtCheck +scalafmtCheckAll +scripted
