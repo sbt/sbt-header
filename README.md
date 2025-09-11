@@ -9,7 +9,7 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.6.0") // Check the latest version above or look at the release tags
+addSbtPlugin("com.github.sbt" % "sbt-header" % "5.6.0") // Check the latest version above or look at the release tags
 ```
 
 Then in your `build.sbt` configure the following settings:
@@ -71,7 +71,7 @@ This will also be given precedence if a license has been auto detected from proj
 
 ### Build in licenses
 
-The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/License.scala). They can either be detected using their SPDX identifier or by setting them explicitly.
+The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/sbtheader/License.scala). They can either be detected using their SPDX identifier or by setting them explicitly.
 
 |License|SPDX identifier|
 |-------|---------------|
@@ -132,7 +132,7 @@ Note that you don't need to add comment markers like `//` or `/*`. The comment s
 
 ### Configuring comment styles
 
-Comment styles are configured on a per file type basis. The default is to apply C Style block comments to Scala and Java files. No other comment styles are predefined. If you want to create comments for example for your XML files, you have to add the corresponding mapping manually (see below). The build-in comment styles are defined in [CommentStyle](https://github.com/sbt/sbt-header/blob/master/src/main/scala/de/heikoseeberger/sbtheader/CommentStyle.scala):
+Comment styles are configured on a per file type basis. The default is to apply C Style block comments to Scala and Java files. No other comment styles are predefined. If you want to create comments for example for your XML files, you have to add the corresponding mapping manually (see below). The build-in comment styles are defined in [CommentStyle](https://github.com/sbt/sbt-header/blob/master/src/main/scala/sbtheader/CommentStyle.scala):
 
 |Name|Description|
 |----|-----------|
@@ -191,7 +191,7 @@ headerEmptyLine := false
 If your build uses an auto plugin for common settings, make sure to add `HeaderPlugin` to `requires`:
 
 ``` scala
-import de.heikoseeberger.sbtheader.HeaderPlugin
+import sbtheader.HeaderPlugin
 
 object Build extends AutoPlugin {
   override def requires = ... && HeaderPlugin
@@ -235,7 +235,7 @@ project), the Twirl templates have to be added to the sources handled by sbt-hea
 definition:
 
 ```scala
-import de.heikoseeberger.sbtheader.FileType
+import sbtheader.FileType
 import play.twirl.sbt.Import.TwirlKeys
 
 headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.twirlStyleBlockComment)

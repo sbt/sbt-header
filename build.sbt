@@ -4,10 +4,10 @@
 
 inThisBuild(
   Seq(
-    organization     := "de.heikoseeberger",
-    organizationName := "Heiko Seeberger",
+    organization     := "com.github.sbt",
+    organizationName := "sbt plugins contributors",
     startYear        := Some(2015),
-    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+    licenses += License.Apache2,
     homepage := Some(url("https://github.com/sbt/sbt-header")),
     scmInfo := Some(
       ScmInfo(
@@ -47,6 +47,13 @@ lazy val `sbt-header` =
     .enablePlugins(AutomateHeaderPlugin, SbtPlugin)
     .settings(commonSettings)
     .settings(
+      headerLicense := Some(HeaderLicense.Custom(
+        """|Copyright (c) 2015 - 2025, Heiko Seeberger
+           |Copyright (c) 2025, sbt plugin contributors
+           |
+           |SPDX-License-Identifier: Apache-2.0
+           |""".stripMargin
+      )),
       libraryDependencies ++= Seq(
         library.scalaTest % Test,
       ),
