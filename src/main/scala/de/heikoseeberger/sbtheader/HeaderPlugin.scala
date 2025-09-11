@@ -73,6 +73,11 @@ object HeaderPlugin extends AutoPlugin {
         "The license to apply to files; None by default (enabling auto detection from project settings)"
       )
 
+    val headerLicenseFallback: SettingKey[Option[License]] =
+      settingKey(
+        "The license crated by auto detection from the project settings"
+      )
+
     val headerLicenseStyle: SettingKey[LicenseStyle] =
       settingKey[LicenseStyle] {
         "The license style to be used. Can be `Detailed` or `SpdxSyntax`. Defaults to Detailed."
@@ -114,7 +119,16 @@ object HeaderPlugin extends AutoPlugin {
 
   override def requires = JvmPlugin
 
-  override def globalSettings = Vector(headerEmptyLine := true)
+  override def globalSettings = Vector(
+    headerEmptyLine    := true,
+    headerEndYear      := None,
+    headerLicenseStyle := LicenseStyle.Detailed,
+    headerMappings := Map(
+      FileType.scala -> cStyleBlockComment,
+      FileType.java  -> cStyleBlockComment
+    ),
+    headerLicense := None,
+  )
 
   override def projectSettings = notToBeScopedSettings ++ headerSettings(Compile, Test)
 
@@ -130,26 +144,36 @@ object HeaderPlugin extends AutoPlugin {
         headerResources / includeFilter,
         headerResources / excludeFilter
       ).value,
-      headerCreate := createHeadersTask(
-        streams.value.cacheDirectory,
-        headerSources.value.toList ++
-        headerResources.value.toList,
-        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
-        headerMappings.value,
-        headerEmptyLine.value,
-        streams.value.log
-      ),
+      headerCreate := {
+        val fallback = headerLicenseFallback.value
+        createHeadersTask(
+          streams.value.cacheDirectory,
+          headerSources.value.toList ++
+          headerResources.value.toList,
+          headerLicense.value
+            .orElse(fallback)
+            .getOrElse(sys.error("Unable to auto detect project license")),
+          headerMappings.value,
+          headerEmptyLine.value,
+          streams.value.log
+        )
+      },
       headerCreateAll := headerCreate.?.all(
         ScopeFilter(configurations = inAnyConfiguration)
       ).value.flatten.flatten.toSet,
-      headerCheck := checkHeadersTask(
-        headerSources.value.toList ++
-        headerResources.value.toList,
-        headerLicense.value.getOrElse(sys.error("Unable to auto detect project license")),
-        headerMappings.value,
-        headerEmptyLine.value,
-        streams.value.log
-      ),
+      headerCheck := {
+        val fallback = headerLicenseFallback.value
+        checkHeadersTask(
+          headerSources.value.toList ++
+          headerResources.value.toList,
+          headerLicense.value
+            .orElse(fallback)
+            .getOrElse(sys.error("Unable to auto detect project license")),
+          headerMappings.value,
+          headerEmptyLine.value,
+          streams.value.log
+        )
+      },
       headerCheckAll := headerCheck.?.all(
         ScopeFilter(configurations = inAnyConfiguration)
       ).value.flatten.flatten.toSet
@@ -157,19 +181,13 @@ object HeaderPlugin extends AutoPlugin {
 
   private def notToBeScopedSettings =
     Vector(
-      headerMappings := Map(
-        FileType.scala -> cStyleBlockComment,
-        FileType.java  -> cStyleBlockComment
-      ),
-      headerLicense := LicenseDetection(
+      headerLicenseFallback := LicenseDetection(
         licenses.value.toList,
         organizationName.value,
         startYear.value,
         headerEndYear.value,
         headerLicenseStyle.value
       ),
-      headerEndYear                   := None,
-      headerLicenseStyle              := LicenseStyle.Detailed,
       headerSources / includeFilter   := (unmanagedSources / includeFilter).value,
       headerSources / excludeFilter   := (unmanagedSources / excludeFilter).value,
       headerResources / includeFilter := (unmanagedResources / includeFilter).value,
