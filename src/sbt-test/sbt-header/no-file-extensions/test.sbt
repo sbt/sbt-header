@@ -1,15 +1,26 @@
 headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
 // Files named exactly "routes" (with no extension)
-headerMappings := headerMappings.value + (HeaderFileType("", None, "routes") -> HeaderCommentStyle.hashLineComment)
+headerMappings := headerMappings.value + (HeaderFileType(
+  "",
+  None,
+  "routes"
+) -> HeaderCommentStyle.hashLineComment)
 // Files named exactly "more.routes"
-headerMappings := headerMappings.value + (HeaderFileType("routes", None, "more") -> HeaderCommentStyle.cStyleBlockComment)
+headerMappings := headerMappings.value + (HeaderFileType(
+  "routes",
+  None,
+  "more"
+) -> HeaderCommentStyle.cStyleBlockComment)
 // Hidden files named exactly ".routes"
-headerMappings := headerMappings.value + (HeaderFileType("", None, ".routes") -> HeaderCommentStyle.cppStyleLineComment)
+headerMappings := headerMappings.value + (HeaderFileType(
+  "",
+  None,
+  ".routes"
+) -> HeaderCommentStyle.cppStyleLineComment)
 
 // Do not exclude hidden files (.filename)
 unmanagedResources / excludeFilter := (_ => false)
-
 
 val checkFileContents = taskKey[Unit]("Verify file contents match expected contents")
 
