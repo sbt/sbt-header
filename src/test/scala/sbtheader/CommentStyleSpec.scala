@@ -7,7 +7,7 @@
 
 package sbtheader
 
-import sbtheader.CommentStyle._
+import sbtheader.CommentStyle.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

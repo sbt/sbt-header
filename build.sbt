@@ -2,14 +2,18 @@
 // Build settings
 // *****************************************************************************
 
+val scala212 = "2.12.20"
+val scala3   = "3.7.2"
+
 inThisBuild(
   Seq(
-    organization     := "com.github.sbt",
-    organizationName := "sbt plugins contributors",
-    startYear        := Some(2015),
+    crossScalaVersions := List(scala212, scala3),
+    organization       := "com.github.sbt",
+    organizationName   := "sbt plugins contributors",
+    startYear          := Some(2015),
     licenses += License.Apache2,
     homepage := Some(url("https://github.com/sbt/sbt-header")),
-    scmInfo := Some(
+    scmInfo  := Some(
       ScmInfo(
         url("https://github.com/sbt/sbt-header"),
         "git@github.com:sbt/sbt-header.git"
@@ -23,17 +27,26 @@ inThisBuild(
         url("https://github.com/hseeberger")
       )
     ),
-    // scalaVersion defined by sbt
-    scalacOptions ++= Seq(
+    scalacOptions ++= List(
       "-unchecked",
       "-deprecation",
       "-encoding",
       "UTF-8",
-      "-Ywarn-unused:imports",
-      "-Xsource:3",
     ),
-    scalafmtOnCompile := true,
-    dynverSeparator   := "_", // the default `+` is not compatible with docker tags
+    scalacOptions ++= {
+      scalaBinaryVersion.value match {
+        case "2.12" =>
+          List("-Ywarn-unused:imports", "-Xsource:3")
+        case _ => Nil
+      }
+    },
+    scalafmtOnCompile := {
+      scalaBinaryVersion.value match {
+        case "2.12" => true
+        case _      => false
+      }
+    },
+    dynverSeparator := "_", // the default `+` is not compatible with docker tags
   )
 )
 
@@ -65,7 +78,7 @@ lazy val `sbt-header` =
       ),
       (pluginCrossBuild / sbtVersion) := {
         scalaBinaryVersion.value match {
-          case "2.12" => "1.5.8"
+          case "2.12" => "1.9.9"
           case _      => "2.0.0-RC4"
         }
       },

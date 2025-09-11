@@ -22,7 +22,7 @@ object HeaderPlugin extends AutoPlugin {
 
   object autoImport {
 
-    val HeaderLicense = License
+    val HeaderLicense = sbtheader.License
 
     val HeaderLicenseStyle = LicenseStyle
 
@@ -44,12 +44,12 @@ object HeaderPlugin extends AutoPlugin {
         "The end of the range of years to specify in the header. Defaults to None (only the `startYear` is used)."
       )
 
-    val headerLicense: SettingKey[Option[License]] =
+    val headerLicense: SettingKey[Option[sbtheader.License]] =
       settingKey(
         "The license to apply to files; None by default (enabling auto detection from project settings)"
       )
 
-    val headerLicenseFallback: SettingKey[Option[License]] =
+    val headerLicenseFallback: SettingKey[Option[sbtheader.License]] =
       settingKey(
         "The license crated by auto detection from the project settings"
       )
@@ -68,20 +68,24 @@ object HeaderPlugin extends AutoPlugin {
       settingKey("If an empty line header should be added between the header and the body")
 
     val headerSources =
-      taskKey[scala.collection.Seq[File]]("Sources which need headers checked or created.")
+      taskKey[scala.Seq[File]]("Sources which need headers checked or created.")
 
     val headerResources =
-      taskKey[scala.collection.Seq[File]]("Resources which need headers checked or created.")
+      taskKey[scala.Seq[File]]("Resources which need headers checked or created.")
 
+    @transient
     val headerCreate: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers")
 
+    @transient
     val headerCreateAll: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Create/update headers in all configurations")
 
+    @transient
     val headerCheck: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers")
 
+    @transient
     val headerCheckAll: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers in all configurations")
 
@@ -99,7 +103,7 @@ object HeaderPlugin extends AutoPlugin {
     headerEmptyLine    := true,
     headerEndYear      := None,
     headerLicenseStyle := LicenseStyle.Detailed,
-    headerMappings := Map(
+    headerMappings     := Map(
       FileType.scala -> cStyleBlockComment,
       FileType.java  -> cStyleBlockComment
     ),
@@ -173,7 +177,7 @@ object HeaderPlugin extends AutoPlugin {
   private def createHeadersTask(
       cacheDirectory: File,
       files: Seq[File],
-      headerLicense: License,
+      headerLicense: sbtheader.License,
       headerMappings: Map[FileType, CommentStyle],
       headerEmptyLine: Boolean,
       log: Logger
@@ -186,7 +190,7 @@ object HeaderPlugin extends AutoPlugin {
 
   private def createHeaders(
       files: Set[File],
-      headerLicense: License,
+      headerLicense: sbtheader.License,
       headerMappings: Map[FileType, CommentStyle],
       headerEmptyLine: Boolean,
       log: Logger
@@ -218,7 +222,7 @@ object HeaderPlugin extends AutoPlugin {
 
   private def checkHeadersTask(
       files: Seq[File],
-      headerLicense: License,
+      headerLicense: sbtheader.License,
       headerMappings: Map[FileType, CommentStyle],
       headerEmptyLine: Boolean,
       log: Logger

@@ -9,6 +9,7 @@ package sbtheader
 
 import sbt.{ *, given }
 import sbt.Keys.compile
+import PluginCompat.{ *, given }
 
 /**
   * Enable this plugin to automate header creation/update on compile. By default the `Compile` and
@@ -21,7 +22,11 @@ object AutomateHeaderPlugin extends AutoPlugin {
 
     def automateHeaderSettings(configurations: Configuration*): Seq[Setting[?]] =
       configurations.foldLeft(List.empty[Setting[?]]) {
-        _ ++ inConfig(_)(compile := compile.dependsOn(HeaderPlugin.autoImport.headerCreate).value)
+        _ ++ inConfig(_)(
+          compile := Def.uncached {
+            compile.dependsOn(HeaderPlugin.autoImport.headerCreate).value
+          }
+        )
       }
   }
 
