@@ -18,6 +18,7 @@ package de.heikoseeberger.sbtheader
 
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
 import sbt.URL
+import sbt.url
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -27,47 +28,47 @@ class LicenseDetectionSpec extends AnyWordSpec with Matchers {
   val yyyy             = "2017"
   val startYear        = Some(yyyy)
   val apache: (String, URL) =
-    ("Apache-2.0", new URL("https://spdx.org/licenses/Apache-2.0.html#licenseText"))
-  val mit: (String, URL) = ("MIT", new URL("https://spdx.org/licenses/MIT.html#licenseText"))
+    ("Apache-2.0", url("https://spdx.org/licenses/Apache-2.0.html#licenseText"))
+  val mit: (String, URL) = ("MIT", url("https://spdx.org/licenses/MIT.html#licenseText"))
 
   val licenses: Map[License, (String, URL)] = Map(
-    BSD2Clause(yyyy.toString, organizationName) -> ("BSD-2-Clause", new URL(
+    BSD2Clause(yyyy.toString, organizationName) -> ("BSD-2-Clause", url(
       "https://spdx.org/licenses/BSD-2-Clause.html#licenseText"
     )),
-    BSD3Clause(yyyy.toString, organizationName) -> ("BSD-3-Clause", new URL(
+    BSD3Clause(yyyy.toString, organizationName) -> ("BSD-3-Clause", url(
       "https://spdx.org/licenses/BSD-3-Clause.html#licenseText"
     )),
-    AGPLv3OrLater(yyyy.toString, organizationName) -> ("AGPL-3.0-or-later", new URL(
+    AGPLv3OrLater(yyyy.toString, organizationName) -> ("AGPL-3.0-or-later", url(
       "https://spdx.org/licenses/AGPL-3.0-or-later.html#licenseText"
     )),
-    AGPLv3Only(yyyy.toString, organizationName) -> ("AGPL-3.0-only", new URL(
+    AGPLv3Only(yyyy.toString, organizationName) -> ("AGPL-3.0-only", url(
       "https://spdx.org/licenses/AGPL-3.0-only.html#licenseText"
     )),
-    AGPLv3(yyyy.toString, organizationName) -> ("AGPL-3.0", new URL(
+    AGPLv3(yyyy.toString, organizationName) -> ("AGPL-3.0", url(
       "https://spdx.org/licenses/AGPL-3.0.html#licenseText"
     )),
     ALv2(yyyy.toString, organizationName) ->
     apache,
-    GPLv3OrLater(yyyy.toString, organizationName) -> ("GPL-3.0-or-later", new URL(
+    GPLv3OrLater(yyyy.toString, organizationName) -> ("GPL-3.0-or-later", url(
       "https://spdx.org/licenses/GPL-3.0-or-later.html#licenseText"
     )),
-    GPLv3Only(yyyy.toString, organizationName) -> ("GPL-3.0-only", new URL(
+    GPLv3Only(yyyy.toString, organizationName) -> ("GPL-3.0-only", url(
       "https://spdx.org/licenses/GPL-3.0-only.html#licenseText"
     )),
-    GPLv3(yyyy.toString, organizationName) -> ("GPL-3.0", new URL(
+    GPLv3(yyyy.toString, organizationName) -> ("GPL-3.0", url(
       "https://spdx.org/licenses/GPL-3.0.html#licenseText"
     )),
-    LGPLv3OrLater(yyyy.toString, organizationName) -> ("LGPL-3.0-or-later", new URL(
+    LGPLv3OrLater(yyyy.toString, organizationName) -> ("LGPL-3.0-or-later", url(
       "https://spdx.org/licenses/LGPL-3.0-or-later.html#licenseText"
     )),
-    LGPLv3Only(yyyy.toString, organizationName) -> ("LGPL-3.0-only", new URL(
+    LGPLv3Only(yyyy.toString, organizationName) -> ("LGPL-3.0-only", url(
       "https://spdx.org/licenses/LGPL-3.0-only.html#licenseText"
     )),
-    LGPLv3(yyyy.toString, organizationName) -> ("LGPL-3.0", new URL(
+    LGPLv3(yyyy.toString, organizationName) -> ("LGPL-3.0", url(
       "https://spdx.org/licenses/LGPL-3.0.html#licenseText"
     )),
     MIT(yyyy.toString, organizationName) -> mit,
-    MPLv2(yyyy.toString, organizationName) -> ("MPL-2.0", new URL(
+    MPLv2(yyyy.toString, organizationName) -> ("MPL-2.0", url(
       "https://spdx.org/licenses/MPL-2.0.html#licenseText"
     ))
   )
