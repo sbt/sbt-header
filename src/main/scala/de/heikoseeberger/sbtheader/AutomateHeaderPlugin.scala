@@ -26,7 +26,7 @@ import sbt.Keys.compile
   */
 object AutomateHeaderPlugin extends AutoPlugin {
 
-  final object autoImport {
+  object autoImport {
 
     def automateHeaderSettings(configurations: Configuration*): Seq[Setting[_]] =
       configurations.foldLeft(List.empty[Setting[_]]) {

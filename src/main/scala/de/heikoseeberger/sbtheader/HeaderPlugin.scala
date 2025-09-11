@@ -44,13 +44,13 @@ import scala.util.matching.Regex
 
 object HeaderPlugin extends AutoPlugin {
 
-  final object autoImport {
+  object autoImport {
 
     val HeaderLicense = License
 
     val HeaderLicenseStyle = LicenseStyle
 
-    final object HeaderPattern {
+    object HeaderPattern {
 
       def commentBetween(start: String, middle: String, end: String): Regex =
         raw"""(?s)($start(?!\$middle).*?$end(?:\n|\r|\r\n)+)(.*)""".r
