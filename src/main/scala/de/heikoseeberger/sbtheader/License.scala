@@ -161,7 +161,7 @@ object License {
       }
   }
 
-  final object MPLv2_NoCopyright extends License {
+  object MPLv2_NoCopyright extends License {
 
     override val text: String =
       s"""|This Source Code Form is subject to the terms of the Mozilla Public
