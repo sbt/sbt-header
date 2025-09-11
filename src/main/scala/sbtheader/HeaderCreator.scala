@@ -38,7 +38,7 @@ final class HeaderCreator private (
 
   private val (firstLine, text) = {
     val fileContent =
-      try scala.io.Source.fromInputStream(input)(Codec.UTF8).mkString
+      try scala.io.Source.fromInputStream(input)(using Codec.UTF8).mkString
       finally input.close()
 
     fileType.firstLinePattern match {

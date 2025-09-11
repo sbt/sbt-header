@@ -10,22 +10,7 @@ package sbtheader
 import sbtheader.CommentStyle.cStyleBlockComment
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
-import sbt.{
-  AutoPlugin,
-  Compile,
-  Configuration,
-  File,
-  Logger,
-  ScopeFilter,
-  Setting,
-  SettingKey,
-  TaskKey,
-  Test,
-  inAnyConfiguration,
-  inConfig,
-  settingKey,
-  taskKey
-}
+import sbt.{ *, given }
 import sbt.Defaults.collectFiles
 import sbt.Keys._
 import sbt.internal.util.MessageOnlyException
@@ -100,8 +85,8 @@ object HeaderPlugin extends AutoPlugin {
     val headerCheckAll: TaskKey[Iterable[File]] =
       taskKey[Iterable[File]]("Check whether files have headers in all configurations")
 
-    def headerSettings(configurations: Configuration*): Seq[Setting[_]] =
-      configurations.foldLeft(List.empty[Setting[_]])(_ ++ inConfig(_)(toBeScopedSettings))
+    def headerSettings(configurations: Configuration*): Seq[Setting[?]] =
+      configurations.foldLeft(List.empty[Setting[?]])(_ ++ inConfig(_)(toBeScopedSettings))
   }
 
   import autoImport._
