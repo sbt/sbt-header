@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
 import scala.util.matching.Regex
 

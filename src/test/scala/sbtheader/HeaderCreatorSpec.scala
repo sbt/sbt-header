@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
 import java.io.ByteArrayInputStream
 
 import sbt.Logger
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.hashLineComment
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
+import sbtheader.HeaderPlugin.autoImport.HeaderCommentStyle.hashLineComment
+import sbtheader.HeaderPlugin.autoImport.HeaderLicense.Custom
 
 import scala.util.matching.Regex
 import org.scalatest.matchers.should.Matchers

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle._
+import sbtheader.CommentStyle._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

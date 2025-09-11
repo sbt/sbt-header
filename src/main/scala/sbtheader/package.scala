@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger
-
 import java.io.File
 import scala.util.matching.Regex
 

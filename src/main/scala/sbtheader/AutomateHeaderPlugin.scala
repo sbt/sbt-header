@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
 import sbt.{ AutoPlugin, Compile, Configuration, Def, Plugins, Setting, Test, inConfig }
 import sbt.Keys.compile

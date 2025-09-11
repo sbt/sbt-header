@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense._
+import sbtheader.HeaderPlugin.autoImport.HeaderLicense._
 import sbt.URL
 import sbt.url
 import org.scalatest.matchers.should.Matchers

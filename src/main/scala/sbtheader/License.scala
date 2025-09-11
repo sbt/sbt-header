@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
-import de.heikoseeberger.sbtheader.LicenseStyle.{ Detailed, SpdxSyntax }
+import sbtheader.LicenseStyle.{ Detailed, SpdxSyntax }
 
 sealed trait License {
   def text: String

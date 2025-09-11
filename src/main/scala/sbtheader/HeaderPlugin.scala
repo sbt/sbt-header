@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.heikoseeberger.sbtheader
+package sbtheader
 
-import de.heikoseeberger.sbtheader.CommentStyle.cStyleBlockComment
+import sbtheader.CommentStyle.cStyleBlockComment
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import sbt.{
