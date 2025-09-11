@@ -7,7 +7,7 @@
 
 package sbtheader
 
-import sbt.{ AutoPlugin, Compile, Configuration, Def, Plugins, Setting, Test, inConfig }
+import sbt.{ *, given }
 import sbt.Keys.compile
 
 /**
@@ -19,8 +19,8 @@ object AutomateHeaderPlugin extends AutoPlugin {
 
   object autoImport {
 
-    def automateHeaderSettings(configurations: Configuration*): Seq[Setting[_]] =
-      configurations.foldLeft(List.empty[Setting[_]]) {
+    def automateHeaderSettings(configurations: Configuration*): Seq[Setting[?]] =
+      configurations.foldLeft(List.empty[Setting[?]]) {
         _ ++ inConfig(_)(compile := compile.dependsOn(HeaderPlugin.autoImport.headerCreate).value)
       }
   }
@@ -28,6 +28,6 @@ object AutomateHeaderPlugin extends AutoPlugin {
   override def requires: Plugins =
     HeaderPlugin
 
-  override def projectSettings: Seq[Def.Setting[_]] =
+  override def projectSettings: Seq[Def.Setting[?]] =
     autoImport.automateHeaderSettings(Compile, Test)
 }

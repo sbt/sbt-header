@@ -27,10 +27,10 @@ inThisBuild(
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
-      "-language:_",
       "-encoding",
       "UTF-8",
       "-Ywarn-unused:imports",
+      "-Xsource:3",
     ),
     scalafmtOnCompile := true,
     dynverSeparator   := "_", // the default `+` is not compatible with docker tags
