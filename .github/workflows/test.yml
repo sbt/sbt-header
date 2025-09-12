@@ -43,4 +43,4 @@ jobs:
       - name: Scalafmt
         if: ${{ matrix.jobtype == 3 }}
         shell: bash
-        run: sbt -v scalafmtSbtCheck +scalafmtCheckAll
+        run: sbt -v scalafmtSbtCheck +scalafmtCheckAll +headerCheckAll
