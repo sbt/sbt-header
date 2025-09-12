@@ -10,6 +10,6 @@ package sbtheader
 sealed trait LicenseStyle
 
 object LicenseStyle {
-  final case object Detailed   extends LicenseStyle
-  final case object SpdxSyntax extends LicenseStyle
+  case object Detailed   extends LicenseStyle
+  case object SpdxSyntax extends LicenseStyle
 }
