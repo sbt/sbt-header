@@ -9,8 +9,10 @@ sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating
 In order to add the sbt-header plugin to your build, add the following line to `project/plugins.sbt`:
 
 ``` scala
-addSbtPlugin("com.github.sbt" % "sbt-header" % "5.6.0") // Check the latest version above or look at the release tags
+addSbtPlugin("com.github.sbt" % "sbt-header" % "5.11.0") // Check the latest version above or look at the release tags
 ```
+
+**Note**: sbt-header is published to Maven Central under a new organization name `com.github.sbt`, starting 5.11.0.
 
 Then in your `build.sbt` configure the following settings:
 
