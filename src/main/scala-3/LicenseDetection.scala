@@ -31,8 +31,8 @@ object LicenseDetection:
   ): Option[License] =
     val spdxIds =
       licenses match
-        case l :: Nil => Some(l.spdxId)
-        case _        => None
+        case Seq(l) => Some(l.spdxId)
+        case _      => None
     for
       spdxId  <- spdxIds
       license <- spdxMapping.get(spdxId)
