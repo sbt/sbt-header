@@ -50,7 +50,7 @@ object License {
         |SPDX-License-Identifier: $spdxIdentifier
         |""".stripMargin
 
-  final case object ALv2 extends SpdxLicense {
+  case object ALv2 extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "Apache-2.0"
@@ -85,7 +85,7 @@ object License {
       }
   }
 
-  final case object MIT extends SpdxLicense {
+  case object MIT extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "MIT"
@@ -125,7 +125,7 @@ object License {
       }
   }
 
-  final case object MPLv2 extends SpdxLicense {
+  case object MPLv2 extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "MPL-2.0"
@@ -161,7 +161,7 @@ object License {
           |""".stripMargin
   }
 
-  final case object BSD2Clause extends SpdxLicense {
+  case object BSD2Clause extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "BSD-2-Clause"
@@ -206,7 +206,7 @@ object License {
       }
   }
 
-  final case object BSD3Clause extends SpdxLicense {
+  case object BSD3Clause extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "BSD-3-Clause"
@@ -255,7 +255,7 @@ object License {
       }
   }
 
-  final case object GPLv3OrLater extends SpdxLicense {
+  case object GPLv3OrLater extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "GPL-3.0-or-later"
@@ -291,7 +291,7 @@ object License {
       }
   }
 
-  final case object GPLv3Only extends SpdxLicense {
+  case object GPLv3Only extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "GPL-3.0-only"
@@ -326,7 +326,7 @@ object License {
       }
   }
 
-  final case object GPLv3 extends SpdxLicense {
+  case object GPLv3 extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "GPL-3.0"
@@ -345,7 +345,7 @@ object License {
       }
   }
 
-  final case object LGPLv3OrLater extends SpdxLicense {
+  case object LGPLv3OrLater extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "LGPL-3.0-or-later"
@@ -381,7 +381,7 @@ object License {
       }
   }
 
-  final case object LGPLv3Only extends SpdxLicense {
+  case object LGPLv3Only extends SpdxLicense {
 
     override def spdxIdentifier: String =
       "LGPL-3.0-only"
@@ -416,7 +416,7 @@ object License {
       }
   }
 
-  final case object LGPLv3 extends SpdxLicense {
+  case object LGPLv3 extends SpdxLicense {
 
     override def spdxIdentifier: String =
       "LGPL-3.0"
@@ -435,7 +435,7 @@ object License {
       }
   }
 
-  final case object AGPLv3OrLater extends SpdxLicense {
+  case object AGPLv3OrLater extends SpdxLicense {
     override def spdxIdentifier: String =
       "AGPL-3.0-or-later"
 
@@ -470,7 +470,7 @@ object License {
       }
   }
 
-  final case object AGPLv3Only extends SpdxLicense {
+  case object AGPLv3Only extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "AGPL-3.0-only"
@@ -505,7 +505,7 @@ object License {
       }
   }
 
-  final case object AGPLv3 extends SpdxLicense {
+  case object AGPLv3 extends SpdxLicense {
 
     override val spdxIdentifier: String =
       "AGPL-3.0"
