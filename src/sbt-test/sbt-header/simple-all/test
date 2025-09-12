@@ -5,6 +5,6 @@ $ must-mirror src/main/scala/HasHeader.scala src/main/resources/HasHeader.scala_
 $ must-mirror src/main/scala/HasNoHeader.scala src/main/resources/HasNoHeader.scala_expected
 $ must-mirror src/test/scala/HasHeader.scala src/test/resources/HasHeader.scala_expected
 $ must-mirror src/test/scala/HasNoHeader.scala src/test/resources/HasNoHeader.scala_expected
-$ must-mirror src/it/scala/HasHeader.scala src/it/resources/HasHeader.scala_expected
-$ must-mirror src/it/scala/HasNoHeader.scala src/it/resources/HasNoHeader.scala_expected
+$ must-mirror src/myTest/scala/HasHeader.scala src/myTest/resources/HasHeader.scala_expected
+$ must-mirror src/myTest/scala/HasNoHeader.scala src/myTest/resources/HasNoHeader.scala_expected
 > headerCheckAll
