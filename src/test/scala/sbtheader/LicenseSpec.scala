@@ -7,7 +7,7 @@
 
 package sbtheader
 
-import sbtheader.HeaderPlugin.autoImport.HeaderLicense._
+import sbtheader.HeaderPlugin.autoImport.HeaderLicense.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -16,7 +16,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "AGPLv3OrLater" should {
 
     "contain the AGPLv3 or later license with the given copyright year and owner" in {
-      val agplv3 = AGPLv3OrLater("2020", "Edward Samson").text
+      val agplv3   = AGPLv3OrLater("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -41,7 +41,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "AGPLv3Only" should {
 
     "contain the AGPLv3 only license with the given copyright year and owner" in {
-      val agplv3 = AGPLv3Only("2020", "Edward Samson").text
+      val agplv3   = AGPLv3Only("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -65,7 +65,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "AGPLv3" should {
 
     "contain the AGPLv3 license with the given copyright year and owner" in {
-      val agplv3 = AGPLv3("2015", "Heiko Seeberger").text
+      val agplv3   = AGPLv3("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (C) 2015  Heiko Seeberger
             |
@@ -90,7 +90,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "Apache 2.0" should {
 
     "contain the Apache 2.0 license with the given copyright year and owner" in {
-      val alv2 = ALv2("2015", "Heiko Seeberger").text
+      val alv2     = ALv2("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright 2015 Heiko Seeberger
             |
@@ -114,7 +114,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "BSD 2 Clause" should {
 
     "contain the BSD 2 Clause license with the given copyright year and owner" in {
-      val bsd2 = BSD2Clause("2015", "Heiko Seeberger").text
+      val bsd2     = BSD2Clause("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (c) 2015, Heiko Seeberger
             |All rights reserved.
@@ -148,7 +148,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "BSD 3 Clause" should {
 
     "contain the BSD 3 Clause license with the given copyright year and owner" in {
-      val bsd3 = BSD3Clause("2015", "Heiko Seeberger").text
+      val bsd3     = BSD3Clause("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (c) 2015, Heiko Seeberger
             |All rights reserved.
@@ -186,7 +186,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "GPLv3OrLater" should {
 
     "contain the GPLv3 or later license with the given copyright year and owner" in {
-      val gplv3 = GPLv3OrLater("2020", "Edward Samson").text
+      val gplv3    = GPLv3OrLater("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -211,7 +211,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "GPLv3Only" should {
 
     "contain the GPLv3 only license with the given copyright year and owner" in {
-      val gplv3 = GPLv3Only("2020", "Edward Samson").text
+      val gplv3    = GPLv3Only("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -235,7 +235,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "GPLv3" should {
 
     "contain the GPLv3 license with the given copyright year and owner" in {
-      val gplv3 = GPLv3("2015", "Heiko Seeberger").text
+      val gplv3    = GPLv3("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (C) 2015  Heiko Seeberger
             |
@@ -260,7 +260,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "LGPLv3OrLater" should {
 
     "contain the LGPLv3 or later license with the given copyright year and owner" in {
-      val lgplv3 = LGPLv3OrLater("2020", "Edward Samson").text
+      val lgplv3   = LGPLv3OrLater("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -285,7 +285,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "LGPLv3Only" should {
 
     "contain the LGPLv3 only license with the given copyright year and owner" in {
-      val lgplv3 = LGPLv3Only("2020", "Edward Samson").text
+      val lgplv3   = LGPLv3Only("2020", "Edward Samson").text
       val expected =
         s"""|Copyright (C) 2020  Edward Samson
             |
@@ -309,7 +309,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "LGPLv3" should {
 
     "contain the LGPLv3 license with the given copyright year and owner" in {
-      val lgplv3 = LGPLv3("2015", "Heiko Seeberger").text
+      val lgplv3   = LGPLv3("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (C) 2015  Heiko Seeberger
             |
@@ -334,7 +334,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "MIT" should {
 
     "contain the MIT license with the given copyright year and owner" in {
-      val mit = MIT("2015", "Heiko Seeberger").text
+      val mit      = MIT("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (c) 2015 Heiko Seeberger
             |
@@ -363,7 +363,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "MPL 2.0" should {
 
     "contain the MPL 2.0 license with the given copyright year and owner" in {
-      val mit = MPLv2("2015", "Heiko Seeberger").text
+      val mit      = MPLv2("2015", "Heiko Seeberger").text
       val expected =
         s"""|Copyright (c) 2015 Heiko Seeberger
             |
@@ -379,7 +379,7 @@ class licenseSpec extends AnyWordSpec with Matchers {
   "MPL 2.0 license without copyright" should {
 
     "contain the MPL 2.0 license without copyright" in {
-      val mit = MPLv2_NoCopyright.text
+      val mit      = MPLv2_NoCopyright.text
       val expected =
         s"""|This Source Code Form is subject to the terms of the Mozilla Public
             |License, v. 2.0. If a copy of the MPL was not distributed with this

@@ -92,7 +92,7 @@ final class LineCommentCreator(linePrefix: String, lineSuffix: String = "") exte
       }
     def appendLineSuffix(s: String) =
       s match {
-        case "" => ""
+        case ""   => ""
         case line => // Only add the suffix when a prefix was added before
           if (linePrefix.trim.nonEmpty && lineSuffix.trim.nonEmpty) s"$line $lineSuffix" else line
       }

@@ -16,7 +16,7 @@ object HeaderCreator {
   def apply(
       fileType: FileType,
       commentStyle: CommentStyle,
-      license: License,
+      license: sbtheader.License,
       headerEmptyLine: Boolean,
       log: Logger,
       input: InputStream
@@ -27,7 +27,7 @@ object HeaderCreator {
 final class HeaderCreator private (
     fileType: FileType,
     commentStyle: CommentStyle,
-    license: License,
+    license: sbtheader.License,
     headerEmptyLine: Boolean,
     log: Logger,
     input: InputStream

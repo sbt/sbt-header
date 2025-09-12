@@ -116,7 +116,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
     "given a file with shebang" should {
 
       val shebang = "#!/bin/bash" + NewLine
-      val script =
+      val script  =
         """|echo Hello World
            |exit 0
            |""".stripMargin
@@ -139,7 +139,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
     "given an XML file with XML declaration" should {
 
       val xmlDeclaration = """<?xml version="1.0" encoding="UTF-8"?>""" + NewLine
-      val xmlBody =
+      val xmlBody        =
         """|<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
            |  <parent>
            |    <groupId>my.group</groupId>
@@ -177,7 +177,7 @@ final class HeaderCreatorSpec extends AnyWordSpec with Matchers {
     "given a file with an existing copyright year" should {
       val yearPreservingStyle =
         CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
-          val Pattern: Regex = "(?s).*?(\\d{4}(-\\d{4})?).*".r
+          val Pattern: Regex                           = "(?s).*?(\\d{4}(-\\d{4})?).*".r
           def findYear(header: String): Option[String] =
             header match {
               case Pattern(years, _) => Some(years)

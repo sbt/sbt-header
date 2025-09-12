@@ -8,7 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            jobtype: 1
+          - os: ubuntu-latest
+            jobtype: 2
+          - os: ubuntu-latest
+            jobtype: 3
+    runs-on: "${{ matrix.os }}"
     env:
       # define Java options for both official sbt and sbt-extras
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF-8
@@ -22,4 +32,15 @@ jobs:
           java-version: 8
           cache: sbt
       - uses: sbt/setup-sbt@v1
-      - run: sbt -v scalafmtSbtCheck +scalafmtCheckAll +scripted
+      - name: Build and test
+        if: ${{ matrix.jobtype == 1 }}
+        shell: bash
+        run: sbt -v '++ 2.12.x' test scripted
+      - name: Build and test (Scala 3)
+        if: ${{ matrix.jobtype == 2 }}
+        shell: bash
+        run: sbt -v '++ 3.x' test scripted
+      - name: Scalafmt
+        if: ${{ matrix.jobtype == 3 }}
+        shell: bash
+        run: sbt -v scalafmtSbtCheck +scalafmtCheckAll
