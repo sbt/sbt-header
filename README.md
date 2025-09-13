@@ -1,6 +1,9 @@
 # sbt-header #
 
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![sbt1](https://index.scala-lang.org/sbt/sbt-header/sbt-header/latest-by-scala-version.svg?platform=sbt1)](https://index.scala-lang.org/sbt/sbt-header/sbt-header)
+[![sbt2](https://index.scala-lang.org/sbt/sbt-header/sbt-header/latest-by-scala-version.svg?platform=sbt2)](https://index.scala-lang.org/sbt/sbt-header/sbt-header)
+
 
 sbt-header is an [sbt](http://www.scala-sbt.org) plugin for creating or updating file headers, e.g. copyright headers.
 
