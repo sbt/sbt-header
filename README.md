@@ -159,20 +159,22 @@ You can customize how content gets created by providing your own
 `CommentCreator`. For example, this would be a (crude) way to preserve the
 copyright year in existing headers but still update the rest:
 
-    CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
-      val Pattern = "(?s).*?(\\d{4}(-\\d{4})?).*".r
-      def findYear(header: String): Option[String] = header match {
-       case Pattern(years, _) => Some(years)
-        case _                 => None
-      }
-      override def apply(text: String, existingText: Option[String]): String = {
-        val newText = CommentStyle.cStyleBlockComment.commentCreator.apply(text, existingText)
-        existingText
-          .flatMap(findYear)
-          .map(year => newText.replace("2017", year))
-          .getOrElse(newText)
-      }
-    })
+```scala
+CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
+  val Pattern = "(?s).*?(\\d{4}(-\\d{4})?).*".r
+  def findYear(header: String): Option[String] = header match {
+    case Pattern(years, _) => Some(years)
+    case _                 => None
+  }
+  override def apply(text: String, existingText: Option[String]): String = {
+    val newText = CommentStyle.cStyleBlockComment.commentCreator.apply(text, existingText)
+    existingText
+      .flatMap(findYear)
+      .map(year => newText.replace("2017", year))
+      .getOrElse(newText)
+  }
+})
+```
 
 ### Excluding files
 
