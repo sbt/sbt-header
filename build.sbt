@@ -70,7 +70,7 @@ lazy val `sbt-header` =
         )
       ),
       libraryDependencies ++= Seq(
-        library.scalaTest % Test,
+        "org.scalatest" %% "scalatest" % "3.2.19" % Test
       ),
       scriptedLaunchOpts ++= Seq(
         "-Xmx1024M",
@@ -102,15 +102,3 @@ lazy val commonSettings =
       (Compile / scalafmt).value
     },
   )
-
-// *****************************************************************************
-// Library dependencies
-// *****************************************************************************
-
-lazy val library =
-  new {
-    object Version {
-      val scalaTest = "3.2.19"
-    }
-    val scalaTest = "org.scalatest" %% "scalatest" % Version.scalaTest
-  }
