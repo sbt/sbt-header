@@ -10,10 +10,9 @@ import scala.util.matching.Regex
 
 package object sbtheader {
 
-  type Traversable[+A] = scala.collection.immutable.Traversable[A]
-  type Iterable[+A]    = scala.collection.immutable.Iterable[A]
-  type Seq[+A]         = scala.collection.immutable.Seq[A]
-  type IndexedSeq[+A]  = scala.collection.immutable.IndexedSeq[A]
+  type Iterable[+A]   = scala.collection.immutable.Iterable[A]
+  type Seq[+A]        = scala.collection.immutable.Seq[A]
+  type IndexedSeq[+A] = scala.collection.immutable.IndexedSeq[A]
 
   final implicit class FileOps(val file: File) extends AnyVal {
     def extension: Option[String] =
