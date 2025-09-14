@@ -70,7 +70,8 @@ lazy val `sbt-header` =
         )
       ),
       libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "3.2.19" % Test
+        "org.scalatest" %% "scalatest-wordspec"       % "3.2.19" % Test,
+        "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test
       ),
       scriptedLaunchOpts ++= Seq(
         "-Xmx1024M",
