@@ -1,3 +1,0 @@
-# check if headers get for twirl templates
-> headerCreate
-> checkFileContents
