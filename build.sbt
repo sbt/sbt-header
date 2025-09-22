@@ -80,7 +80,7 @@ lazy val `sbt-header` =
       (pluginCrossBuild / sbtVersion) := {
         scalaBinaryVersion.value match {
           case "2.12" => "1.9.9"
-          case _      => "2.0.0-RC4"
+          case _      => "2.0.0-RC5"
         }
       },
       scriptedSbt := {
