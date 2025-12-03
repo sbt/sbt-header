@@ -74,7 +74,7 @@ headerLicense := Some(HeaderLicense.MIT("2015", "Heiko Seeberger"))
 
 This will also be given precedence if a license has been auto detected from project settings.
 
-### Build in licenses
+### Built-in licenses
 
 The most common licenses have been pre-canned in [License](https://github.com/sbt/sbt-header/blob/master/src/main/scala/sbtheader/License.scala). They can either be detected using their SPDX identifier or by setting them explicitly.
 
