@@ -3,7 +3,7 @@
 // *****************************************************************************
 
 val scala212 = "2.12.21"
-val scala3   = "3.7.4"
+val scala3   = "3.8.1"
 
 inThisBuild(
   Seq(
@@ -33,13 +33,6 @@ inThisBuild(
       "-encoding",
       "UTF-8",
     ),
-    scalacOptions ++= {
-      scalaBinaryVersion.value match {
-        case "2.12" =>
-          List("-Ywarn-unused:imports", "-Xsource:3")
-        case _ => Nil
-      }
-    },
     scalafmtOnCompile := {
       scalaBinaryVersion.value match {
         case "2.12" => true
@@ -60,6 +53,17 @@ lazy val `sbt-header` =
     .enablePlugins(AutomateHeaderPlugin, SbtPlugin)
     .settings(commonSettings)
     .settings(
+      scalacOptions ++= {
+        scalaBinaryVersion.value match {
+          case "2.12" =>
+            List(
+              "-Ywarn-unused:imports",
+              "-Xsource:3",
+              "-release:8",
+            )
+          case _ => Nil
+        }
+      },
       headerLicense := Some(
         HeaderLicense.Custom(
           """|Copyright (c) 2015 - 2025, Heiko Seeberger
@@ -80,7 +84,7 @@ lazy val `sbt-header` =
       (pluginCrossBuild / sbtVersion) := {
         scalaBinaryVersion.value match {
           case "2.12" => "1.9.9"
-          case _      => "2.0.0-RC8"
+          case _      => "2.0.0-RC9"
         }
       },
       scriptedSbt := {
