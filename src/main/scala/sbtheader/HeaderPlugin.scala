@@ -67,9 +67,11 @@ object HeaderPlugin extends AutoPlugin {
     val headerEmptyLine: SettingKey[Boolean] =
       settingKey("If an empty line header should be added between the header and the body")
 
+    @transient
     val headerSources =
       taskKey[scala.Seq[File]]("Sources which need headers checked or created.")
 
+    @transient
     val headerResources =
       taskKey[scala.Seq[File]]("Resources which need headers checked or created.")
 
