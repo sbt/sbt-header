@@ -181,8 +181,8 @@ CommentStyle.cStyleBlockComment.copy(commentCreator = new CommentCreator() {
 To exclude some files, use the [sbt's file filters](http://www.scala-sbt.org/0.13/docs/Howto-Customizing-Paths.html#Include%2Fexclude+files+in+the+source+directory):
 
 ``` scala
-excludeFilter.in(headerSources) := HiddenFileFilter || "*Excluded.scala"
-excludeFilter.in(headerResources) := HiddenFileFilter || "*.xml"
+headerSources / excludeFilter := HiddenFileFilter || "*Excluded.scala"
+headerResources / excludeFilter := HiddenFileFilter || "*.xml"
 ```
 
 ### Empty line between header and body
@@ -247,7 +247,7 @@ import play.twirl.sbt.Import.TwirlKeys
 
 headerMappings := headerMappings.value + (FileType("html") -> HeaderCommentStyle.twirlStyleBlockComment)
 
-headerSources.in(Compile) ++= sources.in(Compile, TwirlKeys.compileTemplates).value
+Compile / headerSources ++= sources.in(Compile, TwirlKeys.compileTemplates).value
 ```
 
 sbt-header supports two comment styles for Twirl templates. `twirlStyleBlockComment` will produce simple twirl block comments, while `twirlStyleFramedBlockComment` will produce
@@ -277,7 +277,7 @@ your build definition:
 ```scala
 def addBoilerplate(confs: Configuration*) = confs.foldLeft(List.empty[Setting[_]]) { (acc, conf) =>
   acc ++ Seq(
-    headerSources in conf ++= (((sourceDirectory in conf).value / "boilerplate") ** "*.template").get),
+    conf / headerSources ++= (((conf / sourceDirectory).value / "boilerplate") ** "*.template").get()),
     headerMappings        += (FileType("template") -> HeaderCommentStyle.cStyleBlockComment)
   )
 }
