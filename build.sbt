@@ -3,10 +3,11 @@
 // *****************************************************************************
 
 val scala212 = "2.12.21"
-val scala3   = "3.8.4"
+val scala3   = "3.9.0"
 
 inThisBuild(
   Seq(
+    scalaVersion       := scala212,
     crossScalaVersions := List(scala212, scala3),
     organization       := "com.github.sbt",
     organizationName   := "sbt plugins contributors",
@@ -84,7 +85,7 @@ lazy val `sbt-header` =
       (pluginCrossBuild / sbtVersion) := {
         scalaBinaryVersion.value match {
           case "2.12" => "1.9.9"
-          case _      => "2.0.8"
+          case _      => "2.1.0"
         }
       },
       scriptedSbt := {
