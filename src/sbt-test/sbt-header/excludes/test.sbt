@@ -2,6 +2,7 @@ headerLicense := Some(HeaderLicense.ALv2("2015", "Heiko Seeberger"))
 
 headerSources / excludeFilter := HiddenFileFilter || "*Excluded.scala"
 
+@transient
 val checkFiles = taskKey[Unit]("Verify files match expected files")
 checkFiles := {
 
